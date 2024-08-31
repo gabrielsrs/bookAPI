@@ -1,10 +1,10 @@
 import { Router } from "express";
-import { routeBooks } from "./api/books.js"
-import { routeUsers } from "./api/users.js"
+import routeBooks from "./books/index.js"
+import routeUsers from "./users/index.js"
 
 export const route = Router()
 
-route.use("/books", routeBooks)
-route.use("/users", routeUsers)
+route.use("/", routeBooks)
+route.use("/", routeUsers)
 
 
