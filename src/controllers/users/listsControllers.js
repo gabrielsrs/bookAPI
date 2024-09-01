@@ -1,50 +1,142 @@
+import { ListsServices } from "../../services/users/listsServices"
+
 class ListsControllers {
-    getListsController(req, res) {
-      // Logic for GET /:id/lists/:listId?
+    constructor () {
+      this.listsServices = new ListsServices()
+    }
+
+    getListsController (req, res) {
+      const { id, listId } = req.params
+
+      const result = this.listsServices.getListsService()
+
+      res.status(200).json({
+          "status": "success",
+          ...result
+      })
     }
   
-    createListController(req, res) {
-      // Logic for POST /:id/lists
+    createListController (req, res) {
+      const { id } = req.params
+      const { name, description, privacy } = req.body
+
+      const result = this.listsServices.createListService()
+
+      res.status(200).json({
+          "status": "success",
+          ...result
+      })
     }
   
-    updateListController(req, res) {
-      // Logic for PATCH /:id/lists/:listId
+    updateListController (req, res) {
+      const { id, listId } = req.params
+      const { name, description, privacy } = req.body
+
+      const result = this.listsServices.updateListService()
+
+      res.status(200).json({
+          "status": "success",
+          ...result
+      })
     }
   
-    deleteListController(req, res) {
-      // Logic for DELETE /:id/lists/:listId
+    deleteListController (req, res) {
+      const { id, listId } = req.params
+
+      const result = this.listsServices.deleteListService()
+
+      res.status(200).json({
+          "status": "success",
+          ...result
+      })
     }
   
-    addBookToListController(req, res) {
-      // Logic for POST /:id/lists/:listId/:bookId
+    addBookToListController (req, res) {
+      const { id, listId, bookId } = req.params
+
+      const result = this.listsServices.addBookToListService()
+
+      res.status(200).json({
+          "status": "success",
+          ...result
+      })
     }
   
-    removeBookFromListController(req, res) {
-      // Logic for DELETE /:id/lists/:listId/:bookId
+    removeBookFromListController (req, res) {
+      const { id, listId, bookId } = req.params
+
+      const result = this.listsServices.removeBookFromListService()
+
+      res.status(200).json({
+          "status": "success",
+          ...result
+      })
     }
   
-    getLikedListsController(req, res) {
-      // Logic for GET /:id/lists/like
+    getLikedListsController (req, res) {
+      const { id } = req.params
+
+      const result = this.listsServices.getLikedListsService()
+
+      res.status(200).json({
+          "status": "success",
+          ...result
+      })
     }
   
-    likeListController(req, res) {
-      // Logic for POST /:id/lists/like/:listId
+    likeListController (req, res) {
+      const { id, listId } = req.params
+
+      const result = this.listsServices.likeListService()
+
+      res.status(200).json({
+          "status": "success",
+          ...result
+      })
     }
   
-    unlikeListController(req, res) {
-      // Logic for DELETE /:id/lists/like/:listId
+    unlikeListController (req, res) {
+      const { id, listId } = req.params
+
+      const result = this.listsServices.unlikeListService()
+
+      res.status(200).json({
+          "status": "success",
+          ...result
+      })
     }
   
-    getFollowedListsController(req, res) {
-      // Logic for GET /:id/lists/follow
+    getFollowedListsController (req, res) {
+      const { id } = req.params
+
+      const result = this.listsServices.getFollowedListsService()
+
+      res.status(200).json({
+          "status": "success",
+          ...result
+      })
     }
   
-    followListController(req, res) {
-      // Logic for POST /:id/lists/follow/:listId
+    followListController (req, res) {
+      const { id, listId } = req.params
+
+      const result = this.listsServices.followListService()
+
+      res.status(200).json({
+          "status": "success",
+          ...result
+      })
     }
   
-    unfollowListController(req, res) {
-      // Logic for DELETE /:id/lists/follow/:listId
+    unfollowListController (req, res) {
+      const { id, listId } = req.params
+
+      const result = this.listsServices.unfollowListService()
+
+      res.status(200).json({
+          "status": "success",
+          ...result
+      })
     }
   }
   

@@ -1,12 +1,14 @@
 import { BookDetailsServices } from "../../services/book/bookDetailsServices.js"
 
 class BookDetailsControllers {
+    constructor () {
+        this.bookDetailsServices = new BookDetailsServices()
+    }
+
     getBookNotesController (req, res) {
         const { id } = req.params
 
-        const bookDetailsServices = new BookDetailsServices()
-
-        const result = bookDetailsServices.getBookNotesService(id)
+        const result = this.bookDetailsServices.getBookNotesService(id)
 
         res.status(200).json({
             "status": "success",
@@ -17,9 +19,7 @@ class BookDetailsControllers {
     getBookQuotesController  (req, res) {
         const { id } = req.params
 
-        const bookDetailsServices = new BookDetailsServices()
-
-        const result = bookDetailsServices.getBookQuotesService(id)
+        const result = this.bookDetailsServices.getBookQuotesService(id)
 
         res.status(200).json({
             "status": "success",
@@ -31,9 +31,7 @@ class BookDetailsControllers {
     getBookExcerptsController (req, res) {
         const { id } = req.params
 
-        const bookDetailsServices = new BookDetailsServices()
-
-        const result = bookDetailsServices.getBookExcerptsService(id)
+        const result = this.bookDetailsServices.getBookExcerptsService(id)
 
         res.status(200).json({
             "status": "success",
@@ -44,9 +42,7 @@ class BookDetailsControllers {
     getBookBookmarksController (req, res) {
         const { id } = req.params
 
-        const bookDetailsServices = new BookDetailsServices()
-
-        const result = bookDetailsServices.getBookBookmarksService(id)
+        const result = this.bookDetailsServices.getBookBookmarksService(id)
 
         res.status(200).json({
             "status": "success",
@@ -57,9 +53,7 @@ class BookDetailsControllers {
     getBookMetadataController (req, res) {
         const { id } = req.params
 
-        const bookDetailsServices = new BookDetailsServices()
-
-        const result = bookDetailsServices.getBookMetadataService(id)
+        const result = this.bookDetailsServices.getBookMetadataService(id)
 
         res.status(200).json({
             "status": "success",

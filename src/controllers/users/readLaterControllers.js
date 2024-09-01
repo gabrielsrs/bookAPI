@@ -1,14 +1,42 @@
+import { ReadLaterServices } from "../../services/users/readLaterServices.js"
+
 class ReadLaterControllers {
+    constructor () {
+      this.readLaterServices = new ReadLaterServices()
+    }
+
     getReadLaterController(req, res) {
-      // Logic for GET /:id/readLater
+      const { id } = req.params
+
+      const result = this.readLaterServices.getReadLaterService()
+
+      res.status(200).json({
+          "status": "success",
+          ...result
+      })
     }
   
     createReadLaterController(req, res) {
-      // Logic for POST /:id/readLater/:bookId
+      const { id, bookId } = req.params
+      const { privacy } = req.body
+
+      const result = this.readLaterServices.createReadLaterService()
+
+      res.status(200).json({
+          "status": "success",
+          ...result
+      })
     }
   
     deleteReadLaterController(req, res) {
-      // Logic for DELETE /:id/readLater/:bookId
+      const { id, bookId } = req.params
+
+      const result = this.readLaterServices.deleteReadLaterService()
+
+      res.status(200).json({
+          "status": "success",
+          ...result
+      })
     }
   }
   

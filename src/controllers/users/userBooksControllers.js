@@ -1,14 +1,41 @@
+import { UserBooksServices } from "../../services/users/userBooksServices.js"
+
 class UserBooksControllers {
+    constructor () {
+      this.userBooksServices = new UserBooksServices()
+    }
+
     getUserBooksController(req, res) {
-      // Logic for GET /:id/books
+      const { id } = req.params
+
+      const result = this.userBooksServices.getUserBooksService()
+
+      res.status(200).json({
+          "status": "success",
+          ...result
+      })
     }
   
     addUserBookController(req, res) {
-      // Logic for POST /:id/books/:bookId
+      const { id, bookId } = req.params
+
+      const result = this.userBooksServices.addUserBookService()
+
+      res.status(200).json({
+          "status": "success",
+          ...result
+      })
     }
   
     removeUserBookController(req, res) {
-      // Logic for DELETE /:id/books/:bookId
+      const { id, bookId } = req.params
+
+      const result = this.userBooksServices.removeUserBookService()
+
+      res.status(200).json({
+          "status": "success",
+          ...result
+      })
     }
   }
   

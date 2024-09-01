@@ -1,12 +1,14 @@
 import { RatingServices } from "../../services/book/ratingServices.js"
 
 class RatingControllers {
+    constructor () {
+        this.ratingServices = new RatingServices()
+    }
+
     getRatingsController (req, res) {
         const { id } = req.params
 
-        const ratingServices = new RatingServices()
-
-        const result = ratingServices.getRatingsService(id)
+        const result = this.ratingServices.getRatingsService(id)
 
         res.status(200).json({
             "status": "success",
@@ -18,9 +20,7 @@ class RatingControllers {
         const { id, userId } = req.params
         const { rating, privacy } = req.body
 
-        const ratingServices = new RatingServices()
-
-        const result = ratingServices.createRatingsService()
+        const result = this.ratingServices.createRatingsService()
 
         res.status(200).json({
             "status": "success",
@@ -32,9 +32,7 @@ class RatingControllers {
         const { id, userId, ratingId } = req.params
         const { rating, privacy } = req.body
 
-        const ratingServices = new RatingServices()
-
-        const result = ratingServices.updateRatingsService()
+        const result = this.ratingServices.updateRatingsService()
 
         res.status(200).json({
             "status": "success",
@@ -45,9 +43,7 @@ class RatingControllers {
     deleteRatingsController (req, res) {
         const { id, userId, ratingId } = req.params
 
-        const ratingServices = new RatingServices()
-
-        const result = ratingServices.deleteRatingsService()
+        const result = this.ratingServices.deleteRatingsService()
 
         res.status(200).json({
             "status": "success",

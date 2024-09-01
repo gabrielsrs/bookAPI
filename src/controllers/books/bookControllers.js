@@ -1,12 +1,14 @@
 import { BookServices } from "../../services/book/bookServices.js"
 
 class BookControllers {
+    constructor () {
+        this.bookService = new BookServices()
+    }
+
     getBookController (req, res) {
         const { id } = req.params
 
-        const bookService = new BookServices()
-
-        const result = bookService.getBookService(id)
+        const result = this.bookService.getBookService(id)
 
         res.status(200).json({
             "status": "success",
@@ -31,9 +33,7 @@ class BookControllers {
         } = req.body
 
 
-        const bookService = new BookServices()
-
-        const result = bookService.createBookService()
+        const result = this.bookService.createBookService()
 
         res.status(200).json({
             "status": "success",
@@ -58,9 +58,7 @@ class BookControllers {
             categories
         } = req.body
 
-        const bookService = new BookServices()
-
-        const result = bookService.updateBookService()
+        const result = this.bookService.updateBookService()
 
         res.status(200).json({
             "status": "success",
@@ -71,9 +69,7 @@ class BookControllers {
     deleteBookController (req, res) {
         const { id } = req.params
 
-        const bookService = new BookServices()
-
-        const result = bookService.deleteBookService(id)
+        const result = this.bookService.deleteBookService(id)
 
         res.status(200).json({
             "status": "success",
