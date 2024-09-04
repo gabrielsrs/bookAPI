@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { validateId } from "../../middleware/validation/common/idValidator.js"
-import { validateProgress, validateCreationGoal, validateUpdateGoal } from "../../middleware/validation/user/readingValidators.js"
-import validationResult from "../../middleware/validation/validationResult.js"
+import { validateId } from "../../middlewares/validation/common/idValidator.js"
+import { validateProgress, validateCreationGoal, validateUpdateGoal } from "../../middlewares/validation/user/readingValidators.js"
+import validationResult from "../../middlewares/validation/validationResult.js"
 
 const route = Router()
 
