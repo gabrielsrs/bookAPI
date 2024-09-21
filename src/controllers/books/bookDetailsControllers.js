@@ -5,59 +5,62 @@ class BookDetailsControllers {
         this.bookDetailsServices = new BookDetailsServices()
     }
 
-    getBookNotesController (req, res) {
+    getBookNotesController = async (req, res) => {
         const { id } = req.params
 
-        const result = this.bookDetailsServices.getBookNotesService(id)
+        const result = await this.bookDetailsServices.getBookNotesService({ id })
 
         res.status(200).json({
             "status": "success",
-            ...result
+            ...result.notesCount,
+            items: result.getBookNotesModel
         })
     }
 
-    getBookQuotesController  (req, res) {
+    getBookQuotesController = async (req, res) => {
         const { id } = req.params
 
-        const result = this.bookDetailsServices.getBookQuotesService(id)
+        const result = await this.bookDetailsServices.getBookQuotesService({ id })
 
         res.status(200).json({
             "status": "success",
-            ...result
-        })
-
-    }
-
-    getBookExcerptsController (req, res) {
-        const { id } = req.params
-
-        const result = this.bookDetailsServices.getBookExcerptsService(id)
-
-        res.status(200).json({
-            "status": "success",
-            ...result
+            ...result.quotesCount,
+            items: result.getBookQuotesModel
         })
     }
 
-    getBookBookmarksController (req, res) {
+    getBookExcerptsController = async (req, res) => {
         const { id } = req.params
 
-        const result = this.bookDetailsServices.getBookBookmarksService(id)
+        const result = await this.bookDetailsServices.getBookExcerptsService({ id })
 
         res.status(200).json({
             "status": "success",
-            ...result
+            ...result.excerptsCount,
+            items: result.getBookExcerptsModel
         })
     }
 
-    getBookMetadataController (req, res) {
+    getBookBookmarksController = async (req, res) => {
         const { id } = req.params
 
-        const result = this.bookDetailsServices.getBookMetadataService(id)
+        const result = await this.bookDetailsServices.getBookBookmarksService({ id })
 
         res.status(200).json({
             "status": "success",
-            ...result
+            ...result.bookmarksCount,
+            items: result.getBookBookmarksModel
+        })
+    }
+
+    getBookMetadataController = async (req, res) => {
+        const { id } = req.params
+
+        const result = await this.bookDetailsServices.getBookMetadataService({ id })
+
+        res.status(200).json({
+            "status": "success",
+            "metadata": result
         })
     }
 }

@@ -5,18 +5,19 @@ class BookControllers {
         this.bookService = new BookServices()
     }
 
-    getBookController (req, res) {
+    getBookController = async (req, res) => {
         const { id } = req.params
 
-        const result = this.bookService.getBookService(id)
+        const result = await this.bookService.getBookService({ id })
 
         res.status(200).json({
             "status": "success",
-            ...result
+            ...result.queryCount ,
+            items: result.queryResponse
         })
     }
 
-    createBookController (req, res) {
+    createBookController = async (req, res) => {
         const { 
             title, 
             isbn_10, 
@@ -33,7 +34,7 @@ class BookControllers {
         } = req.body
 
 
-        const result = this.bookService.createBookService()
+        const result = await this.bookService.createBookService()
 
         res.status(200).json({
             "status": "success",
@@ -41,7 +42,7 @@ class BookControllers {
         })
     }
 
-    updateBookController (req, res) {
+    updateBookController = async (req, res) => {
         const { id } = req.params
         const { 
             title, 
@@ -58,7 +59,7 @@ class BookControllers {
             categories
         } = req.body
 
-        const result = this.bookService.updateBookService()
+        const result = await this.bookService.updateBookService()
 
         res.status(200).json({
             "status": "success",
@@ -66,10 +67,10 @@ class BookControllers {
         })
     }
 
-    deleteBookController (req, res) {
+    deleteBookController = async (req, res) => {
         const { id } = req.params
 
-        const result = this.bookService.deleteBookService(id)
+        const result = await this.bookService.deleteBookService(id)
 
         res.status(200).json({
             "status": "success",
