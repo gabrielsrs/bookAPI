@@ -1,20 +1,41 @@
+import { NotesModels } from "../../models/users/notesModels.js";
+
 class NotesServices {
-    getNotesService(req, res) {
-      // Logic for GET /:id/notes/:bookId?
+  constructor () {
+    this.notesModels = new NotesModels()
+  }
+
+  async getNotesService({id, bookId}) {
+    let getNotesModel = null
+
+    if (bookId) {
+      getNotesModel = await this.notesModels.getBookNotesModel({id, bookId})
+    } else {
+      getNotesModel = await this.notesModels.getBooksNotesModel({id})
     }
-  
-    createNoteService(req, res) {
-      // Logic for POST /:id/notes/:bookId
+
+    const queryCount = {
+      count: getNotesModel.length
     }
-  
-    updateNoteService(req, res) {
-      // Logic for PATCH /:id/notes/:noteId
-    }
-  
-    deleteNoteService(req, res) {
-      // Logic for DELETE /:id/notes/:noteId
+
+    return {
+      getNotesModel,
+      queryCount
     }
   }
-  
-  export { NotesServices };
+
+  createNoteService(req, res) {
+    // Logic for POST /:id/notes/:bookId
+  }
+
+  updateNoteService(req, res) {
+    // Logic for PATCH /:id/notes/:noteId
+  }
+
+  deleteNoteService(req, res) {
+    // Logic for DELETE /:id/notes/:noteId
+  }
+}
+
+export { NotesServices };
   

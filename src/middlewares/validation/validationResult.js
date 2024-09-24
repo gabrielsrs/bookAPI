@@ -1,11 +1,11 @@
 import { validationResult } from "express-validator";
 
 export default (req, res, next) => {
-        const result = validationResult(req);
+    const result = validationResult(req);
 
-        if (!result.isEmpty()) {
-            return res.status(400).json({ message: result.array() })
-        }
-
-        next()
+    if (!result.isEmpty()) {
+        return res.status(400).json({ message: result.array() })
     }
+
+    next()
+}

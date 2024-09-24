@@ -1,6 +1,16 @@
+import { ReadingModels } from "../../models/users/readingModels.js"
+
 class ReadingServices {
-    getReadingProgressService(req, res) {
-      // Logic for GET /:id/:bookId/reading/progress
+    constructor() {
+      this.readingModels = new ReadingModels()
+    }
+
+    async getReadingProgressService({id, bookId}) {
+      const getReadingProgressModel = await this.readingModels.getReadingProgressModel({id, bookId})
+
+      return {
+        getReadingProgressService: getReadingProgressModel
+      }
     }
   
     createReadingProgressService(req, res) {
@@ -11,8 +21,16 @@ class ReadingServices {
       // Logic for PUT /:id/:bookId/reading/progress/:progressId
     }
   
-    getReadingGoalsService(req, res) {
-      // Logic for GET /:id/:bookId/reading/goals
+    async getReadingGoalsService({id, bookId}) {
+      const getReadingGoalsModel = await this.readingModels.getReadingGoalsModel({id, bookId})
+      const queryCount = {
+        count: getReadingGoalsModel.length
+      }
+      
+      return {
+        getReadingGoalsService: getReadingGoalsModel,
+        queryCount
+      }
     }
   
     createReadingGoalService(req, res) {

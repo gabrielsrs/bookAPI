@@ -5,14 +5,15 @@ class BookmarksControllers {
     this.bookmarksServices = new BookmarksServices()
   }
 
-  getBookmarksController (req, res) {
+  getBookmarksController = async (req, res) => {
     const { id, bookId } = req.params
 
-    const result = this.bookmarksServices.getBookmarksService()
+    const result = await this.bookmarksServices.getBookmarksService({id, bookId})
 
     res.status(200).json({
         "status": "success",
-        ...result
+        ...result.queryCount,
+        items: result.getBookmarksModel
     })
   }
 

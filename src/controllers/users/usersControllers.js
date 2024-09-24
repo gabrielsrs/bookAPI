@@ -5,14 +5,15 @@ class UsersControllers {
       this.usersServices = new UsersServices()
     }
 
-    getUsersController (req, res) {
+    getUsersController = async (req, res) => {
       const { id } = req.params
 
-      const result = this.usersServices.getUsersService()
+      const result = await this.usersServices.getUsersService({id})
 
       res.status(200).json({
           "status": "success",
-          ...result
+          ...result.queryCount,
+          "items": result.getUsersModel
       })
     }
   

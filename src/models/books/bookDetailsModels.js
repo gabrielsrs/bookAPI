@@ -48,7 +48,7 @@ class BookDetailsModels {
 
     async getBookBookmarksModel ({ id }) {
         const query = `
-            SELECT bookmark.id, bookmark.book_id, bookmark.book_locale_id, bookmark.privacy, lower(book_locale.page)
+            SELECT bookmark.id, lower(book_locale.page) as page, bookmark.book_id, bookmark.privacy 
             FROM bookmark
             LEFT OUTER JOIN book_locale
                 ON bookmark.book_locale_id = book_locale.id

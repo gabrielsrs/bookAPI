@@ -5,14 +5,15 @@ class RatingControllers {
         this.ratingServices = new RatingServices()
     }
 
-    getRatingsController (req, res) {
+    getRatingsController = async (req, res) => {
         const { id } = req.params
 
-        const result = this.ratingServices.getRatingsService(id)
+        const result = await this.ratingServices.getRatingsService({id})
 
         res.status(200).json({
             "status": "success",
-            ...result
+            ...result.queryCount,
+            items: result.getRatingsModel
         })
     }
 

@@ -5,14 +5,15 @@ class ExcerptsControllers {
       this.excerptsServices = new ExcerptsServices()
     }
 
-    getExcerptsController (req, res) {
+    getExcerptsController = async (req, res) => {
       const { id, bookId } = req.params
 
-      const result = this.excerptsServices.getExcerptsService()
+      const result = await this.excerptsServices.getExcerptsService({id, bookId})
 
       res.status(200).json({
           "status": "success",
-          ...result
+          ...result.queryCount,
+          items: result.getExcerptsModel
       })
     }
   

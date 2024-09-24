@@ -5,14 +5,15 @@ class QuotesControllers {
       this.quotesServices = new QuotesServices()
     }
 
-    getQuotesController(req, res) {
+    getQuotesController = async (req, res) => {
       const { id, bookId } = req.params
 
-      const result = this.quotesServices.getQuotesService()
+      const result = await this.quotesServices.getQuotesService({id, bookId})
 
       res.status(200).json({
           "status": "success",
-          ...result
+          ...result.queryCount,
+          items: result.getQuotesModel
       })
     }
   

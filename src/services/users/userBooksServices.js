@@ -1,6 +1,20 @@
+import { UserBooksModels } from "../../models/users/userBooksModels.js";
+
 class UserBooksServices {
-    getUserBooksService(req, res) {
-      // Logic for GET /:id/books
+    constructor () {
+      this.userBooksModels = new UserBooksModels()
+    }
+
+    async getUserBooksService({id}) {
+      const getUserBooksModel = await this.userBooksModels.getUserBooksModel({id})
+      const queryCount = {
+        count: getUserBooksModel.length
+      }
+
+      return {
+        getUserBooksModel,
+        queryCount
+      }
     }
   
     addUserBookService(req, res) {

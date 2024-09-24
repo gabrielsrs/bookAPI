@@ -1,18 +1,19 @@
-import { ListsServices } from "../../services/users/listsServices"
+import { ListsServices } from "../../services/users/listsServices.js"
 
 class ListsControllers {
     constructor () {
       this.listsServices = new ListsServices()
     }
 
-    getListsController (req, res) {
+    getListsController = async (req, res) => {
       const { id, listId } = req.params
 
-      const result = this.listsServices.getListsService()
+      const result = await this.listsServices.getListsService({id, listId})
 
       res.status(200).json({
           "status": "success",
-          ...result
+          ...result.queryCount,
+          items: result.getListsService
       })
     }
   
@@ -73,14 +74,15 @@ class ListsControllers {
       })
     }
   
-    getLikedListsController (req, res) {
-      const { id } = req.params
+    getLikedListsController = async (req, res) => {
+      const { id, listId } = req.params
 
-      const result = this.listsServices.getLikedListsService()
+      const result = await this.listsServices.getLikedListsService({id, listId})
 
       res.status(200).json({
           "status": "success",
-          ...result
+          ...result.queryCount,
+          items: result.getLikedListsService
       })
     }
   
@@ -91,7 +93,7 @@ class ListsControllers {
 
       res.status(200).json({
           "status": "success",
-          ...result
+          
       })
     }
   
@@ -106,14 +108,15 @@ class ListsControllers {
       })
     }
   
-    getFollowedListsController (req, res) {
-      const { id } = req.params
+    getFollowedListsController = async (req, res) => {
+      const { id, listId } = req.params
 
-      const result = this.listsServices.getFollowedListsService()
+      const result = await this.listsServices.getFollowedListsService({id, listId})
 
       res.status(200).json({
           "status": "success",
-          ...result
+          ...result.queryCount,
+          items: result.getFollowedListsService
       })
     }
   

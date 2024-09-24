@@ -5,14 +5,14 @@ class ReadingControllers {
       this.readingServices = new ReadingServices()
     }
 
-    getReadingProgressController(req, res) {
+    getReadingProgressController = async (req, res) => {
       const { id, bookId } = req.params
 
-      const result = this.readingServices.getReadingProgressService()
+      const result = await this.readingServices.getReadingProgressService({id, bookId})
 
       res.status(200).json({
           "status": "success",
-          ...result
+          items: result.getReadingProgressService
       })
     }
   
@@ -40,14 +40,15 @@ class ReadingControllers {
       })
     }
   
-    getReadingGoalsController(req, res) {
+    getReadingGoalsController = async (req, res) => {
       const { id, bookId } = req.params
 
-      const result = this.readingServices.getReadingGoalsService()
+      const result = await this.readingServices.getReadingGoalsService({id, bookId})
 
       res.status(200).json({
           "status": "success",
-          ...result
+          ...result.queryCount,
+          items: result.getReadingGoalsService
       })
     }
   

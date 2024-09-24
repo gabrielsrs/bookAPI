@@ -5,14 +5,15 @@ class RemindersControllers {
       this.remindersServices = new RemindersServices()
     }
 
-    getRemindersController(req, res) {
+    getRemindersController = async (req, res) => {
       const { id } = req.params
 
-      const result = this.remindersServices.getRemindersService()
+      const result = await this.remindersServices.getRemindersService({id})
 
       res.status(200).json({
           "status": "success",
-          ...result
+          ...result.queryCount,
+          items: result.getRemindersService
       })
     }
   

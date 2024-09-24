@@ -5,14 +5,15 @@ class UserBooksControllers {
       this.userBooksServices = new UserBooksServices()
     }
 
-    getUserBooksController(req, res) {
+    getUserBooksController = async (req, res) => {
       const { id } = req.params
 
-      const result = this.userBooksServices.getUserBooksService()
+      const result = await this.userBooksServices.getUserBooksService({id})
 
       res.status(200).json({
           "status": "success",
-          ...result
+          ...result.queryCount,
+          items: result.getUserBooksModel
       })
     }
   

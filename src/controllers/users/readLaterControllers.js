@@ -5,14 +5,15 @@ class ReadLaterControllers {
       this.readLaterServices = new ReadLaterServices()
     }
 
-    getReadLaterController(req, res) {
+    getReadLaterController = async (req, res) => {
       const { id } = req.params
 
-      const result = this.readLaterServices.getReadLaterService()
+      const result = await this.readLaterServices.getReadLaterService({id})
 
       res.status(200).json({
           "status": "success",
-          ...result
+          ...result.queryCount,
+          items: result.getReadLetterModel
       })
     }
   

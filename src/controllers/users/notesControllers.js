@@ -5,14 +5,15 @@ class NotesControllers {
       this.notesServices = new NotesServices()
     }
 
-    getNotesController (req, res) {
+    getNotesController = async (req, res) => {
       const { id, bookId } = req.params
 
-      const result = this.notesServices.getNotesService()
+      const result = await this.notesServices.getNotesService({id, bookId})
 
       res.status(200).json({
           "status": "success",
-          ...result
+          ...result.queryCount,
+          items: result.getNotesModel
       })
     }
   
