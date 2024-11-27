@@ -1,6 +1,28 @@
 import { pool } from "../../db/index.js"
 
 class BookModels {
+    async __selectData(items, table) {
+        const filtered = []
+        for(const item of items) {
+            const query = `
+                SELECT *
+                FROM ${table}
+                WHERE name = '${item.name}'
+            `
+
+            const queryResponse = await pool.query(query)
+
+            if(queryResponse.rows.length) {
+                filtered.push(queryResponse.rows[0])
+            } else {
+                filtered.push(item)
+            }
+        }
+        
+
+        return filtered
+    }
+
     async getBookModel ({ id }) {
         const query = `
             WITH authors AS (SELECT book_author.book_id AS book_id,
@@ -102,186 +124,280 @@ class BookModels {
     }
 
     async createBookModel ({
-        book: {
-            id: bookId,
-            title,
-            isbn_10,
-            isbn_13,
-            pages,
-            language,
-            coverImage,
-            publicationDate,
-            summary,
-            updatedAt: bookUpdatedAt
-        },
-        author: {
-            id: authorId,
-            firstName,
-            lastName,
-            coverImage: authorsCoverImage,
-            bio,
-            updatedAt: authorUpdatedAt
-        },
-        publisher: {
-            id: publisherId,
-            name: publisherName,
-            address,
-            website,
-            updatedAt: publisherUpdatedAt
-        },
-        tag: {
-            id: tagId,
-            name: tagName,
-            type: tagType
-        },
-        category: {
-            id: categoryId,
-            name: categoryName,
-            type: categoryType,
-            description
-        },
+        bookId,
+        title,
+        isbn_10,
+        isbn_13,
+        pages,
+        language,
+        cover_image: coverImage,
+        publication_date: publicationDate,
+        summary,
+        bookUpdatedAt,
+        authors,
+        publishers,
+        tags,
+        categories,
 
+    }) {
+        const client = await pool.connect()
+        try {
+            await client.query('BEGIN')
+                const bookQuery = `
+                    INSERT INTO books
+                    (id, title, isbn_10, isbn_13, pages, language, cover_image, publication_date, summary, updated_at)
+                    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+                    RETURNING *
+                `
+                const bookValues = [
+                    bookId,
+                    title,
+                    isbn_10,
+                    isbn_13,
+                    pages,
+                    language,
+                    coverImage,
+                    publicationDate,
+                    summary,
+                    bookUpdatedAt,
+                ]
+
+                const booksQueryResponse = await client.query(bookQuery, bookValues)
+
+                if (authors.length) {
+                    const authorQuery = `
+                        INSERT INTO authors
+                        (id, first_name, last_name, cover_image, bio, updated_at)
+                        VALUES
+                        ${authors.map(author => {
+                            return `('${author.authorId}', '${author.first_name}', '${author.last_name}', '${author.cover_image}', '${author.bio}', '${author.authorUpdatedAt}')`
+                        })}
+                        RETURNING *
+                    `
+
+                    await client.query(authorQuery)
+                    
+                    const bookAuthorQuery = `
+                        INSERT INTO book_author
+                        (book_id, author_id)
+                        VALUES
+                        ${authors.map(author => {
+                            return `('${bookId}', '${author.authorId}')`
+                        })}
+                        RETURNING *
+                    `
+
+                    await client.query(bookAuthorQuery)
+                }
+                
+                if (publishers.length) {
+                    const publisherQuery = `
+                        INSERT INTO publishers
+                        (id, name, address, website, updated_at)
+                        VALUES
+                        ${publishers.map(publisher => {
+                            return `('${publisher.publisherId}', '${publisher.name}', '${publisher.address}', '${publisher.website}', '${publisher.publisherUpdatedAt}')`
+                        })}
+                        RETURNING *
+                    `
+
+                    await client.query(publisherQuery)
+
+                    const bookPublisherQuery = `
+                        INSERT INTO book_publisher
+                        (book_id, publisher_id)
+                        VALUES
+                        ${publishers.map(publisher => {
+                            return `('${bookId}', '${publisher.publisherId}')`
+                        })}
+                        RETURNING *
+                    `
+
+                    await client.query(bookPublisherQuery)
+                }
+
+                if (tags.length) {
+                    const filteredTags = await this.__selectData(tags, "tags")
+                    
+                    if(filteredTags.length) {
+                        const tagQuery = `
+                            INSERT INTO tags
+                            (id, name, type)
+                            VALUES
+                            ${filteredTags.map((tag, index) => {
+                                if(tag.id == tags[index].id) {
+                                    return `('${tag.id}', '${tag.name}', '${tag.type}')`
+                                }
+                            }).filter(Boolean).join(',')}
+                            RETURNING *
+                        `
+
+                        await client.query(tagQuery)
+                    }
+
+                    const bookTagQuery = `
+                        INSERT INTO book_tag
+                        (book_id, tag_id)
+                        VALUES
+                        ${filteredTags.map(tag => {
+                            return `('${bookId}', '${tag.id}')`
+                        })}
+                        RETURNING *
+                    `
+
+                    await client.query(bookTagQuery)
+                }
+
+                if (categories.length) {
+                    const filteredCategories = await this.__selectData(categories, "categories")
+
+                    const categoryQuery = `
+                        INSERT INTO categories
+                        (id, name, type, description)
+                        VALUES
+                        ${filteredCategories.map((category, index) => {
+                            if(category.id == categories[index].id) {
+                                return `('${category.id}', '${category.name}', '${category.type}', '${category.description}')`
+                            }
+                        }).filter(Boolean).join(',')}
+                        RETURNING *
+                    `
+
+                    await client.query(categoryQuery)
+
+                    const bookCategoryQuery = `
+                        INSERT INTO book_category
+                        (book_id, category_id)
+                        VALUES
+                        ${filteredCategories.map(category => {
+                            return `('${bookId}', '${category.id}')`
+                        })}
+                        RETURNING *
+                    `
+
+                    await client.query(bookCategoryQuery)
+                }
+
+            await client.query('COMMIT')
+
+            return {
+                createdBook: booksQueryResponse.rows[0].id
+            }
+        }
+        catch(err) {
+            console.log(err)
+            client.query('ROLLBACK')
+        }
+        finally {
+            client.release()
+        }
+    }
+    
+    async updateBookModel (book, {
+        authors = [],
+        publishers = [],
+        tags = [],
+        categories = []
     }) {
         const client = await pool.connect()
         try {
             client.query('BEGIN')
             
-            const bookQuery = `
-                INSERT INTO books
-                (id, title, isbn_10, isbn_13, pages, language, cover_image, publication_date, summary, updated_at)
-                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
-                RETURNING *
-            `
-            const bookValues = [
-                bookId,
-                title,
-                isbn_10,
-                isbn_13,
-                pages,
-                language,
-                coverImage,
-                publicationDate,
-                summary,
-                bookUpdatedAt,
-            ]
-
-            const booksQueryResponse = await client.query(bookQuery, bookValues)
-
-            const authorQuery = `
-                    INSERT INTO authors
-                    (id, first_name, last_name, cover_image, bio, updated_at)
-                    VALUES ($1, $2, $3, $4, $5, $6)
-                    RETURNING *
+            if(Object.keys(book).length) {
+                const bookQuery = `
+                    UPDATE books
+                        ${Object.entries(book).map(item => `SET ${item[0]} = ${item[1]}`)}
+                    WHERE id = $1
                 `
-            const authorValues = [
-                authorId,
-                firstName,
-                lastName,
-                authorsCoverImage, // Test refer authors.coverImage
-                bio,
-                authorUpdatedAt
-            ]
 
-            const authorQueryResponse = await client.query(authorQuery, authorValues)
+                const bookValues = [
+                    book.id
+                ]
 
-            const publisherQuery = `
-                    INSERT INTO publisher
-                    (id, name, address, website, updated_at)
-                    VALUES ($1, $2, $3, $4, $5)
-                    RETURNING *
-                `
-            const publisherValues = [
-                publisherId,
-                publisherName,
-                address,
-                website,
-                publisherUpdatedAt
-            ]
+                const booksQueryResponse = await client.query(bookQuery, bookValues)
+            }
 
-            const publisherQueryResponse = await client.query(publisherQuery, publisherValues)
+            if(authors.length) {
+                for(const author in authors) {
+                    const authorQuery = `
+                        UPDATE authors
+                            ${
+                                Object.entries(author).filter(item => item[0] != "id")
+                                .map(item => `SET ${item[0]} = ${item[1]}`)
+                            }
+                        WHERE id = $1
+                    `
 
-            const tagQuery = `
-                    INSERT INTO tags
-                    (id, name, type)
-                    VALUES ($1, $2, $3)
-                    RETURNING *
-                `
-            const tagValues = [
-                tagId,
-                tagName,
-                tagType
-            ]
+                    const authorValues = [
+                        author.id,
+                    ]
 
-            const tagQueryResponse = await client.query(tagQuery, tagValues)
+                    const authorQueryResponse = await client.query(authorQuery, authorValues)
+                }
+            }
 
-            const categoryQuery = `
-                    INSERT INTO tags
-                    (id, name, type, description)
-                    VALUES ($1, $2, $3, $4)
-                    RETURNING *
-                `
-            const categoryValues = [
-                categoryId,
-                categoryName,
-                categoryType,
-                description
-            ]
+            if(publishers.length) {
+                for(const publisher in publishers) {
+                    const publisherQuery = `
+                        UPDATE publishers
+                            ${
+                                Object.entries(publisher).filter(item => item[0] != "id")
+                                .map(item => `SET ${item[0]} = ${item[1]}`)
+                            }
+                        WHERE id = $1
+                    `
 
-            const categoryQueryResponse = await client.query(categoryQuery, categoryValues)
+                    const publisherValues = [
+                        publisher.id,
+                    ]
 
-            const bookAuthorQuery = `
-                    INSERT INTO book_author
-                    (book_id, author_id)
-                    VALUES ($1, $2)
-                    RETURNING *
-                `
-            const bookAuthorValues = [
-                bookId,
-                authorId
-            ]
+                    const publisherQueryResponse = await client.query(publisherQuery, publisherValues)
+                }
+            }
 
-            const bookAuthorQueryResponse = await client.query(bookAuthorQuery, bookAuthorValues)
-            
-            const bookPublisherQuery = `
-                    INSERT INTO book_publisher
-                    (book_id, publisher_id)
-                    VALUES ($1, $2)
-                    RETURNING *
-                `
-            const bookPublisherValues = [
-                bookId,
-                publisherId
-            ]
+            if(tags.length) {
+                for(const tag in tags) {
+                    const tagQuery = `
+                        UPDATE tags
+                            ${
+                                Object.entries(tag).filter(item => item[0] != "id")
+                                .map(item => `SET ${item[0]} = ${item[1]}`)
+                            }
+                        WHERE id = $1
+                    `
 
-            const bookTagQueryResponse = await client.query(bookPublisherQuery, bookPublisherValues)
+                    const tagValues = [
+                        tag.id,
+                    ]
 
-            const bookTagQuery = `
-                    INSERT INTO book_tag
-                    (book_id, tag_id)
-                    VALUES ($1, $2)
-                    RETURNING *
-                `
-            const bookTagValues = [
-                bookId,
-                tagId
-            ]
+                    const tagQueryResponse = await client.query(tagQuery, tagValues)
+                }
+            }
 
-            const bookPublisherQueryResponse = await client.query(bookTagQuery, bookTagValues)
+            if(categories.length) {
+                for(const category in categories) {
+                    const categoryQuery = `
+                        UPDATE categories
+                            ${
+                                Object.entries(category).filter(item => item[0] != "id")
+                                .map(item => `SET ${item[0]} = ${item[1]}`)
+                            }
+                        WHERE id = $1
+                    `
 
-            const bookCategoryQuery = `
-                    INSERT INTO book_category
-                    (book_id, tag_id)
-                    VALUES ($1, $2)
-                    RETURNING *
-                `
-            const bookCategoryValues = [
-                bookId,
-                categoryId
-            ]
+                    const categoryValues = [
+                        category.id,
+                    ]
 
-            const bookCategoryQueryResponse = await client.query(bookCategoryQuery, bookCategoryValues)
+                    const categoryQueryResponse = await client.query(categoryQuery, categoryValues)
+                }
+            }
 
-            client.query('COMMIT')
+            await client.query('COMMIT')
+
+            return {
+                bookId: book.id
+            }
         }
         catch(err) {
             client.query('ROLLBACK')
@@ -291,276 +407,62 @@ class BookModels {
         }
     }
 
-    async updateBookModel ({
-        book: {
-            id: bookId,
-            title,
-            isbn_10,
-            isbn_13,
-            pages,
-            language,
-            coverImage,
-            publicationDate,
-            summary,
-            updatedAt: bookUpdatedAt
-        },
-        author: {
-            id: authorId,
-            firstName,
-            lastName,
-            coverImage: authorsCoverImage,
-            bio,
-            updatedAt: authorUpdatedAt
-        },
-        publisher: {
-            id: publisherId,
-            name: publisherName,
-            address,
-            website,
-            updatedAt: publisherUpdatedAt
-        },
-        tag: {
-            id: tagId,
-            name: tagName,
-            type: tagType
-        },
-        category: {
-            id: categoryId,
-            name: categoryName,
-            type: categoryType,
-            description
-        },
-
-    }) {
+    async deleteBookModel ({id}) {
         const client = await pool.connect()
         try {
             client.query('BEGIN')
-
-            const bookQuery = `
-                UPDATE books
-                    SET title = $2,
-                    SET isbn_10 = $3,
-                    SET isbn_13 = $4,
-                    SET pages = $5,
-                    SET language = $6,
-                    SET coverImage = $7,
-                    SET publication_date = $8,
-                    SET summary = $9,
-                    SET updated_at = $10
-                WHERE id = $1
-            `
-            const bookValues = [
-                bookId,
-                title,
-                isbn_10,
-                isbn_13,
-                pages,
-                language,
-                coverImage,
-                publicationDate,
-                summary,
-                bookUpdatedAt,
-            ]
-
-            const booksQueryResponse = await client.query(bookQuery, bookValues)
-
-            const authorQuery = `
-                UPDATE authors
-                    SET firstName = $2,
-                    SET lastName = $3,
-                    SET coverImage = $4,
-                    SET bio = $5,
-                    SET updated_at = $6
-                WHERE id = $1
-            `
-            const authorValues = [
-                authorId,
-                firstName,
-                lastName,
-                authorsCoverImage, 
-                bio,
-                authorUpdatedAt
-            ]
-
-            const authorQueryResponse = await client.query(authorQuery, authorValues)
-
-            const publisherQuery = `
-                    UPDATE publisher
-                        SET name = $2, 
-                        SET address = $3, 
-                        SET website = $4, 
-                        SET updated_at = $5
-                    WHERE id = $1
-                `
-            const publisherValues = [
-                publisherId,
-                publisherName,
-                address,
-                website,
-                publisherUpdatedAt
-            ]
-
-            const publisherQueryResponse = await client.query(publisherQuery, publisherValues)
-
-            const tagQuery = `
-                    UPDATE tags
-                        SET name = $2, 
-                        SET type = $3
-                    WHERE id = $1
-                `
-            const tagValues = [
-                tagId,
-                tagName,
-                tagType
-            ]
-
-            const tagQueryResponse = await client.query(tagQuery, tagValues)
-
-            const categoryQuery = `
-                    UPDATE tags
-                        SET name = $2, 
-                        SET type = $3, 
-                        SET description = $4
-                    WHERE id = $1
-                `
-            const categoryValues = [
-                categoryId,
-                categoryName,
-                categoryType,
-                description
-            ]
-
-            const categoryQueryResponse = await client.query(categoryQuery, categoryValues)
-
-            client.query('COMMIT')
-        }
-        catch(err) {
-            client.query('ROLLBACK')
-        }
-        finally {
-            client.release()
-        }
-    }
-
-    async deleteBookService ({
-        book: {
-            id: bookId,
-        },
-        author: {
-            id: authorId,
-        },
-        publisher: {
-            id: publisherId,
-        },
-        tag: {
-            id: tagId,
-        },
-        category: {
-            id: categoryId,
-        },
-
-    }) {
-        const client = await pool.connect()
-        try {
-            client.query('BEGIN')
-
-            const bookQuery = `
-                DELETE FROM books
-                WHERE id = $1
-            `
-            const bookValues = [
-                bookId,
-            ]
-
-            const booksQueryResponse = await client.query(bookQuery, bookValues)
-
-            const authorQuery = `
-                    DELETE FROM authors
-                    WHERE id = $1
-                `
-            const authorValues = [
-                authorId,
-            ]
-
-            const authorQueryResponse = await client.query(authorQuery, authorValues)
-
-            const publisherQuery = `
-                    DELETE FROM publisher
-                    WHERE id = $1
-                `
-            const publisherValues = [
-                publisherId,
-            ]
-
-            const publisherQueryResponse = await client.query(publisherQuery, publisherValues)
-
-            const tagQuery = `
-                    DELETE FROM tags
-                    WHERE id = $1
-                `
-            const tagValues = [
-                tagId,
-                tagName,
-                tagType
-            ]
-
-            const tagQueryResponse = await client.query(tagQuery, tagValues)
-
-            const categoryQuery = `
-                    DELETE FROM tags
-                    WHERE id = $1
-                `
-            const categoryValues = [
-                categoryId,
-            ]
-
-            const categoryQueryResponse = await client.query(categoryQuery, categoryValues)
 
             const bookAuthorQuery = `
                     DELETE FROM book_author
-                    WHERE book_id = $1 AND author_id = $2
+                    WHERE book_id = $1
+                    RETURNING author_id
                 `
             const bookAuthorValues = [
-                bookId,
-                authorId
+                id
             ]
 
             const bookAuthorQueryResponse = await client.query(bookAuthorQuery, bookAuthorValues)
             
             const bookPublisherQuery = `
                     DELETE FROM book_publisher
-                    WHERE book_id = $1 AND publisher_id = $2
+                    WHERE book_id = $1
+                    RETURNING publisher_id
                 `
             const bookPublisherValues = [
-                bookId,
-                publisherId
+                id
             ]
 
-            const bookTagQueryResponse = await client.query(bookPublisherQuery, bookPublisherValues)
+            const bookPublisherResponse = await client.query(bookPublisherQuery, bookPublisherValues)
 
-            const bookTagQuery = `
-                    DELETE FROM book_tag
-                    WHERE book_id = $1 AND tag_id = $2
+            const authorQuery = `
+                    DELETE FROM authors
+                    WHERE${bookAuthorQueryResponse.rows.map(authorId => ` id = ${authorId} `).replace(",", "OR")}
                 `
-            const bookTagValues = [
-                bookId,
-                tagId
-            ]
 
-            const bookPublisherQueryResponse = await client.query(bookTagQuery, bookTagValues)
+            const authorQueryResponse = await client.query(authorQuery)
 
-            const bookCategoryQuery = `
-                    DELETE FROM book_category
-                    WHERE book_id = $1 AND tag_id = $2
+            const publisherQuery = `
+                    DELETE FROM publisher
+                    WHERE${bookPublisherResponse.rows.map(publisherId => ` id = ${publisherId} `).replace(",", "OR")}
                 `
-            const bookCategoryValues = [
-                bookId,
-                categoryId
+
+            const publisherQueryResponse = await client.query(publisherQuery)
+
+            const bookQuery = `
+                DELETE FROM books
+                WHERE id = $1
+            `
+            const bookValues = [
+                id,
             ]
 
-            const bookCategoryQueryResponse = await client.query(bookCategoryQuery, bookCategoryValues)
+            const booksQueryResponse = await client.query(bookQuery, bookValues)
 
             client.query('COMMIT')
+
+            return {
+                bookId: id
+            }
         }
         catch(err) {
             client.query('ROLLBACK')

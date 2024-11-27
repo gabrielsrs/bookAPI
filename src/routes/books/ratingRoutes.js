@@ -9,8 +9,8 @@ const route = Router()
 const ratingControllers = new RatingControllers()
 
 route.get("/:id/ratings", validateId, validationResult, ratingControllers.getRatingsController) 
-route.post("/:id/:userId/rating", validateId, ratingCreateValidator, validationResult) 
-route.patch("/:id/:userId/rating/:ratingId", validateId, ratingUpdateValidator, validationResult) 
-route.delete("/:id/:userId/rating/:ratingId", validateId, validationResult) 
+route.post("/:id/:userId/rating", validateId, ratingCreateValidator, validationResult, ratingControllers.createRatingsController) 
+route.patch("/:id/:userId/rating/:ratingId", validateId, ratingUpdateValidator, validationResult, ratingControllers.updateRatingsController) 
+route.delete("/:id/:userId/rating/:ratingId", validateId, validationResult, ratingControllers.deleteRatingsController) 
 
 export default route

@@ -1,5 +1,8 @@
 import { BookModels } from "../../models/books/bookModels.js"
 
+import { ulid } from 'ulid'
+import dayjs from "dayjs"
+
 class BookServices {
     constructor() {
         this.bookModels = new BookModels()
@@ -24,16 +27,93 @@ class BookServices {
         }
     }
 
-    createBookService () {
+    async createBookService(items) {
+        items.authors.forEach((author, index) => {
+            items.authors[index] = {
+                authorId: ulid(),
+                authorUpdatedAt: dayjs().format("YYYY-DD-MM[T]HH:mm:ss"),
+                ...author
+            } 
+        })
 
+        items.publishers.forEach((publisher, index) => {
+            items.publishers[index] = {
+                publisherId: ulid(),
+                publisherUpdatedAt: dayjs().format("YYYY-DD-MM[T]HH:mm:ss"),
+                ...publisher
+            } 
+        })
+
+        items.tags.forEach((tag, index) => {
+            items.tags[index] = {
+                id: ulid(),
+                ...tag
+            } 
+        })
+
+        items.categories.forEach((category, index) => {
+            items.categories[index] = {
+                id: ulid(),
+                ...category
+            } 
+        })
+
+
+        items.bookId = ulid()
+        items.bookUpdatedAt =dayjs().format("YYYY-DD-MM[T]HH:mm:ss")
+
+        const createBookModel = await this.bookModels.createBookModel(items)
+
+        return {
+            ...createBookModel
+        }
     }
 
-    updateBookService () {
+    async updateBookService({id, items}) {
+        const book = {}
+        book.id = id
 
+        for(const item in items) {
+            if(item != "authors" ||
+                item != "publishers" ||
+                item != "tags" ||
+                item != "categories"
+            ) {
+                book.item = items[item]
+                if(!("updatedAt" in book)) {
+                    book.updatedAt = dayjs().format("YYYY-DD-MM[T]HH:mm:ss")
+                }
+            }
+        }
+
+        items.authors.length && items.authors.forEach((author, index) => {
+            items.authors[index] = {
+                authorUpdatedAt: dayjs().format("YYYY-DD-MM[T]HH:mm:ss"),
+                ...author
+            } 
+        })
+
+        items.publishers.length && items.publishers.forEach((publisher, index) => {
+            items.publishers[index] = {
+                publisherUpdatedAt: dayjs().format("YYYY-DD-MM[T]HH:mm:ss"),
+                ...publisher
+            } 
+        })
+
+
+        const updateBookModel = await this.bookModels.updateBookModel(book, items)
+
+        return {
+            ...updateBookModel
+        }
     }
 
-    deleteBookService () {
+    async deleteBookService ({id}) {
+        const deleteBookModel = await this.bookModels.deleteBookModel({id})
 
+        return {
+            ...deleteBookModel
+        }
     }
 }
 

@@ -18,51 +18,27 @@ class BookControllers {
     }
 
     createBookController = async (req, res) => {
-        const { 
-            title, 
-            isbn_10, 
-            isbn_13, 
-            pages, 
-            language, 
-            cover_image, 
-            publication_date, 
-            summary,
-            authors,
-            publishers,
-            tags,
-            categories
-        } = req.body
+        const items = req.body
 
 
-        const result = await this.bookService.createBookService()
+        const result = await this.bookService.createBookService(items)
 
         res.status(200).json({
             "status": "success",
-            ...result
+            "message": "Book created successfully",
+            data: result
         })
     }
 
     updateBookController = async (req, res) => {
         const { id } = req.params
-        const { 
-            title, 
-            isbn_10, 
-            isbn_13, 
-            pages, 
-            language, 
-            cover_image, 
-            publication_date, 
-            summary,
-            authors,
-            publishers,
-            tags,
-            categories
-        } = req.body
+        const items = req.body
 
-        const result = await this.bookService.updateBookService()
+        const result = await this.bookService.updateBookService({id, items})
 
         res.status(200).json({
             "status": "success",
+            "message": "Book updated successfully",
             ...result
         })
     }
@@ -70,7 +46,7 @@ class BookControllers {
     deleteBookController = async (req, res) => {
         const { id } = req.params
 
-        const result = await this.bookService.deleteBookService(id)
+        const result = await this.bookService.deleteBookService({id})
 
         res.status(200).json({
             "status": "success",

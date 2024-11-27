@@ -10,8 +10,8 @@ const route = Router()
 const bookControllers = new BookControllers()
 
 route.get("/:id?", validateId, validationResult, bookControllers.getBookController) 
-route.post("/", validateCreationBook, validationResult) 
-route.patch("/:id", validateId, validateUpdateBook, validationResult) 
-route.delete("/:id", validateId, validationResult, (req, res) => res.json({ param: req.params })) 
+route.post("/", validateCreationBook, validationResult, bookControllers.createBookController) 
+route.patch("/:id", validateId, validateUpdateBook, validationResult, bookControllers.updateBookController) 
+route.delete("/:id", validateId, validationResult, bookControllers.deleteBookController) 
 
 export default route
