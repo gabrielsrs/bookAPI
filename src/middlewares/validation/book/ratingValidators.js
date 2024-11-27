@@ -1,4 +1,4 @@
-import { body } from "express-validator"
+import { body, check } from "express-validator"
 
 const ratingCreateValidator = [
     body("rating")
@@ -12,6 +12,12 @@ const ratingCreateValidator = [
 ]
 
 const ratingUpdateValidator = [
+    body().custom((value, { req }) => {
+        if (Object.keys(req.body).length === 0) {
+            throw new Error('No data informed!');
+        }
+        return true;
+    }),
     body("rating")
         .optional()
         .isInt({ min: 1, max: 5 })

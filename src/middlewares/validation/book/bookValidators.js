@@ -6,9 +6,9 @@ const _isbn_13 = /^(?:978|979)[\ |-]?(?:\d[\ |-]?){10}$/
 
 const validateCreationBook = [
     body("title")
-        .trim()
         .notEmpty()
         .isString()
+        .trim()
         .withMessage("Invalid TITLE format. Title should be a string"),
     body("isbn_10")
         .optional()
@@ -22,63 +22,64 @@ const validateCreationBook = [
         .withMessage("Invalid ISBN_13 format"),
     body("pages")
         .notEmpty()
+        .toInt()
         .isInt()
         .withMessage("Invalid PAGES format. Pages should to be integer"),
     body("language")
-        .trim()
         .notEmpty()
         .isString()
+        .trim()
         .withMessage("Invalid LANGUAGE format. Language should be a string"),
     body(["cover_image", "authors.*.cover_image"])
         .optional()
-        .trim()
         .isString()
+        .trim()
         .withMessage("Invalid COVER IMAGE format. Cover image should be a string"),
     body("publication_date")
-        .trim()
         .notEmpty()
         .isString()
+        .trim()
         .withMessage("Invalid PUBLICATION DATE format. Publication date should be a string"),
     body("summary")
-        .trim()
         .notEmpty()
         .isString()
+        .trim()
         .withMessage("Invalid SUMMARY format. Summary should be a string"),
-    body(["authors.*.first_name", "authors.*.first_name", "publishers.*.name", "tags.*.name", "categories.*.name"])
-        .trim()
+    body(["authors.*.first_name", "authors.*.last_name", "publishers.*.name", "tags.*.name", "categories.*.name"])
         .notEmpty()
         .isString()
+        .trim()
         .withMessage("Invalid NAME format. Name should be a string"),
     body("authors.*.bio")
         .optional()
         .isString()
         .withMessage("Invalid BIO format. Bio should be a string"),
     body("publishers.*.address")
-        .trim()
         .notEmpty()
         .isString()
+        .trim()
         .withMessage("Invalid ADDRESS format. Address should be a string"),
     body("publishers.*.website")
         .optional()
         .isString()
         .withMessage("Invalid WEBSITE format. Name should be a string"),
     body(["tags.*.type", "categories.*.type"])
-        .trim()
         .notEmpty()
         .isString()
+        .trim()
         .withMessage("Invalid TYPE format. Type should be a string"),
     body("categories.*.description")
         .optional()
-        .trim()
         .isString()
+        .trim()
         .withMessage("Invalid DESCRIPTION format. Description should be a string"),
 ]
 
 const validateUpdateBook = [
     body("title")
         .optional()
-        .trim()
         .isString()
+        .trim()
         .withMessage("Invalid TITLE format. Title should be a string"),
     body("isbn_10")
         .optional()
@@ -92,32 +93,33 @@ const validateUpdateBook = [
         .withMessage("Invalid ISBN_13 format"),
     body("pages")
         .optional()
+        .toInt()
         .isInt()
         .withMessage("Invalid PAGES format. Pages should to be integer"),
     body("language")
         .optional()
-        .trim()
         .isString()
+        .trim()
         .withMessage("Invalid LANGUAGE format. Language should be a string"),
     body(["cover_image", "authors.*.cover_image"])
         .optional()
-        .trim()
         .isString()
+        .trim()
         .withMessage("Invalid COVER IMAGE format. Cover image should be a string"),
     body("publication_date")
         .optional()
-        .trim()
         .isString()
+        .trim()
         .withMessage("Invalid PUBLICATION DATE format. Publication date should be a string"),
     body("summary")
         .optional()
-        .trim()
         .isString()
+        .trim()
         .withMessage("Invalid SUMMARY format. Summary should be a string"),
     body(["authors.*.first_name", "authors.*.first_name", "publishers.*.name", "tags.*.name", "categories.*.name"])
         .optional()
-        .trim()
         .isString()
+        .trim()
         .withMessage("Invalid NAME format. Name should be a string"),
     body("authors.*.bio")
         .optional()
@@ -125,8 +127,8 @@ const validateUpdateBook = [
         .withMessage("Invalid BIO format. Bio should be a string"),
     body("publishers.*.address")
         .optional()
-        .trim()
         .isString()
+        .trim()
         .withMessage("Invalid ADDRESS format. Address should be a string"),
     body("publishers.*.website")
         .optional()
@@ -134,13 +136,13 @@ const validateUpdateBook = [
         .withMessage("Invalid WEBSITE format. Name should be a string"),
     body(["tags.*.type", "categories.*.type"])
         .optional()
-        .trim()
         .isString()
+        .trim()
         .withMessage("Invalid TYPE format. Type should be a string"),
     body("categories.*.description")
         .optional()
-        .trim()
         .isString()
+        .trim()
         .withMessage("Invalid DESCRIPTION format. Description should be a string"),
 ]
 
