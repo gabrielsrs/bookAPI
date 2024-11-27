@@ -9,8 +9,8 @@ const route = Router()
 const usersControllers = new UsersControllers()
 
 route.get("/:id?", validateId, validationResult, usersControllers.getUsersController) 
-route.post("/", validateCreationUser, validationResult) 
-route.patch("/:id", validateId, validateUpdateUser, validationResult) 
-route.delete("/:id", validateId, validationResult) 
+route.post("/", validateCreationUser, validationResult, usersControllers.createUserController) 
+route.patch("/:id", validateId, validateUpdateUser, validationResult, usersControllers.updateUserController) 
+route.delete("/:id", validateId, validationResult, usersControllers.deleteUserController) 
 
 export default route

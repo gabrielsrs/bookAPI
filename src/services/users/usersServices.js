@@ -1,5 +1,8 @@
 import { UsersModels } from "../../models/users/usersModels.js"
 
+import { ulid } from 'ulid'
+import dayjs from "dayjs"
+
 class UsersServices {
   constructor() {
     this.usersModels = new UsersModels()
@@ -24,16 +27,39 @@ class UsersServices {
     }
   }
 
-  createUserService(req, res) {
-    // Logic for POST /
+  async createUserService({nickname, description, cover_image}) {
+    const user = {
+      id: ulid(),
+      nickname,
+      description,
+      coverImage: cover_image,
+      updatedAt: dayjs().format("YYYY-DD-MM[T]HH:mm:ss")
+    }
+
+    const createUserModel = await this.usersModels.createUserModel({user})
+
+    return {
+      ...createUserModel
+    }
   }
 
-  updateUserService(req, res) {
-    // Logic for PATCH /:id
+  async updateUserService({
+    id,
+    items
+  }) {
+    const updateUserModel = await this.usersModels.updateUserModel({id, items })
+
+    return {
+      ...updateUserModel
+    }
   }
 
-  deleteUserService(req, res) {
-    // Logic for DELETE /:id
+  async deleteUserService({id}) {
+    const deleteUserModel = await this.usersModels.deleteUserModel({id})
+
+    return {
+      ...deleteUserModel
+    }
   }
 }
   

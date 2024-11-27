@@ -37,6 +37,60 @@ class UsersModels {
 
         return queryResponse.rows
     }
+
+    async createUserModel ({
+        id, 
+        nickname,
+        description,
+        coverImage,
+        updatedAt
+    }) {
+        const query = `
+            INSERT INTO users (id, nickname, cover_image, description, updated_at)
+            VALUES ($1, $2, $3, $4, $5)
+        `
+
+        const values = [
+            id, 
+            nickname,
+            description,
+            coverImage,
+            updatedAt
+        ]
+
+        const userQueryResponse = await pool.query(query, values)
+
+        return userQueryResponse.rows[0]
+    }
+
+    async updateUserModel ({id, items}) {
+        const query = `
+            UPDATE users
+                ${Object.entries(items).map(item => `${item[0]} = ${item[1]}`)}
+            WHERE id = $1
+            RETURNING *
+        `
+
+        const values = [id]
+
+        const userQueryResponse = await pool.query(query, values) 
+
+        return userQueryResponse.rows[0]
+    }
+
+    async deleteUserModel({id}) {
+        const query = `
+            DELETE FROM users
+            WHERE id = $1
+            RETURNING id
+        `
+
+        const values = [id]
+
+        const userQueryResponse = await pool.query(query, values)
+
+        return userQueryResponse.rows[0]
+    }
 }
 
 export { UsersModels }

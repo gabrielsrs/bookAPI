@@ -17,10 +17,10 @@ class UsersControllers {
       })
     }
   
-    createUserController (req, res) {
+    createUserController = async (req, res) => {
       const { nickname, description, cover_image } = req.body
 
-      const result = this.usersServices.createUserService()
+      const result = await this.usersServices.createUserService({nickname, description, cover_image})
 
       res.status(200).json({
           "status": "success",
@@ -28,11 +28,11 @@ class UsersControllers {
       })
     }
   
-    updateUserController (req, res) {
+    updateUserController = async (req, res) => {
       const { id } = req.params
-      const { nickname, description, cover_image } = req.body
+      const items = req.body
 
-      const result = this.usersServices.updateUserService()
+      const result = await this.usersServices.updateUserService({id, items})
 
       res.status(200).json({
           "status": "success",
@@ -40,10 +40,10 @@ class UsersControllers {
       })
     }
   
-    deleteUserController (req, res) {
+    deleteUserController = async (req, res) => {
       const { id } = req.params
 
-      const result = this.usersServices.deleteUserService()
+      const result = await this.usersServices.deleteUserService({id})
 
       res.status(200).json({
           "status": "success",
