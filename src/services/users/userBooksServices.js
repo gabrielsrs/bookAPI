@@ -17,8 +17,8 @@ class UserBooksServices {
       }
     }
   
-    addUserBookService({ id, bookId }) {
-      const addUserBookModel = this.userBooksModels.addUserBookModel({ id, bookId })
+    async addUserBookService({ id, bookId }) {
+      const addUserBookModel = await this.userBooksModels.addUserBookModel({ id, bookId })
 
       return {
         ...addUserBookModel
@@ -26,8 +26,8 @@ class UserBooksServices {
 
     }
   
-    removeUserBookService({ id, bookId }) {
-      const removeUserBookModel = this.userBooksModels.removeUserBookModel({ id, bookId })
+    async removeUserBookService({ id, bookId }) {
+      const removeUserBookModel = await this.userBooksModels.removeUserBookModel({ id, bookId })
 
       return {
         ...removeUserBookModel

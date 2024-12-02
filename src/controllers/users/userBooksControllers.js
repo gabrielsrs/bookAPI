@@ -20,7 +20,7 @@ class UserBooksControllers {
     addUserBookController = async (req, res) => {
       const { id, bookId } = req.params
 
-      const result = this.userBooksServices.addUserBookService({ id, bookId })
+      const result = await this.userBooksServices.addUserBookService({ id, bookId })
 
       res.status(200).json({
           "status": "success",
@@ -31,7 +31,7 @@ class UserBooksControllers {
     removeUserBookController = async (req, res) => {
       const { id, bookId } = req.params
 
-      const result = this.userBooksServices.removeUserBookService({ id, bookId })
+      const result = await this.userBooksServices.removeUserBookService({ id, bookId })
 
       res.status(200).json({
           "status": "success",
