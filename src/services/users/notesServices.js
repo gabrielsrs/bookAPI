@@ -1,4 +1,5 @@
 import { NotesModels } from "../../models/users/notesModels.js";
+import { ulid } from 'ulid'
 
 class NotesServices {
   constructor () {
@@ -24,16 +25,42 @@ class NotesServices {
     }
   }
 
-  createNoteService(req, res) {
-    // Logic for POST /:id/notes/:bookId
+  async createNoteService ({ id, bookId, items }) {
+    items.id = ulid()
+
+    items.privacy || (items.privacy = true)
+
+    items.updatedAt = dayjs().format("YYYY-DD-MM[T]HH:mm:ss")
+
+    const { book_locale: bookLocale } = items
+
+    bookLocale && (bookLocale.id = ulid())
+    
+    const createNoteModel = await this.notesModels.createNoteModel({ id, bookId, items, bookLocale })
+
+    return {
+      ...createNoteModel
+    }
   }
 
-  updateNoteService(req, res) {
-    // Logic for PATCH /:id/notes/:noteId
+  async updateNoteService({ noteId, items }) {
+    const { book_locale: bookLocale } = items
+
+    items.updatedAt = dayjs().format("YYYY-DD-MM[T]HH:mm:ss")
+
+    const updateNoteModel = await this.notesModels.updateNoteModel({ noteId, items, bookLocale })
+
+    return {
+      ...updateNoteModel
+    }
   }
 
-  deleteNoteService(req, res) {
-    // Logic for DELETE /:id/notes/:noteId
+  async deleteNoteService({ noteId }) {
+    const deleteNoteModel = await this.notesModels.deleteNoteModel({ noteId })
+
+    return {
+      ...deleteNoteModel
+    }
   }
 }
 

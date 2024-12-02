@@ -34,6 +34,167 @@ class NotesModels {
         return queryResponse.rows
         
     }
+
+    async createNoteModel ({ id, bookId, items: {
+        id: noteId,
+        content,
+        privacy,
+        updatedAt
+    }, bookLocale: {
+        id: bookLocaleId,
+        page,
+        paragraph_number,
+        chapter_number,
+        word_offset,
+        location_indentifier
+    } }) {
+        const client = await pool.connect()
+
+        try {
+            client.query('BEGIN')
+
+            const noteQuery = `
+                INSERT INTO notes (id, content, privacy, updated_at)
+                VALUES ($1, $2, $3, $4)
+                RETURNING id
+            `
+
+            const noteValues = [noteId, content, privacy, updatedAt]
+
+            const noteQueryResponse = await client.query(noteQuery, noteValues)
+
+            if (bookLocaleId) {
+                const bookLocaleQuery = `
+                    INSERT INTO book_locale (id, page, paragraph_number, chapter_number, word_offset, location_indentifier)
+                    VALUES ($1, $2, $3, $4, $5, $6, $7)
+                    RETURNING id
+                `
+
+                const bookLocaleValues = [bookLocaleId, page, paragraph_number, chapter_number, word_offset, location_indentifier]
+
+                const bookLocaleResponse = await client.query(bookLocaleQuery, bookLocaleValues)
+            }
+
+            const bookNoteQuery = `
+                INSERT INTO book_note (note_id, book_id, user_id, book_locale_id)
+                VALUES ($1, $2, $3, $4)
+                RETURNING note_id
+            `
+
+            const bookNoteValues = [noteId, bookId, id, bookLocaleId]
+
+            const bookNoteResponse = await client.query(bookNoteQuery, bookNoteValues)
+
+            await client.query('COMMIT')
+
+            return noteQueryResponse.rows[0]
+
+        } catch (err) {
+            client.query('ROLLBACK')
+
+        } finally {
+            client.release()
+        }
+    }
+    
+    async updateNoteModel ({ noteId, items, bookLocale}) {
+        const client = await pool.connect()
+
+        try {
+            client.query('BEGIN')
+
+            if (items) {
+                const noteQuery = `
+                    UPDATE notes
+                    ${Object.entries(items).map(item => `${item[0]} = ${item[1]}`)}
+                    WHERE id = $1
+                    RETURNING id
+                `
+
+                const noteValues = [noteId]
+
+                const noteQueryResponse = await client.query(noteQuery, noteValues)
+            }
+
+            if (bookLocale) {
+                const bookLocaleQuery = `
+                    WITH book_locale_id AS (
+                        SELECT book_locale_id FROM book_note WHERE note_id = $1
+                    )
+                    UPDATE book_locale
+                    ${Object.entries(bookLocale).map(item => `${item[0]} = ${item[1]}`)}
+                    WHERE id = book_locale_id
+                    RETURNING id
+                `
+
+                const bookLocaleValues = [noteId]
+
+                const bookLocaleResponse = await client.query(bookLocaleQuery, bookLocaleValues)
+            }
+
+            await client.query('COMMIT')
+
+            return noteId
+
+        } catch (err) {
+            client.query('ROLLBACK')
+
+        } finally {
+            client.release()
+        }
+    }
+    
+    async deleteNoteModel ({ noteId }) {
+        const client = await pool.connect()
+
+        try {
+            client.query('BEGIN')
+
+            const noteQuery = `
+                DELETE FROM notes
+                WHERE id = $1
+                RETURNING id
+            `
+
+            const noteValues = [noteId]
+
+            const noteQueryResponse = await client.query(noteQuery, noteValues)
+
+            const bookLocaleQuery = `
+                WITH book_locale_id AS (
+                    SELECT book_locale_id FROM book_note WHERE note_id = $1
+                )
+                DELETE FROM book_locale
+                WHERE id = book_locale_id
+                RETURNING id
+            `
+
+            const bookLocaleValues = [noteId]
+
+            const bookLocaleResponse = await client.query(bookLocaleQuery, bookLocaleValues)
+
+            const bookNoteQuery = `
+                DELETE FROM book_note
+                WHERE note_id = $1
+                RETURNING note_id 
+            `
+
+            const bookNoteValues = [noteId]
+
+            const bookNoteResponse = await client.query(bookNoteQuery, bookNoteValues)
+
+            await client.query('COMMIT')
+
+            return noteQueryResponse.rows[0]
+
+        } catch (err) {
+            client.query('ROLLBACK')
+
+        } finally {
+            client.release()
+        }
+    }
+    
 }
 
 export { NotesModels }

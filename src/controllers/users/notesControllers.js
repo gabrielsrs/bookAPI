@@ -17,23 +17,11 @@ class NotesControllers {
       })
     }
   
-    createNoteController (req, res) {
+    createNoteController = async (req, res) => {
       const { id, bookId } = req.params
-      const { content, privacy, book_locale } = req.body
+      const items = req.body
 
-      const result = this.notesServices.createNoteService()
-
-      res.status(200).json({
-          "status": "success",
-          ...result
-      })
-    }
-  
-    updateNoteController (req, res) {
-      const { id, noteId } = req.params
-      const { content, privacy, book_locale } = req.body
-
-      const result = this.notesServices.updateNoteService()
+      const result = await this.notesServices.createNoteService({ id, bookId, items })
 
       res.status(200).json({
           "status": "success",
@@ -41,10 +29,22 @@ class NotesControllers {
       })
     }
   
-    deleteNoteController (req, res) {
-      const { id, noteId } = req.params
+    updateNoteController = async (req, res) => {
+      const { noteId } = req.params
+      const items = req.body
 
-      const result = this.notesServices.deleteNoteService()
+      const result = await this.notesServices.updateNoteService({ noteId, items })
+
+      res.status(200).json({
+          "status": "success",
+          ...result
+      })
+    }
+  
+    deleteNoteController = async (req, res) => {
+      const { noteId } = req.params
+
+      const result = await this.notesServices.deleteNoteService({ noteId })
 
       res.status(200).json({
           "status": "success",
