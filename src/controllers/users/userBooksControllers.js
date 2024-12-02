@@ -17,10 +17,10 @@ class UserBooksControllers {
       })
     }
   
-    addUserBookController(req, res) {
+    addUserBookController = async (req, res) => {
       const { id, bookId } = req.params
 
-      const result = this.userBooksServices.addUserBookService()
+      const result = this.userBooksServices.addUserBookService({ id, bookId })
 
       res.status(200).json({
           "status": "success",
@@ -28,10 +28,10 @@ class UserBooksControllers {
       })
     }
   
-    removeUserBookController(req, res) {
+    removeUserBookController = async (req, res) => {
       const { id, bookId } = req.params
 
-      const result = this.userBooksServices.removeUserBookService()
+      const result = this.userBooksServices.removeUserBookService({ id, bookId })
 
       res.status(200).json({
           "status": "success",

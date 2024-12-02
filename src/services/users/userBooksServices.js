@@ -17,12 +17,21 @@ class UserBooksServices {
       }
     }
   
-    addUserBookService(req, res) {
-      // Logic for POST /:id/books/:bookId
+    addUserBookService({ id, bookId }) {
+      const addUserBookModel = this.userBooksModels.addUserBookModel({ id, bookId })
+
+      return {
+        ...addUserBookModel
+      }
+
     }
   
-    removeUserBookService(req, res) {
-      // Logic for DELETE /:id/books/:bookId
+    removeUserBookService({ id, bookId }) {
+      const removeUserBookModel = this.userBooksModels.removeUserBookModel({ id, bookId })
+
+      return {
+        ...removeUserBookModel
+      }
     }
   }
   

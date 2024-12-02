@@ -16,6 +16,34 @@ class UserBooksModels {
 
         return queryResponse.rows
     }
+
+    addUserBookModel({ id, bookId }) {
+        const query = `
+            INSERT INTO book_user (user_id, book_id)
+            VALUES ($1, $2)
+            RETURNING *
+        `
+
+        const values = [id, bookId]
+
+        const queryResponse = pool.query(query, values)
+
+        return queryResponse.rows[0]
+    }
+
+    removeUserBookModel({ id, bookId }){
+        const query = `
+            DELETE FROM book_user
+            WHERE user_id = $1 AND book_id = $2
+            RETURNING *
+        `
+
+        const values = [id, bookId]
+        
+        const queryResponse = pool.query(query, values)
+
+        return queryResponse.rows[0]
+    }
 }
 
 export { UserBooksModels }
