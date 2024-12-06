@@ -24,16 +24,38 @@ class QuotesServices {
     }
   }
 
-  createQuoteService(req, res) {
-    // Logic for POST /:id/quotes/:bookId
+  async createQuoteService({ id, bookId, items }) {
+    items.id = ulid()
+
+    items.privacy || (items.privacy = true)
+
+    const { book_locale: bookLocale } = items
+
+    bookLocale.id = ulid()
+    
+    const createQuoteModel = await this.quotesModels.createQuoteModel({ id, bookId, items, bookLocale })
+
+    return {
+      ...createQuoteModel
+    }
   }
 
-  updateQuoteService(req, res) {
-    // Logic for PATCH /:id/quotes/:quotesId
+  async updateQuoteService({ quoteId, items }) {
+    const { book_locale: bookLocale } = items
+
+    const updateQuoteModel = await this.quotesModels.updateQuoteModel({ quoteId, items, bookLocale })
+
+    return {
+      ...updateQuoteModel
+    }
   }
 
-  deleteQuoteService(req, res) {
-    // Logic for DELETE /:id/quotes/:quotesId
+  async deleteQuoteService({ quoteId }) {
+    const deleteQuoteModel = await this.quotesModels.deleteQuoteModel({ quoteId })
+
+    return {
+      ...deleteQuoteModel
+    }
   }
 }
   

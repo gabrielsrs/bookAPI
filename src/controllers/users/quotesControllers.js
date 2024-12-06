@@ -17,23 +17,11 @@ class QuotesControllers {
       })
     }
   
-    createQuoteController(req, res) {
+    createQuoteController = async (req, res) => {
       const { id, bookId } = req.params
-      const { content, privacy, book_locale } = req.body
+      const items = req.body
 
-      const result = this.quotesServices.createQuoteService()
-
-      res.status(200).json({
-          "status": "success",
-          ...result
-      })
-    }
-  
-    updateQuoteController(req, res) {
-      const { id, quotesId } = req.params
-      const { content, privacy, book_locale } = req.body
-
-      const result = this.quotesServices.updateQuoteService()
+      const result = await this.quotesServices.createQuoteService({ id, bookId, items })
 
       res.status(200).json({
           "status": "success",
@@ -41,10 +29,22 @@ class QuotesControllers {
       })
     }
   
-    deleteQuoteController(req, res) {
-      const { id, quotesId } = req.params
+    updateQuoteController = async (req, res) => {
+      const { quoteId } = req.params
+      const items = req.body
 
-      const result = this.quotesServices.deleteQuoteService()
+      const result = await this.quotesServices.updateQuoteService({ quoteId, items })
+
+      res.status(200).json({
+          "status": "success",
+          ...result
+      })
+    }
+  
+    deleteQuoteController = async (req, res) => {
+      const { quoteId } = req.params
+
+      const result = await this.quotesServices.deleteQuoteService({ quoteId })
 
       res.status(200).json({
           "status": "success",

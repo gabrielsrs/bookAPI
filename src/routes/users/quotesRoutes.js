@@ -10,8 +10,8 @@ const route = Router()
 const quotesControllers = new QuotesControllers()
 
 route.get("/:id/quotes/:bookId?", validateId, validationResult, quotesControllers.getQuotesController)
-route.post("/:id/quotes/:bookId", validateId, validateCreationHighlight, validationResult)
-route.patch("/:id/quotes/:quotesId", validateId, validateUpdateHighlight, validationResult)
-route.delete("/:id/quotes/:quotesId", validateId, validationResult)
+route.post("/:id/quotes/:bookId", validateId, validateCreationHighlight, validationResult, quotesControllers.createQuoteController)
+route.patch("/:id/quotes/:quoteId", validateId, validateUpdateHighlight, validationResult, quotesControllers.updateQuoteController)
+route.delete("/:id/quotes/:quoteId", validateId, validationResult, quotesControllers.deleteQuoteController)
 
 export default route
