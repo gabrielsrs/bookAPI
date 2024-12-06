@@ -17,23 +17,11 @@ class ExcerptsControllers {
       })
     }
   
-    createExcerptsController (req, res) {
+    createExcerptsController = async (req, res) => {
       const { id, bookId } = req.params
-      const { content, privacy, book_locale } = req.body
+      const items = req.body
 
-      const result = this.excerptsServices.createExcerptService()
-
-      res.status(200).json({
-          "status": "success",
-          ...result
-      })
-    }
-  
-    updateExcerptsController (req, res) {
-      const { id, excerptId } = req.params
-      const { content, privacy, book_locale } = req.body
-
-      const result = this.excerptsServices.updateExcerptService()
+      const result = await this.excerptsServices.createExcerptService({ id, bookId, items })
 
       res.status(200).json({
           "status": "success",
@@ -41,10 +29,22 @@ class ExcerptsControllers {
       })
     }
   
-    deleteExcerptsController (req, res) {
-      const { id, excerptId } = req.params
+    updateExcerptsController = async (req, res) => {
+      const { excerptId } = req.params
+      const items = req.body
 
-      const result = this.excerptsServices.deleteExcerptService()
+      const result = await this.excerptsServices.updateExcerptService({ excerptId, items })
+
+      res.status(200).json({
+          "status": "success",
+          ...result
+      })
+    }
+  
+    deleteExcerptsController = async (req, res) => {
+      const { excerptId } = req.params
+
+      const result = this.excerptsServices.deleteExcerptService({ excerptId })
 
       res.status(200).json({
           "status": "success",

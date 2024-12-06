@@ -24,16 +24,38 @@ class ExcerptsServices {
     }
   }
 
-  createExcerptService(req, res) {
-    // Logic for POST /:id/excerpts/:bookId
+  async createExcerptService({ id, bookId, items }) {
+    items.id = ulid()
+
+    items.privacy || (items.privacy = true)
+
+    const { book_locale: bookLocale } = items
+
+    bookLocale.id = ulid()
+    
+    const createExcerptModel = await this.excerptsModels.createExcerptModel({ id, bookId, items, bookLocale })
+
+    return {
+      ...createExcerptModel
+    }
   }
 
-  updateExcerptService(req, res) {
-    // Logic for PATCH /:id/excerpts/:excerptId
+  async updateExcerptService({ excerptId, items }) {
+    const { book_locale: bookLocale } = items
+
+    const updateExcerptModel = await this.excerptsModels.updateExcerptModel({ excerptId, items, bookLocale })
+
+    return {
+      ...updateExcerptModel
+    }
   }
 
-  deleteExcerptService(req, res) {
-    // Logic for DELETE /:id/excerpts/:excerptId
+  async deleteExcerptService({ excerptId }) {
+    const deleteExcerptModel = await this.excerptsModels.deleteExcerptModel({ excerptId })
+
+    return {
+      ...deleteExcerptModel
+    }
   }
 }
 
