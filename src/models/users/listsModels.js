@@ -85,6 +85,129 @@ class ListsModels {
         return queryResponse.rows
     }
 
+    async createListModel({ userId, items: {
+        id: listId,
+        name,
+        description,
+        privacy,
+        updatedAt
+    } }) {
+        const client = pool.connect()
+
+        try {
+            client.query('BEGIN')
+
+            const listQuery = `
+                INSERT INTO lists (id, name, description, privacy, updated_at)
+                VALUES ($1, $2, $3, $4, $5)
+                RETURNING id
+            `
+            
+            const listValues = [listId, name, description, privacy, updatedAt]
+
+            const listQueryResponse = await pool.query(listQuery, listValues)
+            
+            const userListQuery = `
+                INSERT INTO user_lists (user_id, list_id)
+                VALUES ($1, $2)
+                RETURNING id
+            `
+            
+            const userListValues = [userId, listId]
+
+            const userListQueryResponse = await pool.query(userListQuery, userListValues)
+            
+            await client.query('COMMIT')
+
+            return listQueryResponse.rows[0]
+
+        } catch (err) {
+            client.query('ROLLBACK')
+        } finally {
+            client.release()
+        }
+    }
+
+    async updateListModel({ listId, items }) {
+        const query = `
+            UPDATE lists
+            SET ${Object.entries(items).map(item => `${item[0]} = ${item[1]}`)}
+            WHERE id = $1
+            RETURNING id
+        `
+        
+        const values = [listId]
+
+        const queryResponse = await pool.query(query, values)
+
+        return queryResponse.rows[0]
+    }
+
+    async deleteListModel({ listId }) {
+        const client = pool.connect()
+
+        try {
+            client.query('BEGIN')
+
+            const listQuery = `
+                DELETE FROM lists
+                WHERE id = $1
+                RETURNING id
+            `
+            
+            const listValues = [listId]
+
+            const listQueryResponse = await pool.query(listQuery, listValues)
+            
+            const userListQuery = `
+                DELETE FROM user_lists
+                WHERE list_id = $1
+                RETURNING id
+            `
+            
+            const userListValues = [listId]
+
+            const userListQueryResponse = await pool.query(userListQuery, userListValues)
+            
+            await client.query('COMMIT')
+
+            return listQueryResponse.rows[0]
+
+        } catch (err) {
+            client.query('ROLLBACK')
+        } finally {
+            client.release()
+        }
+    }
+
+    async addBookToListModel({ listId, bookId }) {
+        const query = `
+            INSERT INTO list_books (list_id, book_id)
+            VALUES ($1, $2)
+            RETURNING *
+        `
+        
+        const values = [listId, bookId]
+
+        const queryResponse = await pool.query(query, values)
+
+        return queryResponse.rows[0]
+    }
+    
+    async removeBookFromListModel({ listId, bookId }) {
+        const query = `
+            DELETE FROM list_books
+            WHERE list_id = $1 AND book_id = $2
+            RETURNING *
+        `
+        
+        const values = [listId, bookId]
+
+        const queryResponse = await pool.query(query, values)
+
+        return queryResponse.rows[0]
+    }
+
     async getLikedListModel({id, listId}) {
         const query = `
             SELECT 
@@ -153,6 +276,34 @@ class ListsModels {
         return queryResponse.rows
     }
 
+    async likeListModel({ userId, listId }) {
+        const query = `
+            INSERT INTO likes_list (user_id, list_id)
+            VALUES ($1, $2)
+            RETURNING *
+        `
+        
+        const values = [userId, listId]
+
+        const queryResponse = await pool.query(query, values)
+
+        return queryResponse.rows[0]
+    }
+
+    async unlikeListModel({ userId, listId }){
+        const query = `
+            DELETE FROM likes_list
+            WHERE user_id = $1 AND list_id = $2
+            RETURNING *
+        `
+        
+        const values = [userId, listId]
+
+        const queryResponse = await pool.query(query, values)
+
+        return queryResponse.rows[0]
+    }
+
     async getFollowedListModel({id, listId}) {
         const query = `
             SELECT 
@@ -219,6 +370,34 @@ class ListsModels {
         const queryResponse = await pool.query(query, values)
 
         return queryResponse.rows
+    }
+
+    async followListModel({ userId, listId }) {
+        const query = `
+            INSERT INTO list_followed (user_id, list_id)
+            VALUES ($1, $2)
+            RETURNING *
+        `
+        
+        const values = [userId, listId]
+
+        const queryResponse = await pool.query(query, values)
+
+        return queryResponse.rows[0]
+    }
+
+    async unfollowListModel({ userId, listId }) {
+        const query = `
+            DELETE FROM list_followed
+            WHERE user_id = $1 AND list_id = $2
+            RETURNING *
+        `
+        
+        const values = [userId, listId]
+
+        const queryResponse = await pool.query(query, values)
+
+        return queryResponse.rows[0]        
     }
 }
 

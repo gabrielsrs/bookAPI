@@ -1,5 +1,8 @@
 import { ListsModels } from "../../models/users/listsModels.js"
 
+import { ulid } from 'ulid'
+import dayjs from "dayjs"
+
 class ListsServices {
   constructor() {
     this.listsModels = new ListsModels()
@@ -24,24 +27,50 @@ class ListsServices {
     }
   }
 
-  createListService(req, res) {
-    // Logic for POST /:id/lists
+  async createListService({ id:userId, items }) {
+    items.id = ulid()
+    items.privacy || (items.privacy = false)
+    items.updatedAt = dayjs().format("YYYY-DD-MM[T]HH:mm:ss")
+    
+    const createListModel = await this.listsModels.createListModel({ userId, items })
+
+    return {
+      ...createListModel
+    }
   }
 
-  updateListService(req, res) {
-    // Logic for PATCH /:id/lists/:listId
+  async updateListService({ listId, items }) {
+    items.updatedAt = dayjs().format("YYYY-DD-MM[T]HH:mm:ss")
+
+    const updateListModel = await this.listsModels.updateListModel({ listId, items })
+
+    return {
+      ...updateListModel
+    }
   }
 
-  deleteListService(req, res) {
-    // Logic for DELETE /:id/lists/:listId
+  async deleteListService({ listId }) {
+    const deleteListModel = await this.listsModels.deleteListModel({ listId })
+
+    return {
+      ...deleteListModel
+    }
   }
 
-  addBookToListService(req, res) {
-    // Logic for POST /:id/lists/:listId/:bookId
+  async addBookToListService({ listId, bookId }) {
+    const addBookToListModel = await this.listsModels.addBookToListModel({ listId, bookId })
+
+    return {
+      ...addBookToListModel
+    }
   }
 
-  removeBookFromListService(req, res) {
-    // Logic for DELETE /:id/lists/:listId/:bookId
+  async removeBookFromListService({ listId, bookId }) {
+    const removeBookFromListModel = await this.listsModels.removeBookFromListModel({ listId, bookId })
+
+    return {
+      ...removeBookFromListModel
+    }
   }
 
   async getLikedListsService ({id, listId}) {
@@ -63,12 +92,20 @@ class ListsServices {
     }
   }
 
-  likeListService(req, res) {
-    // Logic for POST /:id/lists/like/:listId
+  async likeListService({ id:userId, listId }) {
+    const likeListModel = await this.listsModels.likeListModel({ id, listId })
+
+    return {
+      ...likeListModel
+    }
   }
 
-  unlikeListService(req, res) {
-    // Logic for DELETE /:id/lists/like/:listId
+  async unlikeListService({ id:userId, listId }) {
+    const unlikeListModel = await this.listsModels.unlikeListModel({ id, listId })
+
+    return {
+      ...unlikeListModel
+    }
   }
 
   async getFollowedListsService ({id, listId}) {
@@ -90,12 +127,20 @@ class ListsServices {
     }
   }
 
-  followListService(req, res) {
-    // Logic for POST /:id/lists/follow/:listId
+  async followListService({ id:userId, listId }) {
+    const followListModel = await this.listsModels.followListModel({ userId, listId })
+
+    return {
+      ...followListModel
+    }
   }
 
-  unfollowListService(req, res) {
-    // Logic for DELETE /:id/lists/follow/:listId
+  async unfollowListService({ id:userId, listId }) {
+    const unfollowListModel = await this.listsModels.unfollowListModel({ userId, listId })
+
+    return {
+      ...unfollowListModel
+    }
   }
 }
 

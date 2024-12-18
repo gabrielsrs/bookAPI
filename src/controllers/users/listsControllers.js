@@ -17,23 +17,11 @@ class ListsControllers {
       })
     }
   
-    createListController (req, res) {
+    createListController = async (req, res) => {
       const { id } = req.params
-      const { name, description, privacy } = req.body
+      const items = req.body
 
-      const result = this.listsServices.createListService()
-
-      res.status(200).json({
-          "status": "success",
-          ...result
-      })
-    }
-  
-    updateListController (req, res) {
-      const { id, listId } = req.params
-      const { name, description, privacy } = req.body
-
-      const result = this.listsServices.updateListService()
+      const result = await this.listsServices.createListService({ id, items })
 
       res.status(200).json({
           "status": "success",
@@ -41,21 +29,12 @@ class ListsControllers {
       })
     }
   
-    deleteListController (req, res) {
-      const { id, listId } = req.params
+    updateListController = async (req, res) => {
+      const { listId } = req.params
+      // const { name, description, privacy } = req.body
+      const items = req.body
 
-      const result = this.listsServices.deleteListService()
-
-      res.status(200).json({
-          "status": "success",
-          ...result
-      })
-    }
-  
-    addBookToListController (req, res) {
-      const { id, listId, bookId } = req.params
-
-      const result = this.listsServices.addBookToListService()
+      const result = await this.listsServices.updateListService({ listId, items })
 
       res.status(200).json({
           "status": "success",
@@ -63,10 +42,32 @@ class ListsControllers {
       })
     }
   
-    removeBookFromListController (req, res) {
-      const { id, listId, bookId } = req.params
+    deleteListController = async (req, res) => {
+      const { listId } = req.params
 
-      const result = this.listsServices.removeBookFromListService()
+      const result = await this.listsServices.deleteListService({ listId })
+
+      res.status(200).json({
+          "status": "success",
+          ...result
+      })
+    }
+  
+    addBookToListController = async (req, res) => {
+      const { listId, bookId } = req.params
+
+      const result = this.listsServices.addBookToListService({ listId, bookId })
+
+      res.status(200).json({
+          "status": "success",
+          ...result
+      })
+    }
+  
+    removeBookFromListController = async (req, res) => {
+      const { listId, bookId } = req.params
+
+      const result = await this.listsServices.removeBookFromListService({ listId, bookId })
 
       res.status(200).json({
           "status": "success",
@@ -85,11 +86,13 @@ class ListsControllers {
           items: result.getLikedListsService
       })
     }
+
+
   
-    likeListController (req, res) {
+    likeListController = async (req, res) => {
       const { id, listId } = req.params
 
-      const result = this.listsServices.likeListService()
+      const result = awaitthis.listsServices.likeListService({ id, listId })
 
       res.status(200).json({
           "status": "success",
@@ -97,10 +100,10 @@ class ListsControllers {
       })
     }
   
-    unlikeListController (req, res) {
+    unlikeListController = async (req, res) => {
       const { id, listId } = req.params
 
-      const result = this.listsServices.unlikeListService()
+      const result = awaitthis.listsServices.unlikeListService({ id, listId })
 
       res.status(200).json({
           "status": "success",
@@ -120,10 +123,10 @@ class ListsControllers {
       })
     }
   
-    followListController (req, res) {
+    followListController = async (req, res) => {
       const { id, listId } = req.params
 
-      const result = this.listsServices.followListService()
+      const result = await this.listsServices.followListService({ id, listId })
 
       res.status(200).json({
           "status": "success",
@@ -131,10 +134,10 @@ class ListsControllers {
       })
     }
   
-    unfollowListController (req, res) {
+    unfollowListController = async (req, res) => {
       const { id, listId } = req.params
 
-      const result = this.listsServices.unfollowListService()
+      const result = await this.listsServices.unfollowListService({ id, listId })
 
       res.status(200).json({
           "status": "success",
