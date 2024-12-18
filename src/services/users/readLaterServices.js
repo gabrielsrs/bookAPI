@@ -1,5 +1,8 @@
 import { ReadLaterModels } from "../../models/users/readLaterModels.js";
 
+import { ulid } from 'ulid'
+import dayjs from "dayjs"
+
 class ReadLaterServices {
   constructor() {
     this.readLaterModels = new ReadLaterModels()
@@ -17,12 +20,27 @@ class ReadLaterServices {
     }
   }
 
-  createReadLaterService(req, res) {
-    // Logic for POST /:id/readLater/:bookId
+  async createReadLaterService({ id, bookId, items }) {
+    items.id = ulid()
+    items.userId = id
+    items.bookId = bookId
+    items.updatedAt = dayjs().format("YYYY-DD-MM[T]HH:mm:ss")
+
+    items.privacy || (items.privacy = false)
+
+    const createReadLaterModel = await this.readLaterModels.createReadLaterModel({ items })
+    
+    return {
+      ...createReadLaterModel
+    }
   }
 
-  deleteReadLaterService(req, res) {
-    // Logic for DELETE /:id/readLater/:bookId
+  async deleteReadLaterService({ id: userId, bookId }) {
+    const deleteReadLaterModel = await this.readLaterModels.deleteReadLaterModel({ userId, bookId })
+
+    return { 
+      ...deleteReadLaterModel
+    }
   }
 }
 

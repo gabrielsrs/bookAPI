@@ -17,11 +17,11 @@ class ReadLaterControllers {
       })
     }
   
-    createReadLaterController(req, res) {
+    createReadLaterController = async (req, res) => {
       const { id, bookId } = req.params
-      const { privacy } = req.body
+      const items = req.body
 
-      const result = this.readLaterServices.createReadLaterService()
+      const result = await this.readLaterServices.createReadLaterService({ id, bookId, items })
 
       res.status(200).json({
           "status": "success",
@@ -29,10 +29,10 @@ class ReadLaterControllers {
       })
     }
   
-    deleteReadLaterController(req, res) {
+    deleteReadLaterController = async (req, res) => {
       const { id, bookId } = req.params
 
-      const result = this.readLaterServices.deleteReadLaterService()
+      const result = await this.readLaterServices.deleteReadLaterService({ id, bookId })
 
       res.status(200).json({
           "status": "success",
