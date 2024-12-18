@@ -17,11 +17,11 @@ class BookmarksControllers {
     })
   }
 
-  createBookmarksController (req, res) {
+  createBookmarksController = async (req, res) => {
     const { id, bookId } = req.params
-    const { privacy, book_locale } = req.body
+    const items = req.body
 
-    const result = this.bookmarksServices.createBookmarkService()
+    const result = await this.bookmarksServices.createBookmarkService({ id, bookId, items })
 
     res.status(200).json({
         "status": "success",
@@ -29,10 +29,10 @@ class BookmarksControllers {
     })
   }
 
-  deleteBookmarksController (req, res) {
-    const { id, bookId, bookmarkId } = req.params
+  deleteBookmarksController = async (req, res) => {
+    const { bookmarkId } = req.params
 
-    const result = this.bookmarksServices.deleteBookmarkService()
+    const result = await this.bookmarksServices.deleteBookmarkService({ bookmarkId })
 
     res.status(200).json({
         "status": "success",

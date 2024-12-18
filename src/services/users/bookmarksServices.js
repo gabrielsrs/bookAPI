@@ -1,5 +1,7 @@
 import { BookmarksModels } from "../../models/users/bookmarksModels.js"
 
+import { ulid } from 'ulid'
+
 class BookmarksServices {
   constructor () {
     this.bookmarksModels = new BookmarksModels()
@@ -23,12 +25,31 @@ class BookmarksServices {
       queryCount
     }
   }
-  createBookmarkService (req, res) {
-    // Logic for POST /:id/bookmarks/:bookId
+  async createBookmarkService ({ id, bookId, items }) {
+    items.id = ulid()
+    items.userId = id
+    items.bookId = bookId
+
+    items.privacy || (items.privacy = true)
+    
+    const { book_locale: bookLocale } = items
+
+    bookLocale.id = ulid()
+
+    const createBookmarkModel = await this.bookmarksModels.createBookmarkModel({ items, bookLocale })
+
+    return {
+      ...createBookmarkModel
+    }
+
   }
 
-  deleteBookmarkService (req, res) {
-    // Logic for DELETE /:id/bookmarks/:bookmarkId
+  async deleteBookmarkService ({ bookmarkId }) {
+    const deleteBookmarkModel = await this.bookmarksModels.deleteBookmarkModel({ bookmarkId })
+
+    return {
+      ...deleteBookmarkModel
+    }
   }
 }
 

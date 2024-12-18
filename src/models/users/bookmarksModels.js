@@ -34,6 +34,97 @@ class BookmarksModels {
         return queryResponse.rows
         
     }
+
+    async createBookmarkModel({ items: {
+        id: bookmarkId,
+        userId,
+        bookId,
+        privacy
+    }, bookLocale: {
+        id: bookLocaleId,
+        page,
+        paragraph_number,
+        chapter_number,
+        word_offset,
+        location_indentifier
+    } }) {
+        const client = pool.connect()
+
+        try {
+            client.query('BEGIN')
+    
+            const bookmarkQuery = `
+                INSERT INTO bookmark (id, book_id, user_id, book_locale_id, privacy)
+                VALUES ($1, $2, $3, $4, $5)
+                RETURNING id
+            `
+    
+            const bookmarkValues = [bookmarkId, bookId, userId, bookLocaleId, privacy]
+    
+            const bookmarkQueryResponse = await client.query(bookmarkQuery, bookmarkValues)
+    
+            const bookLocaleQuery = `
+                INSERT INTO book_locale (id, page, paragraph_number, chapter_number, word_offset, location_indentifier)
+                VALUES ($1, $2, $3, $4, $5, $6, $7)
+                RETURNING id
+            `
+    
+            const bookLocaleValues = [bookLocaleId, page, paragraph_number, chapter_number, word_offset, location_indentifier]
+    
+            const bookLocaleResponse = await client.query(bookLocaleQuery, bookLocaleValues)
+    
+            await client.query('COMMIT')
+    
+            return bookmarkQueryResponse.rows[0]
+    
+        } catch (err) {
+            client.query('ROLLBACK')
+    
+        } finally {
+            client.release()
+        }
+    }
+
+    async deleteBookmarkModel({ bookmarkId }) {
+        const client = await pool.connect()
+
+    try {
+        client.query('BEGIN')
+
+        const bookmarkQuery = `
+            DELETE FROM bookmark
+            WHERE id = $1
+            RETURNING id
+        `
+
+        const bookmarkValues = [bookmarkId]
+
+        const bookmarkQueryResponse = await client.query(bookmarkQuery, bookmarkValues)
+
+        const bookLocaleQuery = `
+            WITH book_locale_id AS (
+                SELECT book_locale_id FROM bookmark WHERE id = $1
+            )
+            DELETE FROM book_locale
+            WHERE id = book_locale_id
+            RETURNING id
+        `
+
+        const bookLocaleValues = [bookmarkId]
+
+        const bookLocaleResponse = await client.query(bookLocaleQuery, bookLocaleValues)
+
+        await client.query('COMMIT')
+
+        return bookmarkQueryResponse.rows[0]
+
+    } catch (err) {
+        client.query('ROLLBACK')
+
+    } finally {
+        client.release()
+    }
+    }
 }
 
 export { BookmarksModels }
