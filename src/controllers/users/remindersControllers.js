@@ -17,23 +17,11 @@ class RemindersControllers {
       })
     }
   
-    createReminderController(req, res) {
+    createReminderController = async (req, res) => {
       const { id } = req.params
-      const { name, description, reminder_time, is_active, is_sent } = req.body
+      const items = req.body
 
-      const result = this.remindersServices.createReminderService()
-
-      res.status(200).json({
-          "status": "success",
-          ...result
-      })
-    }
-  
-    updateReminderController(req, res) {
-      const { id, reminderId } = req.params
-      const { name, description, reminder_time, is_active, is_sent } = req.body
-
-      const result = this.remindersServices.updateReminderService()
+      const result = this.remindersServices.createReminderService({ id, items })
 
       res.status(200).json({
           "status": "success",
@@ -41,10 +29,22 @@ class RemindersControllers {
       })
     }
   
-    deleteReminderController(req, res) {
-      const { id, reminderId } = req.params
+    updateReminderController = async (req, res) => {
+      const { reminderId } = req.params
+      const items = req.body
 
-      const result = this.remindersServices.deleteReminderService()
+      const result = this.remindersServices.updateReminderService({ reminderId, items })
+
+      res.status(200).json({
+          "status": "success",
+          ...result
+      })
+    }
+  
+    deleteReminderController = async (req, res) => {
+      const { reminderId } = req.params
+
+      const result = this.remindersServices.deleteReminderService({ reminderId })
 
       res.status(200).json({
           "status": "success",

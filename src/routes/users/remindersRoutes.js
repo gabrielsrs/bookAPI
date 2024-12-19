@@ -10,8 +10,8 @@ const route = Router()
 const remindersControllers = new RemindersControllers()
 
 route.get("/:id/reminders", validateId, validationResult, remindersControllers.getRemindersController) 
-route.post("/:id/reminders", validateId, validateCreationReminder, validationResult) 
-route.patch("/:id/reminders/:reminderId", validateId, validateUpdateReminder, validationResult) 
-route.delete("/:id/reminders/:reminderId", validateId, validationResult) 
+route.post("/:id/reminders", validateId, validateCreationReminder, validationResult, remindersControllers.createReminderController) 
+route.patch("/:id/reminders/:reminderId", validateId, validateUpdateReminder, validationResult, remindersControllers.updateReminderController) 
+route.delete("/:id/reminders/:reminderId", validateId, validationResult, remindersControllers.deleteReminderController) 
 
 export default route
