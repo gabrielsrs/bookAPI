@@ -16,11 +16,11 @@ class ReadingControllers {
       })
     }
   
-    createReadingProgressController(req, res) {
+    createReadingProgressController = async (req, res) => {
       const { id, bookId } = req.params
-      const { privacy, book_locale } = req.body
+      const items = req.body
 
-      const result = this.readingServices.createReadingProgressService()
+      const result = await this.readingServices.createReadingProgressService({ id, bookId, items })
 
       res.status(200).json({
           "status": "success",
@@ -28,11 +28,11 @@ class ReadingControllers {
       })
     }
   
-    updateReadingProgressController(req, res) {
-      const { id, bookId, progressId } = req.params
-      const { privacy, book_locale } = req.body
+    updateReadingProgressController = async (req, res) => {
+      const { progressId } = req.params
+      const items = req.body
 
-      const result = this.readingServices.updateReadingProgressService()
+      const result = await this.readingServices.updateReadingProgressService({ progressId, items })
 
       res.status(200).json({
           "status": "success",
@@ -52,23 +52,11 @@ class ReadingControllers {
       })
     }
   
-    createReadingGoalController(req, res) {
+    createReadingGoalController = async (req, res) => {
       const { id, bookId } = req.params
-      const { name, description, time, end_date, frequency } = req.body
+      const items = req.body
 
-      const result = this.readingServices.createReadingGoalService()
-
-      res.status(200).json({
-          "status": "success",
-          ...result
-      })
-    }
-  
-    updateReadingGoalController(req, res) {
-      const { id, bookId, goalId } = req.params
-      const { name, description, time, end_date, frequency } = req.body
-
-      const result = this.readingServices.updateReadingGoalService()
+      const result = await this.readingServices.createReadingGoalService({ id, bookId, items })
 
       res.status(200).json({
           "status": "success",
@@ -76,10 +64,22 @@ class ReadingControllers {
       })
     }
   
-    deleteReadingGoalController(req, res) {
-      const { id, bookId, goalId } = req.params
+    updateReadingGoalController = async (req, res) => {
+      const { goalId } = req.params
+      const items = req.body
 
-      const result = this.readingServices.deleteReadingGoalService()
+      const result = await this.readingServices.updateReadingGoalService({ goalId, items })
+
+      res.status(200).json({
+          "status": "success",
+          ...result
+      })
+    }
+  
+    deleteReadingGoalController = async (req, res) => {
+      const { goalId } = req.params
+
+      const result = this.readingServices.deleteReadingGoalService({ goalId })
 
       res.status(200).json({
           "status": "success",

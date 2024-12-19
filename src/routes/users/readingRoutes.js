@@ -10,11 +10,11 @@ const route = Router()
 const readingControllers = new ReadingControllers()
 
 route.get("/:id/:bookId/reading/progress", validateId, validationResult, readingControllers.getReadingProgressController) 
-route.post("/:id/:bookId/reading/progress", validateId, validateProgress, validationResult) 
-route.put("/:id/:bookId/reading/progress/:progressId", validateId, validateProgress, validationResult) 
+route.post("/:id/:bookId/reading/progress", validateId, validateProgress, validationResult, readingControllers.createReadingProgressController) 
+route.put("/:id/:bookId/reading/progress/:progressId", validateId, validateProgress, validationResult, readingControllers.updateReadingProgressController) 
 route.get("/:id/:bookId/reading/goals", validateId, validationResult, readingControllers.getReadingGoalsController) 
-route.post("/:id/:bookId/reading/goals", validateId, validateCreationGoal, validationResult) 
-route.patch("/:id/:bookId/reading/goals/:goalId", validateUpdateGoal, validateId, validationResult) 
-route.delete("/:id/:bookId/reading/goals/:goalId", validateId, validationResult) 
+route.post("/:id/:bookId/reading/goals", validateId, validateCreationGoal, validationResult, readingControllers.createReadingGoalController) 
+route.patch("/:id/:bookId/reading/goals/:goalId", validateUpdateGoal, validateId, validationResult, readingControllers.updateReadingGoalController) 
+route.delete("/:id/:bookId/reading/goals/:goalId", validateId, validationResult, readingControllers.deleteReadingGoalController) 
 
 export default route

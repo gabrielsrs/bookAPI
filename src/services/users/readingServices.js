@@ -1,5 +1,8 @@
 import { ReadingModels } from "../../models/users/readingModels.js"
 
+import { ulid } from 'ulid'
+import dayjs from "dayjs"
+
 class ReadingServices {
     constructor() {
       this.readingModels = new ReadingModels()
@@ -13,12 +16,33 @@ class ReadingServices {
       }
     }
   
-    createReadingProgressService(req, res) {
-      // Logic for POST /:id/:bookId/reading/progress
+    async createReadingProgressService({ id:userId, bookId, items }) {
+      items.id = ulid()
+      items.privacy || (items.privacy = false)
+      items.started || (items.started = false)
+      items.finished || (items.finished = false)
+      items.lastReading = dayjs().format("YYYY-DD-MM[T]HH:mm:ss")
+
+      const { book_locale: bookLocale } = items
+      bookLocale.id = ulid()
+
+      const createReadingProgressModel = await this.readingModels.createReadingProgressModel({ userId, bookId, items, bookLocale })
+
+      return {
+        ...createReadingProgressModel
+      }
     }
   
-    updateReadingProgressService(req, res) {
-      // Logic for PUT /:id/:bookId/reading/progress/:progressId
+    async updateReadingProgressService({ progressId, items }) {
+      const { book_locale: bookLocale } = items
+
+      bookLocale && (items.lastReading = dayjs().format("YYYY-DD-MM[T]HH:mm:ss"))
+      
+      const updateReadingProgressModel = await this.readingModels.updateReadingProgressModel({ progressId, items, bookLocale })
+
+      return {
+        ...updateReadingProgressModel
+      }
     }
   
     async getReadingGoalsService({id, bookId}) {
@@ -33,16 +57,58 @@ class ReadingServices {
       }
     }
   
-    createReadingGoalService(req, res) {
-      // Logic for POST /:id/:bookId/reading/goals
+    async createReadingGoalService({ id:userId, bookId, items }) {
+      const { start_time:startTime, end_date:endDate, frequency } = items
+
+      items.goalId = ulid()
+      items.startTime = dayjs(startTime).format("HH:mm:ss")
+      items.endDate = dayjs(endDate).format("YYYY-DD-MM")
+      items.goalUpdatedAt = dayjs().format("YYYY-DD-MM[T]HH:mm:ss")
+
+      frequency.frequencyId = ulid()
+
+      const reminder = {
+        reminderId: ulid(),
+        reminderDatetime: dayjs(items.startTime).subtract(5, 'm'),
+        isActive: true,
+        isSent : false,
+        reminderUpdatedAt: dayjs().format("YYYY-DD-MM[T]HH:mm:ss")
+      }
+
+      const createReadingGoalModel = await this.readingModels.createReadingGoalModel({ userId, bookId, items, frequency, reminder })
+
+      return {
+        ...createReadingGoalModel
+      }
     }
   
-    updateReadingGoalService(req, res) {
-      // Logic for PATCH /:id/:bookId/reading/goals/:goalId
+    async updateReadingGoalService({ goalId, items }) {
+      const { start_time:startTime, end_date:endDate, frequency } = items
+      const reminder = {}
+
+      startTime && (items.startTime = dayjs(startTime).format("HH:mm:ss"))
+      endDate && (items.endDate = dayjs(endDate).format("YYYY-DD-MM"))
+
+      Object.entries(items).filter(item => item[0] !== frequency) && (items.goalUpdatedAt = dayjs().format("YYYY-DD-MM[T]HH:mm:ss"))
+
+      if (startTime) {
+        reminder.reminderDatetime = dayjs(items.startTime).subtract(5, 'm'),
+        reminder.reminderUpdatedAt = dayjs().format("YYYY-DD-MM[T]HH:mm:ss")
+      }
+
+      const updateReadingGoalModel = await this.readingModels.updateReadingGoalModel({ goalId, items, frequency, reminder })
+
+      return {
+        ...updateReadingGoalModel
+      }
     }
   
-    deleteReadingGoalService(req, res) {
-      // Logic for DELETE /:id/:bookId/reading/goals/:goalId
+    async deleteReadingGoalService({ goalId }) {
+      const deleteReadingGoalModel = await this.readingModels.deleteReadingGoalModel({ goalId })
+
+      return {
+        ...deleteReadingGoalModel
+      }
     }
   }
   
