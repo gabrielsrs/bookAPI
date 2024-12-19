@@ -214,16 +214,16 @@ CREATE TABLE "goals" (
   "id" VARCHAR(26) PRIMARY KEY,
   "name" VARCHAR(255) NOT NULL,
   "description" TEXT,
-  "duration" INTERVAL,
-  "start_time" TIME,
-  "end_date" DATE,
+  "duration" INTERVAL, -- NOT NULL MINUTES
+  "start_time" TIME, -- NOT NULL
+  "end_date" DATE, -- NOT NULL
   "updated_at" TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
 CREATE TABLE "frequencies" (
   "id" VARCHAR(26) PRIMARY KEY,
   "frequency_options_id" INT NOT NULL,
-  "marker" JSON
+  "marker" JSON -- options based in frequency_options, like once => 30
 );
 
 CREATE TABLE "frequency_options" (
@@ -259,7 +259,7 @@ CREATE TABLE "reminders" (
   "id" VARCHAR(26) PRIMARY KEY,
   "name" VARCHAR(255) NOT NULL,
   "description" TEXT,
-  "reminder_datetime" TIMESTAMP NOT NULL,
+  "reminder_datetime" TIMESTAMP NOT NULL, -- Create a field to date and another to time in reminder will use date and time and in goal will use just time
   "is_active" BOOL  DEFAULT true,
   "is_sent" BOOL  DEFAULT false,
   "updated_at" TIMESTAMP WITH TIME ZONE DEFAULT NOW()
