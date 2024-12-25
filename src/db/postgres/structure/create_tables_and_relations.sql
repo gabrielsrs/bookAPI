@@ -223,7 +223,7 @@ CREATE TABLE "goals" (
 CREATE TABLE "frequencies" (
   "id" VARCHAR(26) PRIMARY KEY,
   "frequency_options_id" INT NOT NULL,
-  "marker" JSON -- options based in frequency_options, like once => 30
+  "marker" JSON -- options based in frequency_options, like once => day 30
 );
 
 CREATE TABLE "frequency_options" (
