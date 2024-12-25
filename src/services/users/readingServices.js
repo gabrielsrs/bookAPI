@@ -35,6 +35,7 @@ class ReadingServices {
   
     async updateReadingProgressService({ progressId, items }) {
       const { book_locale: bookLocale } = items
+      delete items.book_locale
 
       bookLocale && (items.lastReading = dayjs().format("YYYY-DD-MM[T]HH:mm:ss"))
       
@@ -85,6 +86,7 @@ class ReadingServices {
     async updateReadingGoalService({ goalId, items }) {
       const { start_time:startTime, end_date:endDate, frequency } = items
       const reminder = {}
+      delete items.frequency
 
       startTime && (items.startTime = dayjs(startTime).format("HH:mm:ss"))
       endDate && (items.endDate = dayjs(endDate).format("YYYY-DD-MM"))

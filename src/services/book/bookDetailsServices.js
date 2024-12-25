@@ -58,7 +58,9 @@ class BookDetailsServices {
     async getBookMetadataService ({ id }) {
         const getBookMetadataModel = await this.bookDetailsModels.getBookMetadataModel({ id })
         
-        return getBookMetadataModel
+        return {
+            getBookMetadataModel
+        }
     }
 }
 

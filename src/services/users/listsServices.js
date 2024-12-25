@@ -93,7 +93,7 @@ class ListsServices {
   }
 
   async likeListService({ id:userId, listId }) {
-    const likeListModel = await this.listsModels.likeListModel({ id, listId })
+    const likeListModel = await this.listsModels.likeListModel({ userId, listId })
 
     return {
       ...likeListModel
@@ -101,7 +101,7 @@ class ListsServices {
   }
 
   async unlikeListService({ id:userId, listId }) {
-    const unlikeListModel = await this.listsModels.unlikeListModel({ id, listId })
+    const unlikeListModel = await this.listsModels.unlikeListModel({ userId, listId })
 
     return {
       ...unlikeListModel

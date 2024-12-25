@@ -14,7 +14,7 @@ class BookmarksModels {
 
         const queryResponse = await pool.query(query, values)
 
-        return queryResponse.rows
+        return queryResponse.rows[0]
         
     }
 
@@ -31,7 +31,7 @@ class BookmarksModels {
 
         const queryResponse = await pool.query(query, values)
 
-        return queryResponse.rows
+        return queryResponse.rows[0]
         
     }
 
@@ -46,9 +46,9 @@ class BookmarksModels {
         paragraph_number,
         chapter_number,
         word_offset,
-        location_indentifier
+        location_identifier
     } }) {
-        const client = pool.connect()
+        const client = await pool.connect()
 
         try {
             client.query('BEGIN')
@@ -69,7 +69,7 @@ class BookmarksModels {
                 RETURNING id
             `
     
-            const bookLocaleValues = [bookLocaleId, page, paragraph_number, chapter_number, word_offset, location_indentifier]
+            const bookLocaleValues = [bookLocaleId, page, paragraph_number, chapter_number, word_offset, location_identifier]
     
             const bookLocaleResponse = await client.query(bookLocaleQuery, bookLocaleValues)
     

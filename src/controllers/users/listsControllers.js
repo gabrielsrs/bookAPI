@@ -31,7 +31,6 @@ class ListsControllers {
   
     updateListController = async (req, res) => {
       const { listId } = req.params
-      // const { name, description, privacy } = req.body
       const items = req.body
 
       const result = await this.listsServices.updateListService({ listId, items })
@@ -56,7 +55,7 @@ class ListsControllers {
     addBookToListController = async (req, res) => {
       const { listId, bookId } = req.params
 
-      const result = this.listsServices.addBookToListService({ listId, bookId })
+      const result = await this.listsServices.addBookToListService({ listId, bookId })
 
       res.status(200).json({
           "status": "success",
@@ -92,7 +91,7 @@ class ListsControllers {
     likeListController = async (req, res) => {
       const { id, listId } = req.params
 
-      const result = awaitthis.listsServices.likeListService({ id, listId })
+      const result = await this.listsServices.likeListService({ id, listId })
 
       res.status(200).json({
           "status": "success",
@@ -103,7 +102,7 @@ class ListsControllers {
     unlikeListController = async (req, res) => {
       const { id, listId } = req.params
 
-      const result = awaitthis.listsServices.unlikeListService({ id, listId })
+      const result = await this.listsServices.unlikeListService({ id, listId })
 
       res.status(200).json({
           "status": "success",

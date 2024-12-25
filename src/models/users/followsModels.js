@@ -1,36 +1,49 @@
 import { pool } from "../../db/index.js"
 
 class FollowsModels {
-    async getFollowingModel ({id}) {
-        const query = `
-            SELECT * 
-            FROM users
-            JOIN follows
-                ON users.id = follows.followed_id
-            WHERE follows.following_id = $1
-        `
+    async getFollowsModel ({id}) {
+        const client = await pool.connect()
 
-        const values = [id]
+        try{
+            client.query('BEGIN')
+            
+            const followingQuery = `
+                SELECT * 
+                FROM users
+                JOIN follows
+                    ON users.id = follows.followed_id
+                WHERE follows.following_id = $1
+            `
+    
+            const followingValues = [id]
+    
+            const followingQueryResponse = await pool.query(followingQuery, followingValues)
+    
+            const followerQuery = `
+                SELECT * 
+                FROM users
+                JOIN follows
+                    ON users.id = follows.following_id
+                WHERE follows.followed_id = $1
+            `
+    
+            const followerValues = [id]
+    
+            const followerQueryResponse = await pool.query(followerQuery, followerValues)
+    
+            await client.query('COMMIT')
 
-        const queryResponse = await pool.query(query, values)
+            return {
+                followings: followingQueryResponse.rows[0],
+                followers: followerQueryResponse.rows[0]
 
-        return queryResponse.rows
-    }
+            }
 
-    async getFollowerModel ({id}) {
-        const query = `
-            SELECT * 
-            FROM users
-            JOIN follows
-                ON users.id = follows.following_id
-            WHERE follows.followed_id = $1
-        `
-
-        const values = [id]
-
-        const queryResponse = await pool.query(query, values)
-
-        return queryResponse.rows
+        } catch (err) {
+            client.query('ROLLBACK')
+        } finally {
+            client.release()
+        }
     }
 
     async createFollowModel({ id, follow, followed }){

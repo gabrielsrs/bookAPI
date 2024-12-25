@@ -8,9 +8,8 @@ const route = Router()
 
 const followsControllers = new FollowsControllers()
 
-route.get("/:id/following", validateId, validationResult, followsControllers.getFollowingController)
-route.get("/:id/follower", validateId, validationResult, followsControllers.getFollowerController)
-route.post("/:id/follow/:userId", validateId, validationResult, followsControllers.createFollowController)  
-route.delete("/:id/unfollow/:userId", validateId, validationResult, followsControllers.deleteFollowController)  
+route.get("/:userId/follows", validateId, validationResult, followsControllers.getFollowsController)
+route.post("/:userId/follows/:userId", validateId, validationResult, followsControllers.createFollowController)  
+route.delete("/:userId/follows/:userId", validateId, validationResult, followsControllers.deleteFollowController)  
 
 export default route

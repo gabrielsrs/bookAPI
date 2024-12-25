@@ -16,8 +16,9 @@ class RemindersModels {
 
         const queryResponse = await pool.query(query, values)
 
-        return queryResponse.rows
+        return queryResponse.rows[0]
     }
+    
     async createReminderModel({
         userId, 
         items: {
@@ -47,6 +48,7 @@ class RemindersModels {
             const userReminderQuery = `
                 INSERT INTO user_reminder (user_id, remind_id)
                 VALUES ($1, $2)
+                RETURNING id
             `
 
             const userReminderValues = [userId, id]

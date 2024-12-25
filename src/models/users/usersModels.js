@@ -35,7 +35,7 @@ class UsersModels {
 
         const queryResponse = await pool.query(query)
 
-        return queryResponse.rows
+        return queryResponse.rows[0]
     }
 
     async createUserModel ({
@@ -48,6 +48,7 @@ class UsersModels {
         const query = `
             INSERT INTO users (id, nickname, cover_image, description, updated_at)
             VALUES ($1, $2, $3, $4, $5)
+            RETURNING *
         `
 
         const values = [
@@ -66,7 +67,7 @@ class UsersModels {
     async updateUserModel ({id, items}) {
         const query = `
             UPDATE users
-                ${Object.entries(items).map(item => `${item[0]} = ${item[1]}`)}
+            SET ${Object.entries(items).map(item => `${item[0]} = ${item[1]}`)}
             WHERE id = $1
             RETURNING *
         `

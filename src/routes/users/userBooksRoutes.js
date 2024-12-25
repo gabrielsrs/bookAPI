@@ -8,8 +8,8 @@ const route = Router()
 
 const userBooksControllers = new UserBooksControllers()
 
-route.get("/:id/books", validateId, validationResult, userBooksControllers.getUserBooksController) 
-route.post("/:id/books/:bookId", validateId, validationResult, userBooksControllers.addUserBookController) 
-route.delete("/:id/books/:bookId", validateId, validationResult, userBooksControllers.removeUserBookController) 
+route.get("/:userId/books", validateId, validationResult, userBooksControllers.getUserBooksController) 
+route.post("/:userId/books/:bookId", validateId, validationResult, userBooksControllers.addUserBookController) 
+route.delete("/:userId/books/:bookId", validateId, validationResult, userBooksControllers.removeUserBookController) 
 
 export default route

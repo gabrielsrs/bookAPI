@@ -44,7 +44,7 @@ class ExcerptsControllers {
     deleteExcerptsController = async (req, res) => {
       const { excerptId } = req.params
 
-      const result = this.excerptsServices.deleteExcerptService({ excerptId })
+      const result = await this.excerptsServices.deleteExcerptService({ excerptId })
 
       res.status(200).json({
           "status": "success",

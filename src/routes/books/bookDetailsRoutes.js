@@ -8,10 +8,10 @@ const route = Router()
 
 const bookDetailsControllers = new BookDetailsControllers()
 
-route.get("/:id/notes", validateId, validationResult, bookDetailsControllers.getBookNotesController) 
-route.get("/:id/quotes", validateId, validationResult, bookDetailsControllers.getBookQuotesController) 
-route.get("/:id/excerpts", validateId, validationResult, bookDetailsControllers.getBookExcerptsController) 
-route.get("/:id/bookmark", validateId, validationResult, bookDetailsControllers.getBookBookmarksController) 
-route.get("/:id/metadata", validateId, validationResult, bookDetailsControllers.getBookMetadataController) 
+route.get("/:bookId/notes", validateId, validationResult, bookDetailsControllers.getBookNotesController) 
+route.get("/:bookId/quotes", validateId, validationResult, bookDetailsControllers.getBookQuotesController) 
+route.get("/:bookId/excerpts", validateId, validationResult, bookDetailsControllers.getBookExcerptsController) 
+route.get("/:bookId/bookmark", validateId, validationResult, bookDetailsControllers.getBookBookmarksController) 
+route.get("/:bookId/metadata", validateId, validationResult, bookDetailsControllers.getBookMetadataController) 
 
 export default route

@@ -1,5 +1,7 @@
 import { NotesModels } from "../../models/users/notesModels.js";
+
 import { ulid } from 'ulid'
+import dayjs from "dayjs"
 
 class NotesServices {
   constructor () {
@@ -45,6 +47,7 @@ class NotesServices {
 
   async updateNoteService({ noteId, items }) {
     const { book_locale: bookLocale } = items
+    delete items.book_locale
 
     items.updatedAt = dayjs().format("YYYY-DD-MM[T]HH:mm:ss")
 

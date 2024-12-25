@@ -30,6 +30,7 @@ class RatingModels {
             const rateQuery = `
                 INSERT INTO ratings (id, rating, privacy)
                 VALUES ($1, $2, $3)
+                RETURNING *
             `
             const rateValues = [rate_id, rating, privacy]
 
@@ -38,6 +39,7 @@ class RatingModels {
             const bookRateQuery = `
                 INSERT INTO book_rate (rate_id, book_id, user_id)
                 VALUES ($1, $2, $3)
+                RETURNING *
             `
 
             const bookRateValues = [rate_id, id, userId]
@@ -46,9 +48,7 @@ class RatingModels {
 
             await client.query("COMMIT")
 
-            return {
-                rate: rateQueryResponse
-            }
+            return rateQueryResponse.rows[0]
         }
         catch (err) {
             client.query("ROLLBACK")
@@ -64,8 +64,9 @@ class RatingModels {
     }) {
         const query = `
             UPDATE ratings
-                ${Object.keys(rateData).map(item => `SET ${item} = ${rateData[item]}`)}
+                SET ${Object.keys(rateData).map(item => `${item} = ${rateData[item]}`)}
             WHERE id = $1
+            RETURNING *
         `
 
         const values = [ratingId]
@@ -78,7 +79,7 @@ class RatingModels {
     }
 
     async deleteRatingsModel({ratingId}) {
-        const client = pool.connect()
+        const client = await pool.connect()
 
         try {
             client.query('BEING')
@@ -86,26 +87,27 @@ class RatingModels {
             const rateQuery = `
                 DELETE FROM ratings
                 WHERE id = $id
-                RETURNING *
+                RETURNING id
             `
 
             const rateValues = [ratingId]
 
-            const rateQueryResponse = client.query(rateQuery, rateValues)
+            const rateQueryResponse = await client.query(rateQuery, rateValues)
 
             const bookRateQuery = `
                 DELETE FROM book_rate
                 WHERE rate_id = $1
+                RETURNING rate_id
             `
 
             const bookValues = [ratingId]
 
-            const bookRateQueryResponse = client.query(bookRateQuery, bookValues)
+            const bookRateQueryResponse = await client.query(bookRateQuery, bookValues)
 
-            client.query('COMMIT')
+            await client.query('COMMIT')
 
             return {
-                deletedRate: rateQueryResponse
+                deletedRate: rateQueryResponse.rows[0]
             }
         }
         catch(err) {

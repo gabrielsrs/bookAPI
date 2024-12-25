@@ -7,27 +7,16 @@ class FollowsServices {
       this.followsModels = new FollowsModels()
     }
 
-    async getFollowingService ({id}) {
-      const getFollowingModel = await this.followsModels.getFollowingModel({id})
+    async getFollowsModel ({id}) {
+      const getFollowsModel = await this.followsModels.getFollowsModel({id})
       const queryCount = {
-        count: getFollowingModel.length
+        followingCount: getFollowsModel.followings.length,
+        followerCount: getFollowsModel.followers.length
       }
 
       return {
-        getFollowingModel,
-        queryCount
-      }
-    }
-
-    async getFollowerService ({id}) {
-      const getFollowerModel = await this.followsModels.getFollowerModel({id})
-      const queryCount = {
-        count: getFollowerModel.length
-      }
-
-      return {
-        getFollowerModel,
-        queryCount
+        getFollowsModel,
+        ...queryCount
       }
     }
   

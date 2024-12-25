@@ -1,10 +1,12 @@
 import { RatingModels } from "../../models/books/ratingModels.js"
+
 import { ulid } from "ulid"
 
 class RatingServices {
     constructor () {
         this.ratingModels = new RatingModels()
     }
+    
     async getRatingsService ({id}) {
         const getRatingsModel = await this.ratingModels.getRatingsModel({id})
         const queryCount = {

@@ -9,12 +9,12 @@ const route = Router()
 
 const readingControllers = new ReadingControllers()
 
-route.get("/:id/:bookId/reading/progress", validateId, validationResult, readingControllers.getReadingProgressController) 
-route.post("/:id/:bookId/reading/progress", validateId, validateProgress, validationResult, readingControllers.createReadingProgressController) 
-route.put("/:id/:bookId/reading/progress/:progressId", validateId, validateProgress, validationResult, readingControllers.updateReadingProgressController) 
-route.get("/:id/:bookId/reading/goals", validateId, validationResult, readingControllers.getReadingGoalsController) 
-route.post("/:id/:bookId/reading/goals", validateId, validateCreationGoal, validationResult, readingControllers.createReadingGoalController) 
-route.patch("/:id/:bookId/reading/goals/:goalId", validateUpdateGoal, validateId, validationResult, readingControllers.updateReadingGoalController) 
-route.delete("/:id/:bookId/reading/goals/:goalId", validateId, validationResult, readingControllers.deleteReadingGoalController) 
+route.get("/:userId/reading/:bookId/progress", validateId, validationResult, readingControllers.getReadingProgressController) 
+route.post("/:userId/reading/:bookId/progress", validateId, validateProgress, validationResult, readingControllers.createReadingProgressController) 
+route.put("/:userId/reading/:bookId/progress/:progressId", validateId, validateProgress, validationResult, readingControllers.updateReadingProgressController) 
+route.get("/:userId/reading/:bookId/goals", validateId, validationResult, readingControllers.getReadingGoalsController) 
+route.post("/:userId/reading/:bookId/goals", validateId, validateCreationGoal, validationResult, readingControllers.createReadingGoalController) 
+route.patch("/:userId/reading/:bookId/goals/:goalId", validateUpdateGoal, validateId, validationResult, readingControllers.updateReadingGoalController) 
+route.delete("/:userId/reading/:bookId/goals/:goalId", validateId, validationResult, readingControllers.deleteReadingGoalController) 
 
 export default route

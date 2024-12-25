@@ -20,7 +20,6 @@ class BookControllers {
     createBookController = async (req, res) => {
         const items = req.body
 
-
         const result = await this.bookService.createBookService(items)
 
         res.status(200).json({

@@ -100,20 +100,18 @@ class ReadingModels {
         try {
             client.query('BEGIN')
 
-            if (items.filter(item => item[0] !== "book_locale")) {
-                const readingProgressQuery = `
-                    UPDATE reading_progress
-                    SET ${Object.entries(items).map(item => `${item[0]} = ${item[1]}`)}
-                    WHERE id = $1
-                    RETURNING id
-                `
+            const readingProgressQuery = `
+                UPDATE reading_progress
+                SET ${Object.entries(items).map(item => `${item[0]} = ${item[1]}`)}
+                WHERE id = $1
+                RETURNING id
+            `
 
-                const readingProgressValues = [progressId]
+            const readingProgressValues = [progressId]
 
-                const readingProgressQueryResponse = await client.query(readingProgressQuery, readingProgressValues)
-            }
+            const readingProgressQueryResponse = await client.query(readingProgressQuery, readingProgressValues)
 
-            if(bookLocale) {
+            if(Object.key(bookLocale).length) {
                 const bookLocaleQuery = `
                     WITH book_locale_id AS (
                         SELECT book_locale_id FROM reading_progress WHERE id = $1
@@ -131,7 +129,7 @@ class ReadingModels {
 
             await client.query('COMMIT')
 
-            return readingProgressId
+            return readingProgressQueryResponse.rows[0]
 
         } catch (err) {
             client.query('ROLLBACK')
@@ -282,7 +280,7 @@ class ReadingModels {
         try {
             client.query('BEGIN')
 
-            if (Object.entries(items).filter(item => item[0] !== "frequency")) {
+            if (Object.key(items).length) {
                 const goalQuery = `
                     UPDATE goals
                     SET ${Object.entries(items).map(([key, value]) => `${key} = '${value}'`)}
@@ -296,7 +294,7 @@ class ReadingModels {
 
             }
 
-            if (frequency) {
+            if (Object.key(frequency).length) {
                 const frequencyQuery = `
                     WITH frequency_id AS ( SELECT frequency_id FROM frequency_goal WHERE goal_id = $1 )
                     UPDATE frequencies
@@ -310,7 +308,7 @@ class ReadingModels {
                 const frequencyQueryResponse = await client.query(frequencyQuery, frequencyValues)
             }
 
-            if (reminder) {
+            if (Object.key(reminder).length) {
                 const reminderQuery = `
                     WITH reminder_id AS ( SELECT reminder_id FROM goal_reminder WHERE goal_id = $1 )
                     UPDATE reminders
@@ -363,12 +361,14 @@ class ReadingModels {
             const frequencyGoalQueryResponse = await client.query(frequencyGoalQuery, frequencyGoalValues)
 
             const frequencyQuery = `
+                WITH frequency_id AS 
+                    (SELECT frequency_id FROM frequency_goal WHERE goal_id = $1)
                 DELETE FROM frequencies
-                WHERE id = $1
+                WHERE id = frequency_id
                 RETURNING id
             `
 
-            const frequencyValues = [frequencyGoalQueryResponse.rows[0].frequency_id]
+            const frequencyValues = [goalId]
 
             const frequencyQueryResponse = await client.query(frequencyQuery, frequencyValues)
 

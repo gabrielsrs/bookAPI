@@ -14,7 +14,7 @@ class QuotesModels {
 
         const queryResponse = await pool.query(query, values)
 
-        return queryResponse.rows
+        return queryResponse.rows[0]
         
     }
 
@@ -31,7 +31,7 @@ class QuotesModels {
 
         const queryResponse = await pool.query(query, values)
 
-        return queryResponse.rows
+        return queryResponse.rows[0]
         
     }
 
@@ -100,36 +100,36 @@ class QuotesModels {
     try {
         client.query('BEGIN')
 
-        if (items) {
-            const quoteQuery = `
-                UPDATE quotes
-                ${Object.entries(items).map(item => `${item[0]} = ${item[1]}`)}
-                WHERE id = $1
-                RETURNING id
-            `
-
-            const quoteValues = [quoteId]
-
-            const quoteQueryResponse = await client.query(quoteQuery, quoteValues)
-        }
-
-        const bookLocaleQuery = `
-            WITH book_locale_id AS (
-                SELECT book_locale_id FROM book_quote WHERE quote_id = $1
-            )
-            UPDATE book_locale
-            ${Object.entries(bookLocale).map(item => `${item[0]} = ${item[1]}`)}
-            WHERE id = book_locale_id
+        const quoteQuery = `
+            UPDATE quotes
+            SET ${Object.entries(items).map(item => `${item[0]} = ${item[1]}`)}
+            WHERE id = $1
             RETURNING id
         `
 
-        const bookLocaleValues = [quoteId]
+        const quoteValues = [quoteId]
 
-        const bookLocaleResponse = await client.query(bookLocaleQuery, bookLocaleValues)
+        const quoteQueryResponse = await client.query(quoteQuery, quoteValues)
+
+        if (Object.key(bookLocale).length) {
+            const bookLocaleQuery = `
+                WITH book_locale_id AS (
+                    SELECT book_locale_id FROM book_quote WHERE quote_id = $1
+                )
+                UPDATE book_locale
+                SET ${Object.entries(bookLocale).map(item => `${item[0]} = ${item[1]}`)}
+                WHERE id = book_locale_id
+                RETURNING id
+            `
+
+            const bookLocaleValues = [quoteId]
+
+            const bookLocaleResponse = await client.query(bookLocaleQuery, bookLocaleValues)
+        }
 
         await client.query('COMMIT')
 
-        return quoteId
+        return quoteQueryResponse.rows[0]
 
     } catch (err) {
         client.query('ROLLBACK')

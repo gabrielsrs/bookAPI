@@ -9,8 +9,8 @@ const route = Router()
 
 const readLaterControllers = new ReadLaterControllers()
 
-route.get("/:id/readLater", validateId, validationResult, readLaterControllers.getReadLaterController) 
-route.post("/:id/readLater/:bookId", validateId, validateCreationReadingLater, validationResult, readLaterControllers.createReadLaterController) 
-route.delete("/:id/readLater/:bookId", validateId, validationResult, readLaterControllers.deleteReadLaterController)
+route.get("/:userId/readLater", validateId, validationResult, readLaterControllers.getReadLaterController) 
+route.post("/:userId/readLater/:bookId", validateId, validateCreationReadingLater, validationResult, readLaterControllers.createReadLaterController) 
+route.delete("/:userId/readLater/:bookId", validateId, validationResult, readLaterControllers.deleteReadLaterController)
 
 export default route

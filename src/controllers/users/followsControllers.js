@@ -5,29 +5,18 @@ class FollowsControllers {
       this.followsServices = new FollowsServices()
     }
 
-    getFollowingController = async (req, res) => {
+    getFollowsController = async (req, res) => {
       const { id } = req.params
 
-      const result = await this.followsServices.getFollowingService({id})
+      const result = await this.followsServices.getFollowsService({id})
 
       res.status(200).json({
           "status": "success",
           ...result.queryCount,
-          items: result.getFollowingModel
+          items: result.getFollowsModel
       })
     }
-  
-    getFollowerController = async (req, res) => {
-      const { id } = req.params
 
-      const result = await this.followsServices.getFollowerService({id})
-
-      res.status(200).json({
-          "status": "success",
-          ...result.queryCount,
-          items: result.getFollowerModel
-      })
-    }
 
     createFollowController = async (req, res) => {
       const { id, userId } = req.params

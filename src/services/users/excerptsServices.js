@@ -1,5 +1,7 @@
 import { ExcerptsModels } from "../../models/users/excerptsModels.js";
 
+import { ulid } from "ulid"
+
 class ExcerptsServices {
   constructor () {
     this.excerptsModels = new ExcerptsModels()
@@ -42,6 +44,7 @@ class ExcerptsServices {
 
   async updateExcerptService({ excerptId, items }) {
     const { book_locale: bookLocale } = items
+    delete items.book_locale
 
     const updateExcerptModel = await this.excerptsModels.updateExcerptModel({ excerptId, items, bookLocale })
 

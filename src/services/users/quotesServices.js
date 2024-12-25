@@ -1,5 +1,7 @@
 import { QuotesModels } from "../../models/users/quotesModels.js";
 
+import { ulid } from 'ulid'
+
 class QuotesServices {
   constructor () {
     this.quotesModels = new QuotesModels()
@@ -42,6 +44,7 @@ class QuotesServices {
 
   async updateQuoteService({ quoteId, items }) {
     const { book_locale: bookLocale } = items
+    delete items.book_locale
 
     const updateQuoteModel = await this.quotesModels.updateQuoteModel({ quoteId, items, bookLocale })
 

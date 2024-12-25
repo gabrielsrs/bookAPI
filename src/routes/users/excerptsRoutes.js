@@ -9,9 +9,9 @@ const route = Router()
 
 const excerptsControllers = new ExcerptsControllers()
 
-route.get("/:id/excerpts/:bookId?", validateId, validationResult, excerptsControllers.getExcerptsController)
-route.post("/:id/excerpts/:bookId", validateId, validateCreationHighlight, validationResult, excerptsControllers.createExcerptsController)
-route.patch("/:id/excerpts/:excerptId", validateId, validateUpdateHighlight, validationResult, excerptsControllers.updateExcerptsController)
-route.delete("/:id/excerpts/:excerptsId", validateId, validationResult, excerptsControllers.deleteExcerptsController)
+route.get("/:userId/excerpts/:bookId?", validateId, validationResult, excerptsControllers.getExcerptsController)
+route.post("/:userId/excerpts/:bookId", validateId, validateCreationHighlight, validationResult, excerptsControllers.createExcerptsController)
+route.patch("/:userId/excerpts/:excerptId", validateId, validateUpdateHighlight, validationResult, excerptsControllers.updateExcerptsController)
+route.delete("/:userId/excerpts/:excerptId", validateId, validationResult, excerptsControllers.deleteExcerptsController)
 
 export default route

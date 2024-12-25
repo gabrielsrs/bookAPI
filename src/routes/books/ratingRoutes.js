@@ -8,9 +8,9 @@ import { RatingControllers } from "../../controllers/books/ratingControllers.js"
 const route = Router() 
 const ratingControllers = new RatingControllers()
 
-route.get("/:id/ratings", validateId, validationResult, ratingControllers.getRatingsController) 
-route.post("/:id/:userId/rating", validateId, ratingCreateValidator, validationResult, ratingControllers.createRatingsController) 
-route.patch("/:id/:userId/rating/:ratingId", validateId, ratingUpdateValidator, validationResult, ratingControllers.updateRatingsController) 
-route.delete("/:id/:userId/rating/:ratingId", validateId, validationResult, ratingControllers.deleteRatingsController) 
+route.get("/:bookId/ratings", validateId, validationResult, ratingControllers.getRatingsController) 
+route.post("/:bookId/ratings/:userId", validateId, ratingCreateValidator, validationResult, ratingControllers.createRatingsController) 
+route.patch("/:bookId/ratings/:userId/:ratingId", validateId, ratingUpdateValidator, validationResult, ratingControllers.updateRatingsController) 
+route.delete("/:bookId/ratings/:userId/:ratingId", validateId, validationResult, ratingControllers.deleteRatingsController) 
 
 export default route

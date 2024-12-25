@@ -8,9 +8,9 @@ import { UsersControllers } from "../../controllers/users/usersControllers.js"
 const route = Router()
 const usersControllers = new UsersControllers()
 
-route.get("/:id?", validateId, validationResult, usersControllers.getUsersController) 
+route.get("/:userId?", validateId, validationResult, usersControllers.getUsersController) 
 route.post("/", validateCreationUser, validationResult, usersControllers.createUserController) 
-route.patch("/:id", validateId, validateUpdateUser, validationResult, usersControllers.updateUserController) 
-route.delete("/:id", validateId, validationResult, usersControllers.deleteUserController) 
+route.patch("/:userId", validateId, validateUpdateUser, validationResult, usersControllers.updateUserController) 
+route.delete("/:userId", validateId, validationResult, usersControllers.deleteUserController) 
 
 export default route

@@ -14,7 +14,7 @@ class NotesModels {
 
         const queryResponse = await pool.query(query, values)
 
-        return queryResponse.rows
+        return queryResponse.rows[0]
         
     }
 
@@ -31,7 +31,7 @@ class NotesModels {
 
         const queryResponse = await pool.query(query, values)
 
-        return queryResponse.rows
+        return queryResponse.rows[0]
         
     }
 
@@ -46,7 +46,7 @@ class NotesModels {
         paragraph_number,
         chapter_number,
         word_offset,
-        location_indentifier
+        location_identifier
     } }) {
         const client = await pool.connect()
 
@@ -70,7 +70,7 @@ class NotesModels {
                     RETURNING id
                 `
 
-                const bookLocaleValues = [bookLocaleId, page, paragraph_number, chapter_number, word_offset, location_indentifier]
+                const bookLocaleValues = [bookLocaleId, page, paragraph_number, chapter_number, word_offset, location_identifier]
 
                 const bookLocaleResponse = await client.query(bookLocaleQuery, bookLocaleValues)
             }
@@ -106,7 +106,7 @@ class NotesModels {
             if (items) {
                 const noteQuery = `
                     UPDATE notes
-                    ${Object.entries(items).map(item => `${item[0]} = ${item[1]}`)}
+                    SET ${Object.entries(items).map(item => `${item[0]} = ${item[1]}`)}
                     WHERE id = $1
                     RETURNING id
                 `
@@ -122,7 +122,7 @@ class NotesModels {
                         SELECT book_locale_id FROM book_note WHERE note_id = $1
                     )
                     UPDATE book_locale
-                    ${Object.entries(bookLocale).map(item => `${item[0]} = ${item[1]}`)}
+                    SET ${Object.entries(bookLocale).map(item => `${item[0]} = ${item[1]}`)}
                     WHERE id = book_locale_id
                     RETURNING id
                 `
@@ -134,7 +134,7 @@ class NotesModels {
 
             await client.query('COMMIT')
 
-            return noteId
+            return noteQueryResponse.rows[0]
 
         } catch (err) {
             client.query('ROLLBACK')

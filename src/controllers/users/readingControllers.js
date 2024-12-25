@@ -79,7 +79,7 @@ class ReadingControllers {
     deleteReadingGoalController = async (req, res) => {
       const { goalId } = req.params
 
-      const result = this.readingServices.deleteReadingGoalService({ goalId })
+      const result = await this.readingServices.deleteReadingGoalService({ goalId })
 
       res.status(200).json({
           "status": "success",

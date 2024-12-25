@@ -14,7 +14,7 @@ class ReadLaterModels {
 
         const queryResponse = await pool.query(query, values)
 
-        return queryResponse.rows
+        return queryResponse.rows[0]
     }
 
     async createReadLaterModel({ items: {

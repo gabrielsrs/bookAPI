@@ -21,7 +21,7 @@ class RemindersControllers {
       const { id } = req.params
       const items = req.body
 
-      const result = this.remindersServices.createReminderService({ id, items })
+      const result = await this.remindersServices.createReminderService({ id, items })
 
       res.status(200).json({
           "status": "success",
@@ -33,7 +33,7 @@ class RemindersControllers {
       const { reminderId } = req.params
       const items = req.body
 
-      const result = this.remindersServices.updateReminderService({ reminderId, items })
+      const result = await this.remindersServices.updateReminderService({ reminderId, items })
 
       res.status(200).json({
           "status": "success",
@@ -44,7 +44,7 @@ class RemindersControllers {
     deleteReminderController = async (req, res) => {
       const { reminderId } = req.params
 
-      const result = this.remindersServices.deleteReminderService({ reminderId })
+      const result = await this.remindersServices.deleteReminderService({ reminderId })
 
       res.status(200).json({
           "status": "success",

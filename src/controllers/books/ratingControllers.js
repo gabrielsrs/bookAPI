@@ -21,7 +21,7 @@ class RatingControllers {
         const { id, userId } = req.params
         const { rating, privacy } = req.body
 
-        const result = this.ratingServices.createRatingsService({
+        const result = await this.ratingServices.createRatingsService({
             id,
             userId,
             rating,
@@ -38,7 +38,7 @@ class RatingControllers {
         const { ratingId } = req.params
         const { rating, privacy } = req.body
 
-        const result = this.ratingServices.updateRatingsService({
+        const result = await this.ratingServices.updateRatingsService({
             ratingId,
             rating,
             privacy
@@ -53,7 +53,7 @@ class RatingControllers {
     deleteRatingsController = async (req, res) => {
         const { ratingId } = req.params
 
-        const result = this.ratingServices.deleteRatingsService({ratingId})
+        const result = await this.ratingServices.deleteRatingsService({ratingId})
 
         res.status(200).json({
             "status": "success",

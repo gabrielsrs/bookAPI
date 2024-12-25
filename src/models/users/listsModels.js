@@ -82,7 +82,7 @@ class ListsModels {
 
         const queryResponse = await pool.query(query, values)
 
-        return queryResponse.rows
+        return queryResponse.rows[0]
     }
 
     async createListModel({ userId, items: {
@@ -92,7 +92,7 @@ class ListsModels {
         privacy,
         updatedAt
     } }) {
-        const client = pool.connect()
+        const client = await pool.connect()
 
         try {
             client.query('BEGIN')
@@ -144,10 +144,40 @@ class ListsModels {
     }
 
     async deleteListModel({ listId }) {
-        const client = pool.connect()
+        const client = await pool.connect()
 
         try {
             client.query('BEGIN')
+
+            const bookListQuery = `
+                DELETE FROM list_books
+                WHERE list_id = $1
+                RETURNING id
+            `
+            
+            const bookListValues = [listId]
+
+            const bookListQueryResponse = await pool.query(bookListQuery, bookListValues)
+
+            const likeListQuery = `
+                DELETE FROM likes_list
+                WHERE AND list_id = $1
+                RETURNING id
+            `
+            
+            const likeListValues = [listId]
+
+            const likeListQueryResponse = await pool.query(likeListQuery, likeListValues)
+
+            const followsListQuery = `
+                DELETE FROM list_followed
+                WHERE list_id = $1
+                RETURNING id
+            `
+            
+            const followsListValues = [listId]
+
+            const followsListQueryResponse = await pool.query(followsListQuery, followsListValues)
 
             const listQuery = `
                 DELETE FROM lists
@@ -273,7 +303,7 @@ class ListsModels {
 
         const queryResponse = await pool.query(query, values)
 
-        return queryResponse.rows
+        return queryResponse.rows[0]
     }
 
     async likeListModel({ userId, listId }) {
@@ -369,7 +399,7 @@ class ListsModels {
 
         const queryResponse = await pool.query(query, values)
 
-        return queryResponse.rows
+        return queryResponse.rows[0]
     }
 
     async followListModel({ userId, listId }) {

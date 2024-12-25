@@ -13,7 +13,7 @@ class BookDetailsModels {
         
         const queryResponse = await pool.query(query, values)
 
-        return queryResponse.rows
+        return queryResponse.rows[0]
     }
 
     async getBookQuotesModel ({ id }) {
@@ -28,7 +28,7 @@ class BookDetailsModels {
         
         const queryResponse = await pool.query(query, values)
 
-        return queryResponse.rows
+        return queryResponse.rows[0]
     }
 
     async getBookExcerptsModel ({ id }) {
@@ -43,7 +43,7 @@ class BookDetailsModels {
         
         const queryResponse = await pool.query(query, values)
 
-        return queryResponse.rows
+        return queryResponse.rows[0]
     }
 
     async getBookBookmarksModel ({ id }) {
@@ -58,7 +58,7 @@ class BookDetailsModels {
         
         const queryResponse = await pool.query(query, values)
 
-        return queryResponse.rows
+        return queryResponse.rows[0]
     }
 
     async getBookMetadataModel ({ id }) {
@@ -74,7 +74,7 @@ class BookDetailsModels {
             `
             const bookInfoValues = [id]
             
-            const bookInfoQueryResponse = (await client.query(bookInfo, bookInfoValues))
+            const bookInfoQueryResponse = await client.query(bookInfo, bookInfoValues)
 
             const bookAuthor = `
                 SELECT COUNT(id)
@@ -85,7 +85,7 @@ class BookDetailsModels {
             `
             const bookAuthorValues = [id]
             
-            const bookAuthorQueryResponse = (await client.query(bookAuthor, bookAuthorValues))
+            const bookAuthorQueryResponse = await client.query(bookAuthor, bookAuthorValues)
 
             const bookPublisher = `
                 SELECT COUNT(id)
@@ -96,7 +96,7 @@ class BookDetailsModels {
             `
             const bookPublisherValues = [id]
             
-            const bookPublisherQueryResponse = (await client.query(bookPublisher, bookPublisherValues))
+            const bookPublisherQueryResponse = await client.query(bookPublisher, bookPublisherValues)
 
             const bookTag = `
                 SELECT COUNT(id)
@@ -107,7 +107,7 @@ class BookDetailsModels {
             `
             const bookTagValues = [id]
             
-            const bookTagQueryResponse = (await client.query(bookTag, bookTagValues))
+            const bookTagQueryResponse = await client.query(bookTag, bookTagValues)
 
             const bookCategory = `
                 SELECT COUNT(id)
@@ -118,7 +118,7 @@ class BookDetailsModels {
             `
             const bookCategoryValues = [id]
             
-            const bookCategoryQueryResponse = (await client.query(bookCategory, bookCategoryValues))
+            const bookCategoryQueryResponse = await client.query(bookCategory, bookCategoryValues)
 
             const ratingsQuery = `
                 SELECT COUNT(id) 
@@ -129,7 +129,7 @@ class BookDetailsModels {
             `
             const ratingsValues = [id]
             
-            const ratingsQueryResponse = (await client.query(ratingsQuery, ratingsValues))
+            const ratingsQueryResponse = await client.query(ratingsQuery, ratingsValues)
 
             const notesQuery = `
                 SELECT COUNT(id) 
@@ -140,7 +140,7 @@ class BookDetailsModels {
             `
             const notesValues = [id]
             
-            const notesQueryResponse = (await client.query(notesQuery, notesValues))
+            const notesQueryResponse = await client.query(notesQuery, notesValues)
 
             const quoteQuery = `
                 SELECT COUNT(id) 
@@ -151,7 +151,7 @@ class BookDetailsModels {
             `
             const quoteValues = [id]
             
-            const quoteQueryResponse = (await client.query(quoteQuery, quoteValues))
+            const quoteQueryResponse = await client.query(quoteQuery, quoteValues)
 
             const excerptQuery = `
                 SELECT COUNT(id) 
@@ -162,7 +162,7 @@ class BookDetailsModels {
             `
             const excerptValues = [id]
             
-            const excerptQueryResponse = (await client.query(excerptQuery, excerptValues))
+            const excerptQueryResponse = await client.query(excerptQuery, excerptValues)
 
             const bookmarkQuery = `
                 SELECT COUNT(id) 
@@ -171,7 +171,7 @@ class BookDetailsModels {
             `
             const bookmarkValues = [id]
             
-            const bookmarkQueryResponse = (await client.query(bookmarkQuery, bookmarkValues))
+            const bookmarkQueryResponse = await client.query(bookmarkQuery, bookmarkValues)
 
             const userWithBookQuery = `
                 SELECT COUNT(id) 
@@ -182,7 +182,7 @@ class BookDetailsModels {
             `
             const userWithBookValues = [id]
             
-            const userWithBookQueryResponse = (await client.query(userWithBookQuery, userWithBookValues))
+            const userWithBookQueryResponse = await client.query(userWithBookQuery, userWithBookValues)
 
             const listWithBookQuery = `
                 SELECT COUNT(id) 
@@ -193,7 +193,7 @@ class BookDetailsModels {
             `
             const listWithBookValues = [id]
             
-            const listWithBookQueryResponse = (await client.query(listWithBookQuery, listWithBookValues))
+            const listWithBookQueryResponse = await client.query(listWithBookQuery, listWithBookValues)
 
             const readLaterQuery = `
                 SELECT COUNT(id) 
@@ -202,7 +202,7 @@ class BookDetailsModels {
             `
             const readLaterValues = [id]
             
-            const readLaterQueryResponse = (await client.query(readLaterQuery, readLaterValues))
+            const readLaterQueryResponse = await client.query(readLaterQuery, readLaterValues)
 
             const usersFinishedBookQuery = `
                 SELECT COUNT(id) 
@@ -211,7 +211,7 @@ class BookDetailsModels {
             `
             const usersFinishedBookValues = [id]
             
-            const usersFinishedBookQueryResponse = (await client.query(usersFinishedBookQuery, usersFinishedBookValues))
+            const usersFinishedBookQueryResponse = await client.query(usersFinishedBookQuery, usersFinishedBookValues)
 
             const usersReadingBookQuery = `
                 SELECT COUNT(id) 
@@ -220,9 +220,9 @@ class BookDetailsModels {
             `
             const usersReadingBookValues = [id]
             
-            const usersReadingBookQueryResponse = (await client.query(usersReadingBookQuery, usersReadingBookValues))
+            const usersReadingBookQueryResponse = await client.query(usersReadingBookQuery, usersReadingBookValues)
 
-            client.query('COMMIT')
+            await client.query('COMMIT')
 
             return {
                 bookInfo: {

@@ -9,8 +9,8 @@ const route = Router()
 
 const bookmarksControllers = new BookmarksControllers()
 
-route.get("/:id/bookmarks/:bookId?", validateId, validationResult, bookmarksControllers.getBookmarksController)
-route.post("/:id/bookmarks/:bookId", validateId, validateCreationBookmark, validationResult, bookmarksControllers.createBookmarksController)
-route.delete("/:id/bookmarks/:bookmarkId", validateId, validationResult, bookmarksControllers.deleteBookmarksController)
+route.get("/:userId/bookmarks/:bookId?", validateId, validationResult, bookmarksControllers.getBookmarksController)
+route.post("/:userId/bookmarks/:bookId", validateId, validateCreationBookmark, validationResult, bookmarksControllers.createBookmarksController)
+route.delete("/:userId/bookmarks/:bookmarkId", validateId, validationResult, bookmarksControllers.deleteBookmarksController)
 
 export default route
