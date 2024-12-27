@@ -45,7 +45,7 @@ class QuotesModels {
         paragraph_number,
         chapter_number,
         word_offset,
-        location_indentifier
+        location_identifier
     } }) {
     const client = await pool.connect()
 
@@ -63,12 +63,12 @@ class QuotesModels {
         const quoteQueryResponse = await client.query(quoteQuery, quoteValues)
 
         const bookLocaleQuery = `
-            INSERT INTO book_locale (id, page, paragraph_number, chapter_number, word_offset, location_indentifier)
+            INSERT INTO book_locale (id, page, paragraph_number, chapter_number, word_offset, location_identifier)
             VALUES ($1, $2, $3, $4, $5, $6, $7)
             RETURNING id
         `
 
-        const bookLocaleValues = [bookLocaleId, page, paragraph_number, chapter_number, word_offset, location_indentifier]
+        const bookLocaleValues = [bookLocaleId, page, paragraph_number, chapter_number, word_offset, location_identifier]
 
         const bookLocaleResponse = await client.query(bookLocaleQuery, bookLocaleValues)
 

@@ -127,7 +127,7 @@ CREATE TABLE "book_locale" (
   "paragraph_number" INT4RANGE,
   "chapter_number" INT4RANGE,
   "word_offset" INT4RANGE,
-  "location_indentifier" JSON -- location_identifier
+  "location_identifier" JSON
 );
 
 CREATE TABLE "bookmark" (
@@ -214,9 +214,9 @@ CREATE TABLE "goals" (
   "id" VARCHAR(26) PRIMARY KEY,
   "name" VARCHAR(255) NOT NULL,
   "description" TEXT,
-  "duration" INTERVAL, -- NOT NULL MINUTES
-  "start_time" TIME, -- NOT NULL
-  "end_date" DATE, -- NOT NULL
+  "duration" INTERVAL NOT NULL, -- MINUTES
+  "start_time" TIME NOT NULL,
+  "end_date" DATE NOT NULL,
   "updated_at" TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
@@ -259,7 +259,8 @@ CREATE TABLE "reminders" (
   "id" VARCHAR(26) PRIMARY KEY,
   "name" VARCHAR(255) NOT NULL,
   "description" TEXT,
-  "reminder_datetime" TIMESTAMP NOT NULL, -- Create a field to date and another to time in reminder will use date and time and in goal will use just time
+  "reminder_date" DATE,
+  "reminder_time" TIME NOT NULL,
   "is_active" BOOL  DEFAULT true,
   "is_sent" BOOL  DEFAULT false,
   "updated_at" TIMESTAMP WITH TIME ZONE DEFAULT NOW()

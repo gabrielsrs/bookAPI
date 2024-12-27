@@ -25,7 +25,8 @@ class RemindersModels {
             id,
             name,
             description,
-            reminder_time: reminderTime,
+            reminderDate,
+            reminderTime,
             is_active: isActive,
             is_sent: isActive,
         }
@@ -36,12 +37,12 @@ class RemindersModels {
             client.query('BEGIN')
 
             const reminderQuery = `
-                INSERT INTO reminders (id, name, description, reminder_time, is_active, is_sent)
+                INSERT INTO reminders (id, name, description, reminderDate, reminder_time, is_active, is_sent)
                 VALUES ($1, $2, $3, $4, $5, $6)
                 RETURNING id
             `
 
-            const reminderValues = [id, name, description, reminderTime, isActive, isSent]
+            const reminderValues = [id, name, description, reminderDate, reminderTime, isActive, isSent]
 
             const reminderResponse = await client.query(reminderQuery, reminderValues)
 

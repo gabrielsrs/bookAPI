@@ -70,7 +70,7 @@ class ReadingServices {
 
       const reminder = {
         reminderId: ulid(),
-        reminderDatetime: dayjs(items.startTime).subtract(5, 'm'),
+        reminderTime: dayjs(items.startTime).subtract(5, 'm'),
         isActive: true,
         isSent : false,
         reminderUpdatedAt: dayjs().format("YYYY-DD-MM[T]HH:mm:ss")
@@ -94,7 +94,7 @@ class ReadingServices {
       Object.entries(items).filter(item => item[0] !== frequency) && (items.goalUpdatedAt = dayjs().format("YYYY-DD-MM[T]HH:mm:ss"))
 
       if (startTime) {
-        reminder.reminderDatetime = dayjs(items.startTime).subtract(5, 'm'),
+        reminder.reminder_time = dayjs(items.startTime).subtract(5, 'm'),
         reminder.reminderUpdatedAt = dayjs().format("YYYY-DD-MM[T]HH:mm:ss")
       }
 

@@ -65,7 +65,7 @@ class NotesModels {
 
             if (bookLocaleId) {
                 const bookLocaleQuery = `
-                    INSERT INTO book_locale (id, page, paragraph_number, chapter_number, word_offset, location_indentifier)
+                    INSERT INTO book_locale (id, page, paragraph_number, chapter_number, word_offset, location_identifier)
                     VALUES ($1, $2, $3, $4, $5, $6, $7)
                     RETURNING id
                 `

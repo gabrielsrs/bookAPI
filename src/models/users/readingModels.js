@@ -22,7 +22,7 @@ class ReadingModels {
                     WHEN lower(word_offset) = upper(word_offset) - 1 THEN ARRAY[lower(word_offset)]
                     ELSE ARRAY[lower(word_offset), upper(word_offset) - 1]
                 END AS word_offset,
-                book_locale.location_indentifier,
+                book_locale.location_identifier,
                 reading_progress.user_id,
                 reading_progress.book_id
             FROM reading_progress
@@ -54,7 +54,7 @@ class ReadingModels {
             paragraph_number,
             chapter_number,
             word_offset,
-            location_indentifier
+            location_identifier
         }
     }) {
         const client = await pool.connect()
@@ -73,12 +73,12 @@ class ReadingModels {
             const readingProgressQueryResponse = await client.query(readingProgressQuery, readingProgressValues)
 
             const bookLocaleQuery = `
-                INSERT INTO book_locale (id, page, paragraph_number, chapter_number, word_offset, location_indentifier)
+                INSERT INTO book_locale (id, page, paragraph_number, chapter_number, word_offset, location_identifier)
                 VALUES ($1, $2, $3, $4, $5, $6, $7)
                 RETURNING id
             `
 
-            const bookLocaleValues = [bookLocaleId, page, paragraph_number, chapter_number, word_offset, location_indentifier]
+            const bookLocaleValues = [bookLocaleId, page, paragraph_number, chapter_number, word_offset, location_identifier]
 
             const bookLocaleResponse = await client.query(bookLocaleQuery, bookLocaleValues)
 
@@ -182,7 +182,8 @@ class ReadingModels {
         }, 
         reminder: {
             reminderId,
-            reminderDatetime,
+            reminderDate = undefined,
+            reminderTime,
             isActive,
             isSent,
             reminderUpdatedAt
@@ -243,12 +244,12 @@ class ReadingModels {
                 const goalBookQueryResponse = await client.query(goalBookQuery, goalBookValues)
 
                 const reminderQuery = `
-                    INSERT INTO reminders (id, name, description, reminder_datetime, is_active, is_sent, updated_at)
-                    VALUES ($1, $2, $3, $4, $5,$6 ,$7)
+                    INSERT INTO reminders (id, name, description, reminder_date, reminder_time, is_active, is_sent, updated_at)
+                    VALUES ($1, $2, $3, $4, $5, $6 ,$7, $8)
                     RETURNING id
                 `
 
-                const reminderValues = [reminderId, name, description, reminderDatetime, isActive, isSent, reminderUpdatedAt]
+                const reminderValues = [reminderId, name, description, reminderDate, reminderTime, isActive, isSent, reminderUpdatedAt]
 
                 const reminderQueryResponse = await client.query(reminderQuery, reminderValues)
 
