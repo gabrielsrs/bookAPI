@@ -40,7 +40,7 @@ class ListsServices {
   }
 
   async updateListService({ listId, items }) {
-    items.updatedAt = dayjs().format("YYYY-DD-MM[T]HH:mm:ss")
+    items.updated_at = dayjs().format("YYYY-DD-MM[T]HH:mm:ss")
 
     const updateListModel = await this.listsModels.updateListModel({ listId, items })
 

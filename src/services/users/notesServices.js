@@ -49,7 +49,7 @@ class NotesServices {
     const { book_locale: bookLocale } = items
     delete items.book_locale
 
-    items.updatedAt = dayjs().format("YYYY-DD-MM[T]HH:mm:ss")
+    items.updated_at = dayjs().format("YYYY-DD-MM[T]HH:mm:ss")
 
     const updateNoteModel = await this.notesModels.updateNoteModel({ noteId, items, bookLocale })
 

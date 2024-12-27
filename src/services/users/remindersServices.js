@@ -40,7 +40,7 @@ class RemindersServices {
       items.reminder_date = dayjs(items.reminder_datetime).format("YYYY-DD-MM"),
       items.reminder_time = dayjs(items.reminder_datetime).format("HH:mm:ss")
     )
-    items.updatedAt = dayjs().format("YYYY-DD-MM[T]HH:mm:ss")
+    items.updated_at = dayjs().format("YYYY-DD-MM[T]HH:mm:ss")
 
     const updateReminderModel = await this.remindersModels.updateReminderModel({ reminderId, items })
 

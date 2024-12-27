@@ -88,14 +88,14 @@ class ReadingServices {
       const reminder = {}
       delete items.frequency
 
-      startTime && (items.startTime = dayjs(startTime).format("HH:mm:ss"))
-      endDate && (items.endDate = dayjs(endDate).format("YYYY-DD-MM"))
+      startTime && (items.start_time = dayjs(startTime).format("HH:mm:ss"))
+      endDate && (items.end_date = dayjs(endDate).format("YYYY-DD-MM"))
 
-      Object.entries(items).filter(item => item[0] !== frequency) && (items.goalUpdatedAt = dayjs().format("YYYY-DD-MM[T]HH:mm:ss"))
+      Object.entries(items).filter(item => item[0] !== frequency) && (items.updated_at = dayjs().format("YYYY-DD-MM[T]HH:mm:ss"))
 
       if (startTime) {
         reminder.reminder_time = dayjs(items.startTime).subtract(5, 'm'),
-        reminder.reminderUpdatedAt = dayjs().format("YYYY-DD-MM[T]HH:mm:ss")
+        reminder.updated_at = dayjs().format("YYYY-DD-MM[T]HH:mm:ss")
       }
 
       const updateReadingGoalModel = await this.readingModels.updateReadingGoalModel({ goalId, items, frequency, reminder })

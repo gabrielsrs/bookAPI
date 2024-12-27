@@ -81,21 +81,21 @@ class BookServices {
             ) {
                 book.item = items[item]
                 if(!("updatedAt" in book)) {
-                    book.updatedAt = dayjs().format("YYYY-DD-MM[T]HH:mm:ss")
+                    book.updated_at = dayjs().format("YYYY-DD-MM[T]HH:mm:ss")
                 }
             }
         }
 
         items.authors.length && items.authors.forEach((author, index) => {
             items.authors[index] = {
-                authorUpdatedAt: dayjs().format("YYYY-DD-MM[T]HH:mm:ss"),
+                updated_at: dayjs().format("YYYY-DD-MM[T]HH:mm:ss"),
                 ...author
             } 
         })
 
         items.publishers.length && items.publishers.forEach((publisher, index) => {
             items.publishers[index] = {
-                publisherUpdatedAt: dayjs().format("YYYY-DD-MM[T]HH:mm:ss"),
+                updated_at: dayjs().format("YYYY-DD-MM[T]HH:mm:ss"),
                 ...publisher
             } 
         })
