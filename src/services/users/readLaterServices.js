@@ -24,7 +24,7 @@ class ReadLaterServices {
     items.id = ulid()
     items.userId = id
     items.bookId = bookId
-    items.updated_at = dayjs().format("YYYY-DD-MM[T]HH:mm:ss")
+    items.updated_at = dayjs().format("YYYY-MM-DD[T]HH:mm:ss")
 
     items.privacy || (items.privacy = false)
 

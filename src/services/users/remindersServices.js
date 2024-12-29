@@ -22,11 +22,11 @@ class RemindersServices {
 
   async createReminderService({ id:userId, items }) {
     items.id = ulid()
-    items.reminderDate = dayjs(items.reminder_datetime).format("YYYY-DD-MM")
+    items.reminderDate = dayjs(items.reminder_datetime).format("YYYY-MM-DD")
     items.reminderTime = dayjs(items.reminder_datetime).format("HH:mm:ss")
     items.is_active || (items.is_active = true)
     items.is_sent || (items.is_sent = false)
-    items.updatedAt = dayjs().format("YYYY-DD-MM[T]HH:mm:ss")
+    items.updatedAt = dayjs().format("YYYY-MM-DD[T]HH:mm:ss")
 
     const createReminderModel = await this.remindersModels.createReminderModel({ userId, items })
 
@@ -37,10 +37,10 @@ class RemindersServices {
 
   async updateReminderService({ reminderId, items }) {
     items.reminder_datetime && (
-      items.reminder_date = dayjs(items.reminder_datetime).format("YYYY-DD-MM"),
+      items.reminder_date = dayjs(items.reminder_datetime).format("YYYY-MM-DD"),
       items.reminder_time = dayjs(items.reminder_datetime).format("HH:mm:ss")
     )
-    items.updated_at = dayjs().format("YYYY-DD-MM[T]HH:mm:ss")
+    items.updated_at = dayjs().format("YYYY-MM-DD[T]HH:mm:ss")
 
     const updateReminderModel = await this.remindersModels.updateReminderModel({ reminderId, items })
 

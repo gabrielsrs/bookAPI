@@ -33,7 +33,7 @@ class UsersServices {
       nickname,
       description,
       coverImage: cover_image,
-      updatedAt: dayjs().format("YYYY-DD-MM[T]HH:mm:ss")
+      updatedAt: dayjs().format("YYYY-MM-DD[T]HH:mm:ss")
     }
 
     const createUserModel = await this.usersModels.createUserModel({user})

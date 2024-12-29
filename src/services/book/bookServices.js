@@ -31,7 +31,7 @@ class BookServices {
         items.authors.forEach((author, index) => {
             items.authors[index] = {
                 authorId: ulid(),
-                authorUpdatedAt: dayjs().format("YYYY-DD-MM[T]HH:mm:ss"),
+                authorUpdatedAt: dayjs().format("YYYY-MM-DD[T]HH:mm:ss"),
                 ...author
             } 
         })
@@ -39,7 +39,7 @@ class BookServices {
         items.publishers.forEach((publisher, index) => {
             items.publishers[index] = {
                 publisherId: ulid(),
-                publisherUpdatedAt: dayjs().format("YYYY-DD-MM[T]HH:mm:ss"),
+                publisherUpdatedAt: dayjs().format("YYYY-MM-DD[T]HH:mm:ss"),
                 ...publisher
             } 
         })
@@ -60,8 +60,8 @@ class BookServices {
 
 
         items.bookId = ulid()
-        items.bookUpdatedAt = dayjs().format("YYYY-DD-MM[T]HH:mm:ss")
-        
+        items.bookUpdatedAt = dayjs().format("YYYY-MM-DD[T]HH:mm:ss")
+
         const createBookModel = await this.bookModels.createBookModel(items)
 
         return {
@@ -81,21 +81,21 @@ class BookServices {
             ) {
                 book.item = items[item]
                 if(!("updatedAt" in book)) {
-                    book.updated_at = dayjs().format("YYYY-DD-MM[T]HH:mm:ss")
+                    book.updated_at = dayjs().format("YYYY-MM-DD[T]HH:mm:ss")
                 }
             }
         }
 
         items.authors.length && items.authors.forEach((author, index) => {
             items.authors[index] = {
-                updated_at: dayjs().format("YYYY-DD-MM[T]HH:mm:ss"),
+                updated_at: dayjs().format("YYYY-MM-DD[T]HH:mm:ss"),
                 ...author
             } 
         })
 
         items.publishers.length && items.publishers.forEach((publisher, index) => {
             items.publishers[index] = {
-                updated_at: dayjs().format("YYYY-DD-MM[T]HH:mm:ss"),
+                updated_at: dayjs().format("YYYY-MM-DD[T]HH:mm:ss"),
                 ...publisher
             } 
         })
