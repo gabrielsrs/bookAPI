@@ -28,7 +28,7 @@ class RemindersModels {
             reminderDate,
             reminderTime,
             is_active: isActive,
-            is_sent: isActive,
+            is_sent: isSent,
         }
     }) {
         const client = await pool.connect()

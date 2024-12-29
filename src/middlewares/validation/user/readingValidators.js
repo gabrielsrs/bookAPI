@@ -1,12 +1,12 @@
 import { body } from "express-validator"
+import dayjs from "dayjs";
 
 const validateProgress = [
     body("privacy")
         .optional()
         .isBoolean()
             .withMessage("Invalid PRIVACY format. Privacy should be boolean")
-        .toBoolean()
-        .toLowerCase(),
+        .toBoolean(),
 
     body("book_locale")
         .notEmpty()
@@ -67,21 +67,39 @@ const validateCreationGoal = [
             .withMessage("Field should not be empty")
         .isString()
             .withMessage("Invalid DESCRIPTION format. Description should be a string"),
-    body("time")
+    body("duration")
+        .notEmpty()
+            .withMessage("Field should not be empty")
+        .isInt()
+            .withMessage("Invalid TIME format. Time should be a in minutes(INT number)")
+        .toInt(),
+    body("start_time")
         .trim()
         .notEmpty()
             .withMessage("Field should not be empty")
-        .isTime()
-            .withMessage("Invalid TIME format. Time should be a in hours"),
+        .isTime({ hourFormat: "hour24" })
+            .withMessage("Invalid start time format. Time should be a in HH:mm:ss")
+        .custom(value => {
+            const currentTime = dayjs().format("HH:mm:ss")
+            const currentDate = dayjs().format("YYYY/MM/DD")
+
+            const time = dayjs(`${currentDate}T${value}`).format("HH:mm:ss")
+
+            if (time < currentTime) {
+                throw new Error("Invalid start time. Time should be greater or equal the current one(hourFormat 24)")
+            }
+
+            return true
+        }),
     body("end_date")
         .optional()
         .trim()
         .notEmpty()
             .withMessage("Field should not be empty")
-        .isDate({ format: 'MM/DD/YYYY' })
-            .withMessage("Invalid DATE format. Date should be a date('MM/DD/YYYY')")
-        .isAfter({ comparisonDate: new Date().toISOString() })
-            .withMessage("Invalid DATE format. Date should be greater than the current one"),
+        .isDate({ format: 'YYYY/MM/DD' })
+            .withMessage("Invalid DATE format. Date should be a date('YYYY/MM/DD')")
+        .isAfter({ comparisonDate: dayjs().subtract(1, 'day').toString() })
+            .withMessage("Invalid DATE format. Date should be greater or equal the current one"),
     body("frequency")
         .notEmpty()
             .withMessage("Field should not be empty")
@@ -93,7 +111,6 @@ const validateCreationGoal = [
         .isString()
             .withMessage("Invalid FREQUENCY format. Frequency should be a string"),
     body("frequency.marker")
-        .optional()
         .notEmpty()
             .withMessage("Field(s) should not be empty")
         .isArray()
@@ -115,22 +132,41 @@ const validateUpdateGoal = [
             .withMessage("Field should not be empty")
         .isString()
             .withMessage("Invalid DESCRIPTION format. Description should be a string"),
-    body("time")
+    body("duration")
+        .optional()
+        .notEmpty()
+            .withMessage("Field should not be empty")
+        .isInt()
+            .withMessage("Invalid TIME format. Time should be a in minutes(INT number)")
+        .toInt(),
+    body("start_time")
         .optional()
         .trim()
         .notEmpty()
             .withMessage("Field should not be empty")
-        .isTime()
-            .withMessage("Invalid TIME format. Time should be a in hours"),
+        .isTime({ hourFormat: "hour24" })
+            .withMessage("Invalid start time format. Time should be a in HH:mm:ss")
+        .custom(value => {
+            const currentTime = dayjs().format("HH:mm:ss")
+            const currentDate = dayjs().format("YYYY/MM/DD")
+
+            const time = dayjs(`${currentDate}T${value}`).format("HH:mm:ss")
+
+            if (time < currentTime) {
+                throw new Error("Invalid start time. Time should be greater or equal the current one(hourFormat 24)")
+            }
+
+            return true
+        }),
     body("end_date")
         .optional()
         .trim()
         .notEmpty()
             .withMessage("Field should not be empty")
-        .isDate({ format: 'MM/DD/YYYY' })
-            .withMessage("Invalid DATE format. Date should be a date('MM/DD/YYYY')")
-        .isAfter({ comparisonDate: new Date().toISOString() })
-            .withMessage("Invalid DATE format. Date should be greater than the current one"),
+        .isDate({ format: 'YYYY/MM/DD' })
+            .withMessage("Invalid DATE format. Date should be a date(YYYY/MM/DD)")
+        .isAfter({ comparisonDate: dayjs().subtract(1, 'day') })
+            .withMessage("Invalid DATE format. Date should be greater or equal the current one"),
     body("frequency")
         .optional()
         .notEmpty()

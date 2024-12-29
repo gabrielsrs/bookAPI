@@ -18,8 +18,7 @@ const validateCreationList = [
         .optional()
         .isBoolean()
             .withMessage("Invalid PRIVACY format. Privacy should be boolean")
-        .toBoolean()
-        .toLowerCase(),
+        .toBoolean(),
 ]
 
 const validateUpdateList = [
@@ -41,8 +40,7 @@ const validateUpdateList = [
         .optional()
         .isBoolean()
             .withMessage("Invalid PRIVACY format. Privacy should be boolean")
-        .toBoolean()
-        .toLowerCase(),
+        .toBoolean(),
 ]
 
 export { validateCreationList, validateUpdateList }

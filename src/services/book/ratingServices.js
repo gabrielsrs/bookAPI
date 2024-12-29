@@ -23,7 +23,7 @@ class RatingServices {
         id,
         userId,
         rating,
-        privacy = "false"
+        privacy = false
     }) {
         const rate_id = ulid()
 

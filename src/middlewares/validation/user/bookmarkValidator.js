@@ -5,8 +5,7 @@ const validateCreationBookmark = [
         .optional()
         .isBoolean()
             .withMessage("Invalid PRIVACY format. Privacy should be boolean")
-        .toBoolean()
-        .toLowerCase(),
+        .toBoolean(),
 
     body("book_locale")
         .notEmpty()

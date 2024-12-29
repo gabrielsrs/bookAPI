@@ -22,8 +22,9 @@ const validateCreationBook = [
         .withMessage("Invalid ISBN_13 format"),
     body("pages")
         .notEmpty()
+        .trim()
+        .isInt({ min: 1 })
         .toInt()
-        .isInt()
         .withMessage("Invalid PAGES format. Pages should to be integer"),
     body("language")
         .notEmpty()
@@ -37,7 +38,7 @@ const validateCreationBook = [
         .withMessage("Invalid COVER IMAGE format. Cover image should be a string"),
     body("publication_date")
         .notEmpty()
-        .isString()
+        .isDate({ format: 'YYYY-MM-DD', strictMode: true })
         .trim()
         .withMessage("Invalid PUBLICATION DATE format. Publication date should be a string"),
     body("summary")
@@ -72,7 +73,7 @@ const validateCreationBook = [
         .optional()
         .isString()
         .trim()
-        .withMessage("Invalid DESCRIPTION format. Description should be a string"),
+        .withMessage("Invalid DESCRIPTION format. Description should be a string")
 ]
 
 const validateUpdateBook = [
@@ -93,8 +94,9 @@ const validateUpdateBook = [
         .withMessage("Invalid ISBN_13 format"),
     body("pages")
         .optional()
+        .trim()
+        .isInt({ min: 1 })
         .toInt()
-        .isInt()
         .withMessage("Invalid PAGES format. Pages should to be integer"),
     body("language")
         .optional()
@@ -108,7 +110,7 @@ const validateUpdateBook = [
         .withMessage("Invalid COVER IMAGE format. Cover image should be a string"),
     body("publication_date")
         .optional()
-        .isString()
+        .isDate({ format: 'YYYY-MM-DD', strictMode: true })
         .trim()
         .withMessage("Invalid PUBLICATION DATE format. Publication date should be a string"),
     body("summary")

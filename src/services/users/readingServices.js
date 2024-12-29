@@ -62,7 +62,7 @@ class ReadingServices {
       const { start_time:startTime, end_date:endDate, frequency } = items
 
       items.goalId = ulid()
-      items.startTime = dayjs(startTime).format("HH:mm:ss")
+      items.startTime = dayjs(`${endDate}T${startTime}`).format("HH:mm:ss")
       items.endDate = dayjs(endDate).format("YYYY-DD-MM")
       items.goalUpdatedAt = dayjs().format("YYYY-DD-MM[T]HH:mm:ss")
 
@@ -76,8 +76,9 @@ class ReadingServices {
         reminderUpdatedAt: dayjs().format("YYYY-DD-MM[T]HH:mm:ss")
       }
 
-      const createReadingGoalModel = await this.readingModels.createReadingGoalModel({ userId, bookId, items, frequency, reminder })
-
+      // const createReadingGoalModel = await this.readingModels.createReadingGoalModel({ userId, bookId, items, frequency, reminder })
+      
+      return items
       return {
         ...createReadingGoalModel
       }

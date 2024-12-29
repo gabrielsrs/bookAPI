@@ -5,8 +5,7 @@ const validateCreationReadingLater = [
         .optional()
         .isBoolean()
             .withMessage("Invalid PRIVACY IMAGE format. Privacy should be boolean")
-        .toBoolean()
-        .toLowerCase(),
+        .toBoolean(),
 ]
 
 export { validateCreationReadingLater }

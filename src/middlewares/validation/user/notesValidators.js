@@ -11,8 +11,7 @@ const validateCreationNote = [
         .optional()
         .isBoolean()
             .withMessage("Invalid PRIVACY format. Privacy should be boolean")
-        .toBoolean()
-        .toLowerCase(),
+        .toBoolean(),
 
     body("book_locale")
         .optional()
@@ -67,9 +66,8 @@ const validateUpdateNote = [
         .optional()
         .isBoolean()
             .withMessage("Invalid PRIVACY format. Privacy should be boolean")
-        .toBoolean()
-        .toLowerCase(),
-
+        .toBoolean(),
+        
     body("book_locale")
         .optional()
         .isObject()

@@ -15,7 +15,9 @@ const validateCreationUser = [
     body("description")
         .optional()
         .isString()
-            .withMessage("Invalid DESCRIPTION format. Description should be string")
+            .withMessage("Invalid DESCRIPTION format. Description should be string"),
+    body("*")
+        .trim()
 ]
 
 const validateUpdateUser = [
@@ -32,7 +34,9 @@ const validateUpdateUser = [
     body("description")
         .optional()
         .isString()
-            .withMessage("Invalid DESCRIPTION format. Description should be string")
+            .withMessage("Invalid DESCRIPTION format. Description should be string"),
+    body("*")
+        .trim()
 ]
 
 export { validateCreationUser, validateUpdateUser }

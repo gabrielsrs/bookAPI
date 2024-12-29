@@ -7,8 +7,8 @@ const ratingCreateValidator = [
     body("privacy")
         .optional()
         .isBoolean()
-        .withMessage("Invalid PRIVACY format. Privacy should be boolean (false to public and true to private)")
-
+        .toBoolean()
+        .withMessage("Invalid PRIVACY format. Privacy should be boolean (false to public and true to private)"),
 ]
 
 const ratingUpdateValidator = [
@@ -25,8 +25,8 @@ const ratingUpdateValidator = [
     body("privacy")
         .optional()
         .isBoolean()
-        .withMessage("Invalid PRIVACY format. Privacy should be boolean (false to public and true to private)")
-
+        .toBoolean()
+        .withMessage("Invalid PRIVACY format. Privacy should be boolean (false to public and true to private)"),
 ]
 
 export { ratingCreateValidator, ratingUpdateValidator }

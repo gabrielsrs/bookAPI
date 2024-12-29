@@ -60,8 +60,8 @@ class BookServices {
 
 
         items.bookId = ulid()
-        items.bookUpdatedAt =dayjs().format("YYYY-DD-MM[T]HH:mm:ss")
-
+        items.bookUpdatedAt = dayjs().format("YYYY-DD-MM[T]HH:mm:ss")
+        
         const createBookModel = await this.bookModels.createBookModel(items)
 
         return {

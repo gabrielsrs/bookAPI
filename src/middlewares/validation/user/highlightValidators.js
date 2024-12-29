@@ -2,17 +2,16 @@ import { body } from "express-validator"
 
 const validateCreationHighlight = [
     body("content")
-        .trim()
         .notEmpty()
             .withMessage("Field should not be empty")
         .isString()
             .withMessage("Invalid CONTENT format. Content should be string"),
+            
     body("privacy")
         .optional()
         .isBoolean()
             .withMessage("Invalid PRIVACY format. Privacy should be boolean")
-        .toBoolean()
-        .toLowerCase(),
+        .toBoolean(),
 
     body("book_locale")
         .notEmpty()
@@ -68,8 +67,7 @@ const validateUpdateHighlight = [
         .optional()
         .isBoolean()
             .withMessage("Invalid PRIVACY format. Privacy should be boolean")
-        .toBoolean()
-        .toLowerCase(),
+        .toBoolean(),
 
     body("book_locale")
         .optional()
