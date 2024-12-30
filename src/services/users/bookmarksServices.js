@@ -1,19 +1,13 @@
-import { BookmarksModels } from "../../models/users/bookmarksModels.js"
-
 import { ulid } from 'ulid'
 
 class BookmarksServices {
-  constructor () {
-    this.bookmarksModels = new BookmarksModels()
-  }
-
-  async getBookmarksService({id, bookId}) {
+  async getBookmarksService({ id, bookId }, bookmarksModels) {
     let getBookmarksModel = null
 
     if (bookId) {
-      getBookmarksModel = await this.bookmarksModels.getBookBookmarksModel({id, bookId})
+      getBookmarksModel = await bookmarksModels.getBookBookmarksModel({ id, bookId })
     } else {
-      getBookmarksModel = await this.bookmarksModels.getBooksBookmarksModel({id})
+      getBookmarksModel = await bookmarksModels.getBooksBookmarksModel({ id })
     }
 
     const queryCount = {
@@ -25,7 +19,8 @@ class BookmarksServices {
       queryCount
     }
   }
-  async createBookmarkService ({ id, bookId, items }) {
+
+  async createBookmarkService ({ id, bookId, items }, bookmarksModels) {
     items.id = ulid()
     items.userId = id
     items.bookId = bookId
@@ -36,16 +31,15 @@ class BookmarksServices {
 
     bookLocale.id = ulid()
 
-    const createBookmarkModel = await this.bookmarksModels.createBookmarkModel({ items, bookLocale })
+    const createBookmarkModel = await bookmarksModels.createBookmarkModel({ items, bookLocale })
 
     return {
       ...createBookmarkModel
     }
-
   }
 
-  async deleteBookmarkService ({ bookmarkId }) {
-    const deleteBookmarkModel = await this.bookmarksModels.deleteBookmarkModel({ bookmarkId })
+  async deleteBookmarkService ({ bookmarkId }, bookmarksModels) {
+    const deleteBookmarkModel = await bookmarksModels.deleteBookmarkModel({ bookmarkId })
 
     return {
       ...deleteBookmarkModel
@@ -54,4 +48,3 @@ class BookmarksServices {
 }
 
 export { BookmarksServices }
-  

@@ -1,20 +1,14 @@
-import { BookModels } from "../../models/books/bookModels.js"
-
 import { ulid } from 'ulid'
 import dayjs from "dayjs"
 
 class BookServices {
-    constructor() {
-        this.bookModels = new BookModels()
-    }
-    
-    async getBookService ({ id }) {
+    async getBookService ({ id }, bookModels) {
         let queryResponse = null
 
         if (id) {
-            queryResponse = await this.bookModels.getBookModel({ id })
+            queryResponse = await bookModels.getBookModel({ id })
         } else {
-            queryResponse = await this.bookModels.getBooksModel()
+            queryResponse = await bookModels.getBooksModel()
         }
 
         const queryCount = {
@@ -27,7 +21,7 @@ class BookServices {
         }
     }
 
-    async createBookService(items) {
+    async createBookService({ items }, bookModels) {
         items.authors.forEach((author, index) => {
             items.authors[index] = {
                 authorId: ulid(),
@@ -58,18 +52,17 @@ class BookServices {
             } 
         })
 
-
         items.bookId = ulid()
         items.bookUpdatedAt = dayjs().format("YYYY-MM-DD[T]HH:mm:ss")
 
-        const createBookModel = await this.bookModels.createBookModel(items)
+        const createBookModel = await bookModels.createBookModel(items)
 
         return {
             ...createBookModel
         }
     }
 
-    async updateBookService({id, items}) {
+    async updateBookService({ id, items }, bookModels) {
         const book = {}
         book.id = id
 
@@ -100,16 +93,15 @@ class BookServices {
             } 
         })
 
-
-        const updateBookModel = await this.bookModels.updateBookModel(book, items)
+        const updateBookModel = await bookModels.updateBookModel(book, items)
 
         return {
             ...updateBookModel
         }
     }
 
-    async deleteBookService ({id}) {
-        const deleteBookModel = await this.bookModels.deleteBookModel({id})
+    async deleteBookService ({ id }, bookModels) {
+        const deleteBookModel = await bookModels.deleteBookModel({ id })
 
         return {
             ...deleteBookModel

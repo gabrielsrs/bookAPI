@@ -1,20 +1,14 @@
-import { UsersModels } from "../../models/users/usersModels.js"
-
 import { ulid } from 'ulid'
 import dayjs from "dayjs"
 
 class UsersServices {
-  constructor() {
-    this.usersModels = new UsersModels()
-  }
-
-  async getUsersService({id}) {
+  async getUsersService({ id }, usersModels) {
     let getUsersModel = null
 
     if (id) {
-      getUsersModel = await this.usersModels.getUserModel({id})
+      getUsersModel = await usersModels.getUserModel({ id })
     } else {
-      getUsersModel = await this.usersModels.getUsersModel()
+      getUsersModel = await usersModels.getUsersModel()
     }
 
     const queryCount = {
@@ -27,7 +21,7 @@ class UsersServices {
     }
   }
 
-  async createUserService({nickname, description, cover_image}) {
+  async createUserService({ nickname, description, cover_image }, usersModels) {
     const user = {
       id: ulid(),
       nickname,
@@ -36,32 +30,28 @@ class UsersServices {
       updatedAt: dayjs().format("YYYY-MM-DD[T]HH:mm:ss")
     }
 
-    const createUserModel = await this.usersModels.createUserModel({user})
+    const createUserModel = await usersModels.createUserModel({ user })
 
     return {
       ...createUserModel
     }
   }
 
-  async updateUserService({
-    id,
-    items
-  }) {
-    const updateUserModel = await this.usersModels.updateUserModel({id, items })
+  async updateUserService({ id, items }, usersModels) {
+    const updateUserModel = await usersModels.updateUserModel({ id, items })
 
     return {
       ...updateUserModel
     }
   }
 
-  async deleteUserService({id}) {
-    const deleteUserModel = await this.usersModels.deleteUserModel({id})
+  async deleteUserService({ id }, usersModels) {
+    const deleteUserModel = await usersModels.deleteUserModel({ id })
 
     return {
       ...deleteUserModel
     }
   }
 }
-  
-  export { UsersServices };
-  
+
+export { UsersServices }

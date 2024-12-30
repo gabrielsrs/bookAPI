@@ -1,14 +1,16 @@
 import { BookDetailsServices } from "../../services/book/bookDetailsServices.js"
+import { BookDetailsModels } from "../../models/books/bookDetailsModels.js"
 
 class BookDetailsControllers {
     constructor () {
         this.bookDetailsServices = new BookDetailsServices()
+        this.bookDetailsModels = new BookDetailsModels()
     }
 
     getBookNotesController = async (req, res) => {
         const { id } = req.params
 
-        const result = await this.bookDetailsServices.getBookNotesService({ id })
+        const result = await this.bookDetailsServices.getBookNotesService({ id }, this.bookDetailsModels)
 
         res.status(200).json({
             "status": "success",
@@ -20,7 +22,7 @@ class BookDetailsControllers {
     getBookQuotesController = async (req, res) => {
         const { id } = req.params
 
-        const result = await this.bookDetailsServices.getBookQuotesService({ id })
+        const result = await this.bookDetailsServices.getBookQuotesService({ id }, this.bookDetailsModels)
 
         res.status(200).json({
             "status": "success",
@@ -32,7 +34,7 @@ class BookDetailsControllers {
     getBookExcerptsController = async (req, res) => {
         const { id } = req.params
 
-        const result = await this.bookDetailsServices.getBookExcerptsService({ id })
+        const result = await this.bookDetailsServices.getBookExcerptsService({ id }, this.bookDetailsModels)
 
         res.status(200).json({
             "status": "success",
@@ -44,7 +46,7 @@ class BookDetailsControllers {
     getBookBookmarksController = async (req, res) => {
         const { id } = req.params
 
-        const result = await this.bookDetailsServices.getBookBookmarksService({ id })
+        const result = await this.bookDetailsServices.getBookBookmarksService({ id }, this.bookDetailsModels)
 
         res.status(200).json({
             "status": "success",
@@ -56,7 +58,7 @@ class BookDetailsControllers {
     getBookMetadataController = async (req, res) => {
         const { id } = req.params
 
-        const result = await this.bookDetailsServices.getBookMetadataService({ id })
+        const result = await this.bookDetailsServices.getBookMetadataService({ id }, this.bookDetailsModels)
 
         res.status(200).json({
             "status": "success",

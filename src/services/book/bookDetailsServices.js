@@ -1,14 +1,6 @@
-import { BookDetailsModels } from "../../models/books/bookDetailsModels.js"
-import { BookModels } from "../../models/books/bookModels.js"
-
 class BookDetailsServices {
-    constructor () {
-        this.bookDetailsModels = new BookDetailsModels()
-        this.bookModels = new BookModels()
-    }
-
-    async getBookNotesService ({ id }) {
-        const getBookNotesModel = await this.bookDetailsModels.getBookNotesModel({ id })
+    async getBookNotesService ({ id }, bookDetailsModels) {
+        const getBookNotesModel = await bookDetailsModels.getBookNotesModel({ id })
         const notesCount = {
             count: getBookNotesModel.length
         }
@@ -19,8 +11,8 @@ class BookDetailsServices {
         }
     }
 
-    async getBookQuotesService  ({ id }) {
-        const getBookQuotesModel = await this.bookDetailsModels.getBookQuotesModel({ id })
+    async getBookQuotesService  ({ id }, bookDetailsModels) {
+        const getBookQuotesModel = await bookDetailsModels.getBookQuotesModel({ id })
         const quotesCount = {
             count: getBookQuotesModel.length
         }
@@ -31,8 +23,8 @@ class BookDetailsServices {
         }
     }
 
-    async getBookExcerptsService ({ id }) {
-        const getBookExcerptsModel = await this.bookDetailsModels.getBookExcerptsModel({ id })
+    async getBookExcerptsService ({ id }, bookDetailsModels) {
+        const getBookExcerptsModel = await bookDetailsModels.getBookExcerptsModel({ id })
         const excerptsCount = {
             count: getBookExcerptsModel.length
         }
@@ -43,8 +35,8 @@ class BookDetailsServices {
         }
     }
 
-    async getBookBookmarksService ({ id }) {
-        const getBookBookmarksModel = await this.bookDetailsModels.getBookBookmarksModel({ id })
+    async getBookBookmarksService ({ id }, bookDetailsModels) {
+        const getBookBookmarksModel = await bookDetailsModels.getBookBookmarksModel({ id })
         const bookmarksCount = {
             count: getBookBookmarksModel.length
         }
@@ -55,8 +47,8 @@ class BookDetailsServices {
         }
     }
 
-    async getBookMetadataService ({ id }) {
-        const getBookMetadataModel = await this.bookDetailsModels.getBookMetadataModel({ id })
+    async getBookMetadataService ({ id }, bookDetailsModels) {
+        const getBookMetadataModel = await bookDetailsModels.getBookMetadataModel({ id })
         
         return {
             getBookMetadataModel

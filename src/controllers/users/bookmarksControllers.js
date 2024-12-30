@@ -1,14 +1,16 @@
 import { BookmarksServices } from "../../services/users/bookmarksServices.js"
+import { BookmarksModels } from "../../models/users/bookmarksModels.js"
 
 class BookmarksControllers {
   constructor () {
     this.bookmarksServices = new BookmarksServices()
+    this.bookmarksModels = new BookmarksModels()
   }
 
   getBookmarksController = async (req, res) => {
     const { id, bookId } = req.params
 
-    const result = await this.bookmarksServices.getBookmarksService({id, bookId})
+    const result = await this.bookmarksServices.getBookmarksService({ id, bookId }, this.bookmarksModels)
 
     res.status(200).json({
         "status": "success",
@@ -21,7 +23,7 @@ class BookmarksControllers {
     const { id, bookId } = req.params
     const items = req.body
 
-    const result = await this.bookmarksServices.createBookmarkService({ id, bookId, items })
+    const result = await this.bookmarksServices.createBookmarkService({ id, bookId, items }, this.bookmarksModels)
 
     res.status(200).json({
         "status": "success",
@@ -32,7 +34,7 @@ class BookmarksControllers {
   deleteBookmarksController = async (req, res) => {
     const { bookmarkId } = req.params
 
-    const result = await this.bookmarksServices.deleteBookmarkService({ bookmarkId })
+    const result = await this.bookmarksServices.deleteBookmarkService({ bookmarkId }, this.bookmarksModels)
 
     res.status(200).json({
         "status": "success",
@@ -40,5 +42,5 @@ class BookmarksControllers {
     })
   }
 }
-  
+
 export { BookmarksControllers }

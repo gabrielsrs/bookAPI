@@ -1,57 +1,58 @@
 import { QuotesServices } from "../../services/users/quotesServices.js"
+import { QuotesModels } from "../../models/users/quotesModels.js"
 
 class QuotesControllers {
     constructor () {
-      this.quotesServices = new QuotesServices()
+        this.quotesServices = new QuotesServices()
+        this.quotesModels = new QuotesModels()
     }
 
     getQuotesController = async (req, res) => {
-      const { id, bookId } = req.params
+        const { id, bookId } = req.params
 
-      const result = await this.quotesServices.getQuotesService({id, bookId})
+        const result = await this.quotesServices.getQuotesService({ id, bookId }, this.quotesModels)
 
-      res.status(200).json({
-          "status": "success",
-          ...result.queryCount,
-          items: result.getQuotesModel
-      })
+        res.status(200).json({
+            "status": "success",
+            ...result.queryCount,
+            items: result.getQuotesModel
+        })
     }
-  
+
     createQuoteController = async (req, res) => {
-      const { id, bookId } = req.params
-      const items = req.body
+        const { id, bookId } = req.params
+        const items = req.body
 
-      const result = await this.quotesServices.createQuoteService({ id, bookId, items })
+        const result = await this.quotesServices.createQuoteService({ id, bookId, items }, this.quotesModels)
 
-      res.status(200).json({
-          "status": "success",
-          ...result
-      })
+        res.status(200).json({
+            "status": "success",
+            ...result
+        })
     }
-  
+
     updateQuoteController = async (req, res) => {
-      const { quoteId } = req.params
-      const items = req.body
+        const { quoteId } = req.params
+        const items = req.body
 
-      const result = await this.quotesServices.updateQuoteService({ quoteId, items })
+        const result = await this.quotesServices.updateQuoteService({ quoteId, items }, this.quotesModels)
 
-      res.status(200).json({
-          "status": "success",
-          ...result
-      })
+        res.status(200).json({
+            "status": "success",
+            ...result
+        })
     }
-  
+
     deleteQuoteController = async (req, res) => {
-      const { quoteId } = req.params
+        const { quoteId } = req.params
 
-      const result = await this.quotesServices.deleteQuoteService({ quoteId })
+        const result = await this.quotesServices.deleteQuoteService({ quoteId }, this.quotesModels)
 
-      res.status(200).json({
-          "status": "success",
-          ...result
-      })
+        res.status(200).json({
+            "status": "success",
+            ...result
+        })
     }
-  }
-  
-  export { QuotesControllers }
-  
+}
+
+export { QuotesControllers }

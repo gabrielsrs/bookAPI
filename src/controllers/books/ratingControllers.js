@@ -1,14 +1,16 @@
 import { RatingServices } from "../../services/book/ratingServices.js"
+import { RatingModels } from "../../models/books/ratingModels.js"
 
 class RatingControllers {
     constructor () {
         this.ratingServices = new RatingServices()
+        this.ratingModels = new RatingModels()
     }
 
     getRatingsController = async (req, res) => {
         const { id } = req.params
 
-        const result = await this.ratingServices.getRatingsService({id})
+        const result = await this.ratingServices.getRatingsService({ id }, this.ratingModels)
 
         res.status(200).json({
             "status": "success",
@@ -26,7 +28,7 @@ class RatingControllers {
             userId,
             rating,
             privacy
-        })
+        }, this.ratingModels)
 
         res.status(200).json({
             "status": "success",
@@ -42,7 +44,7 @@ class RatingControllers {
             ratingId,
             rating,
             privacy
-        })
+        }, this.ratingModels)
 
         res.status(200).json({
             "status": "success",
@@ -53,7 +55,7 @@ class RatingControllers {
     deleteRatingsController = async (req, res) => {
         const { ratingId } = req.params
 
-        const result = await this.ratingServices.deleteRatingsService({ratingId})
+        const result = await this.ratingServices.deleteRatingsService({ ratingId }, this.ratingModels)
 
         res.status(200).json({
             "status": "success",

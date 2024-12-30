@@ -1,19 +1,13 @@
-import { QuotesModels } from "../../models/users/quotesModels.js";
-
 import { ulid } from 'ulid'
 
 class QuotesServices {
-  constructor () {
-    this.quotesModels = new QuotesModels()
-  }
-
-  async getQuotesService({id, bookId}) {
+  async getQuotesService({id, bookId}, quotesModels) {
     let getQuotesModel = null
 
     if (bookId) {
-      getQuotesModel = await this.quotesModels.getBookQuotesModel({id, bookId})
+      getQuotesModel = await quotesModels.getBookQuotesModel({id, bookId})
     } else {
-      getQuotesModel = await this.quotesModels.getBooksQuotesModel({id})
+      getQuotesModel = await quotesModels.getBooksQuotesModel({id})
     }
 
     const queryCount = {
@@ -26,7 +20,7 @@ class QuotesServices {
     }
   }
 
-  async createQuoteService({ id, bookId, items }) {
+  async createQuoteService({ id, bookId, items }, quotesModels) {
     items.id = ulid()
 
     items.privacy || (items.privacy = true)
@@ -35,26 +29,26 @@ class QuotesServices {
 
     bookLocale.id = ulid()
     
-    const createQuoteModel = await this.quotesModels.createQuoteModel({ id, bookId, items, bookLocale })
+    const createQuoteModel = await quotesModels.createQuoteModel({ id, bookId, items, bookLocale })
 
     return {
       ...createQuoteModel
     }
   }
 
-  async updateQuoteService({ quoteId, items }) {
+  async updateQuoteService({ quoteId, items }, quotesModels) {
     const { book_locale: bookLocale } = items
     delete items.book_locale
 
-    const updateQuoteModel = await this.quotesModels.updateQuoteModel({ quoteId, items, bookLocale })
+    const updateQuoteModel = await quotesModels.updateQuoteModel({ quoteId, items, bookLocale })
 
     return {
       ...updateQuoteModel
     }
   }
 
-  async deleteQuoteService({ quoteId }) {
-    const deleteQuoteModel = await this.quotesModels.deleteQuoteModel({ quoteId })
+  async deleteQuoteService({ quoteId }, quotesModels) {
+    const deleteQuoteModel = await quotesModels.deleteQuoteModel({ quoteId })
 
     return {
       ...deleteQuoteModel
@@ -63,4 +57,3 @@ class QuotesServices {
 }
   
   export { QuotesServices };
-  

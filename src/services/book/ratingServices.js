@@ -1,14 +1,8 @@
-import { RatingModels } from "../../models/books/ratingModels.js"
-
 import { ulid } from "ulid"
 
 class RatingServices {
-    constructor () {
-        this.ratingModels = new RatingModels()
-    }
-    
-    async getRatingsService ({id}) {
-        const getRatingsModel = await this.ratingModels.getRatingsModel({id})
+    async getRatingsService ({ id }, ratingModels) {
+        const getRatingsModel = await ratingModels.getRatingsModel({ id })
         const queryCount = {
             count: getRatingsModel.length
         }
@@ -24,10 +18,10 @@ class RatingServices {
         userId,
         rating,
         privacy = false
-    }) {
+    }, ratingModels) {
         const rate_id = ulid()
 
-        const createRatingsModel = await this.ratingModels.createRatingsModel({
+        const createRatingsModel = await ratingModels.createRatingsModel({
             rate_id,
             id,
             userId,
@@ -44,13 +38,13 @@ class RatingServices {
         ratingId,
         rating,
         privacy
-    }) {
+    }, ratingModels) {
         const rateData = {}
 
         rating && (rateData.rating = rating)
         privacy && (rateData.privacy = privacy)
 
-        const updateRatingsModel = await this.ratingModels.updateRatingsModel({
+        const updateRatingsModel = await ratingModels.updateRatingsModel({
             ratingId,
             rateData
         })
@@ -60,8 +54,8 @@ class RatingServices {
         }
     }
 
-    async deleteRatingsService ({ratingId}) {
-        const deleteRatingsModel = await this.ratingModels.deleteRatingsModel({ratingId})
+    async deleteRatingsService ({ ratingId }, ratingModels) {
+        const deleteRatingsModel = await ratingModels.deleteRatingsModel({ ratingId })
 
         return {
             ...deleteRatingsModel

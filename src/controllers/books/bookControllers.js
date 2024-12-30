@@ -1,18 +1,20 @@
 import { BookServices } from "../../services/book/bookServices.js"
+import { BookModels } from "../../models/books/bookModels.js"
 
 class BookControllers {
     constructor () {
         this.bookService = new BookServices()
+        this.bookModels = new BookModels()
     }
 
     getBookController = async (req, res) => {
         const { id } = req.params
 
-        const result = await this.bookService.getBookService({ id })
+        const result = await this.bookService.getBookService({ id }, this.bookModels)
 
         res.status(200).json({
             "status": "success",
-            ...result.queryCount ,
+            ...result.queryCount,
             items: result.queryResponse
         })
     }
@@ -20,7 +22,7 @@ class BookControllers {
     createBookController = async (req, res) => {
         const items = req.body
 
-        const result = await this.bookService.createBookService(items)
+        const result = await this.bookService.createBookService(items, this.bookModels)
 
         res.status(200).json({
             "status": "success",
@@ -33,7 +35,7 @@ class BookControllers {
         const { id } = req.params
         const items = req.body
 
-        const result = await this.bookService.updateBookService({id, items})
+        const result = await this.bookService.updateBookService({ id, items }, this.bookModels)
 
         res.status(200).json({
             "status": "success",
@@ -45,7 +47,7 @@ class BookControllers {
     deleteBookController = async (req, res) => {
         const { id } = req.params
 
-        const result = await this.bookService.deleteBookService({id})
+        const result = await this.bookService.deleteBookService({ id }, this.bookModels)
 
         res.status(200).json({
             "status": "success",

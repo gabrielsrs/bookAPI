@@ -1,48 +1,41 @@
-import { ReadLaterModels } from "../../models/users/readLaterModels.js";
-
 import { ulid } from 'ulid'
 import dayjs from "dayjs"
 
 class ReadLaterServices {
-  constructor() {
-    this.readLaterModels = new ReadLaterModels()
-  }
+    async getReadLaterService({ id }, readLaterModels) {
+        const getReadLetterModel = await readLaterModels.getReadLaterModel({ id })
+        const queryCount = {
+            count: getReadLetterModel.length
+        }
 
-  async getReadLaterService({id}) {
-    const getReadLetterModel = await this.readLaterModels.getReadLaterModel({id})
-    const queryCount = {
-      count: getReadLetterModel.length
+        return {
+            getReadLetterModel,
+            queryCount
+        }
     }
 
-    return {
-      getReadLetterModel,
-      queryCount
+    async createReadLaterService({ id, bookId, items }, readLaterModels) {
+        items.id = ulid()
+        items.userId = id
+        items.bookId = bookId
+        items.updated_at = dayjs().format("YYYY-MM-DD[T]HH:mm:ss")
+
+        items.privacy || (items.privacy = false)
+
+        const createReadLaterModel = await readLaterModels.createReadLaterModel({ items })
+        
+        return {
+            ...createReadLaterModel
+        }
     }
-  }
 
-  async createReadLaterService({ id, bookId, items }) {
-    items.id = ulid()
-    items.userId = id
-    items.bookId = bookId
-    items.updated_at = dayjs().format("YYYY-MM-DD[T]HH:mm:ss")
+    async deleteReadLaterService({ id: userId, bookId }, readLaterModels) {
+        const deleteReadLaterModel = await readLaterModels.deleteReadLaterModel({ userId, bookId })
 
-    items.privacy || (items.privacy = false)
-
-    const createReadLaterModel = await this.readLaterModels.createReadLaterModel({ items })
-    
-    return {
-      ...createReadLaterModel
+        return { 
+            ...deleteReadLaterModel
+        }
     }
-  }
-
-  async deleteReadLaterService({ id: userId, bookId }) {
-    const deleteReadLaterModel = await this.readLaterModels.deleteReadLaterModel({ userId, bookId })
-
-    return { 
-      ...deleteReadLaterModel
-    }
-  }
 }
 
-export { ReadLaterServices };
-  
+export { ReadLaterServices }

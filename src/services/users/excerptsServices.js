@@ -1,65 +1,59 @@
-import { ExcerptsModels } from "../../models/users/excerptsModels.js";
-
 import { ulid } from "ulid"
 
 class ExcerptsServices {
-  constructor () {
-    this.excerptsModels = new ExcerptsModels()
-  }
-  
-  async getExcerptsService({id, bookId}) {
-    let getExcerptsModel = null
+    async getExcerptsService({ id, bookId }, excerptsModels) {
+        let getExcerptsModel = null
 
-    if (bookId) {
-      getExcerptsModel = await this.excerptsModels.getBookExcerptsModel({id, bookId})
-    } else {
-      getExcerptsModel = await this.excerptsModels.getBooksExcerptsModel({id})
+        if (bookId) {
+            getExcerptsModel = await excerptsModels.getBookExcerptsModel({ id, bookId })
+        } else {
+            getExcerptsModel = await excerptsModels.getBooksExcerptsModel({ id })
+        }
+
+        const queryCount = {
+            count: getExcerptsModel.length
+        }
+
+        return {
+            getExcerptsModel,
+            queryCount
+        }
     }
 
-    const queryCount = {
-      count: getExcerptsModel.length
+    async createExcerptService({ id, bookId, items }, excerptsModels) {
+        items.id = ulid()
+
+        items.privacy || (items.privacy = true)
+
+        const { book_locale: bookLocale } = items
+
+        bookLocale.id = ulid()
+        
+        const createExcerptModel = await excerptsModels.createExcerptModel({ id, bookId, items, bookLocale })
+
+        return {
+            ...createExcerptModel
+        }
     }
 
-    return {
-      getExcerptsModel,
-      queryCount
+    async updateExcerptService({ excerptId, items }, excerptsModels) {
+        const { book_locale: bookLocale } = items
+        delete items.book_locale
+
+        const updateExcerptModel = await excerptsModels.updateExcerptModel({ excerptId, items, bookLocale })
+
+        return {
+            ...updateExcerptModel
+        }
     }
-  }
 
-  async createExcerptService({ id, bookId, items }) {
-    items.id = ulid()
+    async deleteExcerptService({ excerptId }, excerptsModels) {
+        const deleteExcerptModel = await excerptsModels.deleteExcerptModel({ excerptId })
 
-    items.privacy || (items.privacy = true)
-
-    const { book_locale: bookLocale } = items
-
-    bookLocale.id = ulid()
-    
-    const createExcerptModel = await this.excerptsModels.createExcerptModel({ id, bookId, items, bookLocale })
-
-    return {
-      ...createExcerptModel
+        return {
+            ...deleteExcerptModel
+        }
     }
-  }
-
-  async updateExcerptService({ excerptId, items }) {
-    const { book_locale: bookLocale } = items
-    delete items.book_locale
-
-    const updateExcerptModel = await this.excerptsModels.updateExcerptModel({ excerptId, items, bookLocale })
-
-    return {
-      ...updateExcerptModel
-    }
-  }
-
-  async deleteExcerptService({ excerptId }) {
-    const deleteExcerptModel = await this.excerptsModels.deleteExcerptModel({ excerptId })
-
-    return {
-      ...deleteExcerptModel
-    }
-  }
 }
 
-export { ExcerptsServices };
+export { ExcerptsServices }

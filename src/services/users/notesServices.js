@@ -1,20 +1,14 @@
-import { NotesModels } from "../../models/users/notesModels.js";
-
 import { ulid } from 'ulid'
 import dayjs from "dayjs"
 
 class NotesServices {
-  constructor () {
-    this.notesModels = new NotesModels()
-  }
-
-  async getNotesService({id, bookId}) {
+  async getNotesService({id, bookId}, notesModels) {
     let getNotesModel = null
 
     if (bookId) {
-      getNotesModel = await this.notesModels.getBookNotesModel({id, bookId})
+      getNotesModel = await notesModels.getBookNotesModel({id, bookId})
     } else {
-      getNotesModel = await this.notesModels.getBooksNotesModel({id})
+      getNotesModel = await notesModels.getBooksNotesModel({id})
     }
 
     const queryCount = {
@@ -27,7 +21,7 @@ class NotesServices {
     }
   }
 
-  async createNoteService ({ id, bookId, items }) {
+  async createNoteService ({ id, bookId, items }, notesModels) {
     items.id = ulid()
 
     items.privacy || (items.privacy = true)
@@ -38,28 +32,28 @@ class NotesServices {
 
     bookLocale && (bookLocale.id = ulid())
     
-    const createNoteModel = await this.notesModels.createNoteModel({ id, bookId, items, bookLocale })
+    const createNoteModel = await notesModels.createNoteModel({ id, bookId, items, bookLocale })
 
     return {
       ...createNoteModel
     }
   }
 
-  async updateNoteService({ noteId, items }) {
+  async updateNoteService({ noteId, items }, notesModels) {
     const { book_locale: bookLocale } = items
     delete items.book_locale
 
     items.updated_at = dayjs().format("YYYY-MM-DD[T]HH:mm:ss")
 
-    const updateNoteModel = await this.notesModels.updateNoteModel({ noteId, items, bookLocale })
+    const updateNoteModel = await notesModels.updateNoteModel({ noteId, items, bookLocale })
 
     return {
       ...updateNoteModel
     }
   }
 
-  async deleteNoteService({ noteId }) {
-    const deleteNoteModel = await this.notesModels.deleteNoteModel({ noteId })
+  async deleteNoteService({ noteId }, notesModels) {
+    const deleteNoteModel = await notesModels.deleteNoteModel({ noteId })
 
     return {
       ...deleteNoteModel
@@ -68,4 +62,3 @@ class NotesServices {
 }
 
 export { NotesServices };
-  
