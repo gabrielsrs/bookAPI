@@ -2,13 +2,13 @@ import { ulid } from 'ulid'
 import dayjs from "dayjs"
 
 class NotesServices {
-  async getNotesService({id, bookId}, notesModels) {
+  async getNotesService({userId, bookId}, notesModels) {
     let getNotesModel = null
 
     if (bookId) {
-      getNotesModel = await notesModels.getBookNotesModel({id, bookId})
+      getNotesModel = await notesModels.getBookNotesModel({userId, bookId})
     } else {
-      getNotesModel = await notesModels.getBooksNotesModel({id})
+      getNotesModel = await notesModels.getBooksNotesModel({userId})
     }
 
     const queryCount = {
@@ -21,8 +21,8 @@ class NotesServices {
     }
   }
 
-  async createNoteService ({ id, bookId, items }, notesModels) {
-    items.id = ulid()
+  async createNoteService ({ userId, bookId, items }, notesModels) {
+    items.noteId = ulid()
 
     items.privacy || (items.privacy = true)
 
@@ -30,9 +30,9 @@ class NotesServices {
 
     const { book_locale: bookLocale } = items
 
-    bookLocale && (bookLocale.id = ulid())
+    bookLocale && (bookLocale.bookLocaleId = ulid())
     
-    const createNoteModel = await notesModels.createNoteModel({ id, bookId, items, bookLocale })
+    const createNoteModel = await notesModels.createNoteModel({ userId, bookId, items, bookLocale })
 
     return {
       ...createNoteModel

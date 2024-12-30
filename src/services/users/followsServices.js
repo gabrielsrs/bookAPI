@@ -1,8 +1,8 @@
 import { ulid } from 'ulid'
 
 class FollowsServices {
-    async getFollowsService ({ id }, followsModels) {
-        const getFollowsModel = await followsModels.getFollowsModel({ id })
+    async getFollowsService ({ userId }, followsModels) {
+        const getFollowsModel = await followsModels.getFollowsModel({ userId })
         const queryCount = {
             followingCount: getFollowsModel.followings.length,
             followerCount: getFollowsModel.followers.length
@@ -14,17 +14,17 @@ class FollowsServices {
         }
     }
 
-    async createFollowService({ id: follow, userId: followed }, followsModels) {
-        const id = ulid()
+    async createFollowService({ userId: follow, follow: followed }, followsModels) {
+        const followId = ulid()
 
-        const createFollowModel = await followsModels.createFollowModel({ id, follow, followed })
+        const createFollowModel = await followsModels.createFollowModel({ followId, follow, followed })
 
         return {
             ...createFollowModel
         }
     }
 
-    async deleteFollowService({ id: unfollow, userId: unfollowed }, followsModels) {
+    async deleteFollowService({ userId: unfollow, follow: unfollowed }, followsModels) {
         const deleteFollowModel = await followsModels.deleteFollowModel({ unfollow, unfollowed })
 
         return {

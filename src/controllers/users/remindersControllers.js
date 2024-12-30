@@ -8,9 +8,9 @@ class RemindersControllers {
     }
 
     getRemindersController = async (req, res) => {
-        const { id } = req.params
+        const { userId } = req.params
 
-        const result = await this.remindersServices.getRemindersService({ id }, this.remindersModels)
+        const result = await this.remindersServices.getRemindersService({ userId }, this.remindersModels)
 
         res.status(200).json({
             "status": "success",
@@ -20,10 +20,10 @@ class RemindersControllers {
     }
 
     createReminderController = async (req, res) => {
-        const { id } = req.params
+        const { userId } = req.params
         const items = req.body
 
-        const result = await this.remindersServices.createReminderService({ id, items }, this.remindersModels)
+        const result = await this.remindersServices.createReminderService({ userId, items }, this.remindersModels)
 
         res.status(200).json({
             "status": "success",

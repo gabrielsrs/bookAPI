@@ -2,11 +2,11 @@ import { ulid } from 'ulid'
 import dayjs from "dayjs"
 
 class BookServices {
-    async getBookService ({ id }, bookModels) {
+    async getBookService ({ bookId }, bookModels) {
         let queryResponse = null
 
         if (id) {
-            queryResponse = await bookModels.getBookModel({ id })
+            queryResponse = await bookModels.getBookModel({ bookId })
         } else {
             queryResponse = await bookModels.getBooksModel()
         }
@@ -40,14 +40,14 @@ class BookServices {
 
         items.tags.forEach((tag, index) => {
             items.tags[index] = {
-                id: ulid(),
+                tagId: ulid(),
                 ...tag
             } 
         })
 
         items.categories.forEach((category, index) => {
             items.categories[index] = {
-                id: ulid(),
+                categoryId: ulid(),
                 ...category
             } 
         })
@@ -62,9 +62,9 @@ class BookServices {
         }
     }
 
-    async updateBookService({ id, items }, bookModels) {
+    async updateBookService({ bookId, items }, bookModels) {
         const book = {}
-        book.id = id
+        book.bookId = bookId
 
         for(const item in items) {
             if(item != "authors" ||
@@ -100,8 +100,8 @@ class BookServices {
         }
     }
 
-    async deleteBookService ({ id }, bookModels) {
-        const deleteBookModel = await bookModels.deleteBookModel({ id })
+    async deleteBookService ({ bookId }, bookModels) {
+        const deleteBookModel = await bookModels.deleteBookModel({ bookId })
 
         return {
             ...deleteBookModel

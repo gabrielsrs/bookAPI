@@ -8,9 +8,9 @@ class ReadLaterControllers {
     }
 
     getReadLaterController = async (req, res) => {
-        const { id } = req.params
+        const { userId } = req.params
 
-        const result = await this.readLaterServices.getReadLaterService({ id }, this.readLaterModels)
+        const result = await this.readLaterServices.getReadLaterService({ userId }, this.readLaterModels)
 
         res.status(200).json({
             "status": "success",
@@ -20,10 +20,10 @@ class ReadLaterControllers {
     }
 
     createReadLaterController = async (req, res) => {
-        const { id, bookId } = req.params
+        const { userId, bookId } = req.params
         const items = req.body
 
-        const result = await this.readLaterServices.createReadLaterService({ id, bookId, items }, this.readLaterModels)
+        const result = await this.readLaterServices.createReadLaterService({ userId, bookId, items }, this.readLaterModels)
 
         res.status(200).json({
             "status": "success",
@@ -32,9 +32,9 @@ class ReadLaterControllers {
     }
 
     deleteReadLaterController = async (req, res) => {
-        const { id, bookId } = req.params
+        const { userId, bookId } = req.params
 
-        const result = await this.readLaterServices.deleteReadLaterService({ id, bookId }, this.readLaterModels)
+        const result = await this.readLaterServices.deleteReadLaterService({ userId, bookId }, this.readLaterModels)
 
         res.status(200).json({
             "status": "success",

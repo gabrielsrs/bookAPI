@@ -2,8 +2,8 @@ import { ulid } from 'ulid'
 import dayjs from "dayjs"
 
 class RemindersServices {
-  async getRemindersService({ id }, remindersModels) {
-    const getRemindersModel = await remindersModels.getRemindersModel({ id })
+  async getRemindersService({ userId }, remindersModels) {
+    const getRemindersModel = await remindersModels.getRemindersModel({ userId })
     const queryCount = {
       count: getRemindersModel.length
     }
@@ -14,8 +14,8 @@ class RemindersServices {
     }
   }
 
-  async createReminderService({ id: userId, items }, remindersModels) {
-    items.id = ulid()
+  async createReminderService({ userId, items }, remindersModels) {
+    items.reminderId = ulid()
     items.reminderDate = dayjs(items.reminder_datetime).format("YYYY-MM-DD")
     items.reminderTime = dayjs(items.reminder_datetime).format("HH:mm:ss")
     items.is_active || (items.is_active = true)

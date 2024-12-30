@@ -1,7 +1,7 @@
 import { pool } from "../../db/index.js"
 
 class ReadLaterModels {
-    async getReadLaterModel({id}) {
+    async getReadLaterModel({ userId }) {
         const query = `
             SELECT * 
             FROM books
@@ -10,15 +10,15 @@ class ReadLaterModels {
             WHERE read_later.user_id = $1
         `
 
-        const values = [id]
+        const values = [userId]
 
         const queryResponse = await pool.query(query, values)
 
-        return queryResponse.rows[0]
+        return queryResponse.rows
     }
 
     async createReadLaterModel({ items: {
-        id,
+        readLaterId,
         userId,
         bookId,
         privacy,
@@ -30,7 +30,7 @@ class ReadLaterModels {
             RETURNING *
         `
 
-        const values = [id, bookId, userId, privacy, updatedAt]
+        const values = [readLaterId, bookId, userId, privacy, updatedAt]
 
         const queryResponse = await pool.query(query, values)
 

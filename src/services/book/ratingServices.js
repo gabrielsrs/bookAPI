@@ -1,8 +1,8 @@
 import { ulid } from "ulid"
 
 class RatingServices {
-    async getRatingsService ({ id }, ratingModels) {
-        const getRatingsModel = await ratingModels.getRatingsModel({ id })
+    async getRatingsService ({ bookId }, ratingModels) {
+        const getRatingsModel = await ratingModels.getRatingsModel({ bookId })
         const queryCount = {
             count: getRatingsModel.length
         }
@@ -14,16 +14,16 @@ class RatingServices {
     }
 
     async createRatingsService ({
-        id,
+        bookId,
         userId,
         rating,
         privacy = false
     }, ratingModels) {
-        const rate_id = ulid()
+        const rateId = ulid()
 
         const createRatingsModel = await ratingModels.createRatingsModel({
-            rate_id,
-            id,
+            rateId,
+            bookId,
             userId,
             rating,
             privacy

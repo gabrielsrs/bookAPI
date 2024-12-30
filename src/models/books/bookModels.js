@@ -23,7 +23,7 @@ class BookModels {
         return filtered
     }
 
-    async getBookModel ({ id }) {
+    async getBookModel ({ bookId }) {
         const query = `
             WITH authors AS (SELECT book_author.book_id AS book_id,
                 JSON_AGG(json_build_object('first_name', authors.first_name, 'last_name', authors.last_name, 'cover_image', authors.cover_image, 'bio', authors.bio)) AS authors
@@ -69,7 +69,7 @@ class BookModels {
                 ON categories.book_id = books.id
             WHERE books.id = $1
         `
-        const values = [id]
+        const values = [bookId]
         
         const queryResponse = await pool.query(query, values)
 
@@ -120,7 +120,7 @@ class BookModels {
         
         const queryResponse = await pool.query(query)
 
-        return queryResponse.rows[0]
+        return queryResponse.rows
     }
 
     async createBookModel ({
@@ -224,8 +224,8 @@ class BookModels {
                         (id, name, type)
                         VALUES
                         ${filteredTags.map((tag, index) => {
-                            if(tag.id == tags[index].id) {
-                                return `('${tag.id}', '${tag.name}', '${tag.type}')`
+                            if(tag.tagId == tags[index].id) {
+                                return `('${tag.tagId}', '${tag.name}', '${tag.type}')`
                             }
                         }).filter(Boolean).join(',')}
                         RETURNING *
@@ -239,7 +239,7 @@ class BookModels {
                         (book_id, tag_id)
                         VALUES
                         ${filteredTags.map(tag => {
-                            return `('${bookId}', '${tag.id}')`
+                            return `('${bookId}', '${tag.tagId}')`
                         })}
                         RETURNING *
                     `
@@ -255,8 +255,8 @@ class BookModels {
                         (id, name, type, description)
                         VALUES
                         ${filteredCategories.map((category, index) => {
-                            if(category.id == categories[index].id) {
-                                return `('${category.id}', '${category.name}', '${category.type}', '${category.description}')`
+                            if(category.categoryId == categories[index].id) {
+                                return `('${category.categoryId}', '${category.name}', '${category.type}', '${category.description}')`
                             }
                         }).filter(Boolean).join(',')}
                         RETURNING *
@@ -269,7 +269,7 @@ class BookModels {
                         (book_id, category_id)
                         VALUES
                         ${filteredCategories.map(category => {
-                            return `('${bookId}', '${category.id}')`
+                            return `('${bookId}', '${category.categoryId}')`
                         })}
                         RETURNING *
                     `
@@ -309,7 +309,7 @@ class BookModels {
                     WHERE id = $1
                 `
 
-                const bookValues = [book.id]
+                const bookValues = [book.bookId]
 
                 const booksQueryResponse = await client.query(bookQuery, bookValues)
             }
@@ -326,7 +326,7 @@ class BookModels {
                     `
 
                     const authorValues = [
-                        author.id,
+                        author.authorId,
                     ]
 
                     const authorQueryResponse = await client.query(authorQuery, authorValues)
@@ -345,7 +345,7 @@ class BookModels {
                     `
 
                     const publisherValues = [
-                        publisher.id,
+                        publisher.publisherId,
                     ]
 
                     const publisherQueryResponse = await client.query(publisherQuery, publisherValues)
@@ -364,7 +364,7 @@ class BookModels {
                     `
 
                     const tagValues = [
-                        tag.id,
+                        tag.tagId,
                     ]
 
                     const tagQueryResponse = await client.query(tagQuery, tagValues)
@@ -383,7 +383,7 @@ class BookModels {
                     `
 
                     const categoryValues = [
-                        category.id,
+                        category.categoryId,
                     ]
 
                     const categoryQueryResponse = await client.query(categoryQuery, categoryValues)
@@ -393,7 +393,7 @@ class BookModels {
             await client.query('COMMIT')
 
             return {
-                bookId: book.id
+                bookId: book.bookId
             }
         }
         catch(err) {
@@ -404,7 +404,7 @@ class BookModels {
         }
     }
 
-    async deleteBookModel ({id}) {
+    async deleteBookModel ({ bookId }) {
         const client = await pool.connect()
         try {
             client.query('BEGIN')
@@ -414,9 +414,7 @@ class BookModels {
                     WHERE book_id = $1
                     RETURNING author_id
                 `
-            const bookAuthorValues = [
-                id
-            ]
+            const bookAuthorValues = [bookId]
 
             const bookAuthorQueryResponse = await client.query(bookAuthorQuery, bookAuthorValues)
             
@@ -425,9 +423,7 @@ class BookModels {
                     WHERE book_id = $1
                     RETURNING publisher_id
                 `
-            const bookPublisherValues = [
-                id
-            ]
+            const bookPublisherValues = [bookId]
 
             const bookPublisherResponse = await client.query(bookPublisherQuery, bookPublisherValues)
 
@@ -452,7 +448,7 @@ class BookModels {
                 WHERE id = $1
                 RETURNING id
             `
-            const bookValues = [id]
+            const bookValues = [bookId]
 
             const booksQueryResponse = await client.query(bookQuery, bookValues)
 

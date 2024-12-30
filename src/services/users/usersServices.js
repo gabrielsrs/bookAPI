@@ -2,11 +2,11 @@ import { ulid } from 'ulid'
 import dayjs from "dayjs"
 
 class UsersServices {
-  async getUsersService({ id }, usersModels) {
+  async getUsersService({ userId }, usersModels) {
     let getUsersModel = null
 
-    if (id) {
-      getUsersModel = await usersModels.getUserModel({ id })
+    if (userId) {
+      getUsersModel = await usersModels.getUserModel({ userId })
     } else {
       getUsersModel = await usersModels.getUsersModel()
     }
@@ -23,7 +23,7 @@ class UsersServices {
 
   async createUserService({ nickname, description, cover_image }, usersModels) {
     const user = {
-      id: ulid(),
+      userId: ulid(),
       nickname,
       description,
       coverImage: cover_image,
@@ -37,16 +37,16 @@ class UsersServices {
     }
   }
 
-  async updateUserService({ id, items }, usersModels) {
-    const updateUserModel = await usersModels.updateUserModel({ id, items })
+  async updateUserService({ userId, items }, usersModels) {
+    const updateUserModel = await usersModels.updateUserModel({ userId, items })
 
     return {
       ...updateUserModel
     }
   }
 
-  async deleteUserService({ id }, usersModels) {
-    const deleteUserModel = await usersModels.deleteUserModel({ id })
+  async deleteUserService({ userId }, usersModels) {
+    const deleteUserModel = await usersModels.deleteUserModel({ userId })
 
     return {
       ...deleteUserModel

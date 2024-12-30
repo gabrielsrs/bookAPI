@@ -2,8 +2,8 @@ import { ulid } from 'ulid'
 import dayjs from "dayjs"
 
 class ReadLaterServices {
-    async getReadLaterService({ id }, readLaterModels) {
-        const getReadLetterModel = await readLaterModels.getReadLaterModel({ id })
+    async getReadLaterService({ userId }, readLaterModels) {
+        const getReadLetterModel = await readLaterModels.getReadLaterModel({ userId })
         const queryCount = {
             count: getReadLetterModel.length
         }
@@ -14,9 +14,9 @@ class ReadLaterServices {
         }
     }
 
-    async createReadLaterService({ id, bookId, items }, readLaterModels) {
-        items.id = ulid()
-        items.userId = id
+    async createReadLaterService({ userId, bookId, items }, readLaterModels) {
+        items.readLaterId = ulid()
+        items.userId = userId
         items.bookId = bookId
         items.updated_at = dayjs().format("YYYY-MM-DD[T]HH:mm:ss")
 
@@ -29,7 +29,7 @@ class ReadLaterServices {
         }
     }
 
-    async deleteReadLaterService({ id: userId, bookId }, readLaterModels) {
+    async deleteReadLaterService({ userId, bookId }, readLaterModels) {
         const deleteReadLaterModel = await readLaterModels.deleteReadLaterModel({ userId, bookId })
 
         return { 

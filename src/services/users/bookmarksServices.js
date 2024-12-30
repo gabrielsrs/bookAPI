@@ -1,13 +1,13 @@
 import { ulid } from 'ulid'
 
 class BookmarksServices {
-  async getBookmarksService({ id, bookId }, bookmarksModels) {
+  async getBookmarksService({ userId, bookId }, bookmarksModels) {
     let getBookmarksModel = null
 
     if (bookId) {
-      getBookmarksModel = await bookmarksModels.getBookBookmarksModel({ id, bookId })
+      getBookmarksModel = await bookmarksModels.getBookBookmarksModel({ userId, bookId })
     } else {
-      getBookmarksModel = await bookmarksModels.getBooksBookmarksModel({ id })
+      getBookmarksModel = await bookmarksModels.getBooksBookmarksModel({ userId })
     }
 
     const queryCount = {
@@ -20,16 +20,16 @@ class BookmarksServices {
     }
   }
 
-  async createBookmarkService ({ id, bookId, items }, bookmarksModels) {
-    items.id = ulid()
-    items.userId = id
+  async createBookmarkService ({ userId, bookId, items }, bookmarksModels) {
+    items.bookmarkId = ulid()
+    items.userId = userId
     items.bookId = bookId
 
     items.privacy || (items.privacy = true)
     
     const { book_locale: bookLocale } = items
 
-    bookLocale.id = ulid()
+    bookLocale.bookLocaleId = ulid()
 
     const createBookmarkModel = await bookmarksModels.createBookmarkModel({ items, bookLocale })
 

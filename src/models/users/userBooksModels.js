@@ -1,7 +1,7 @@
 import { pool } from "../../db/index.js"
 
 class UserBooksModels {
-    async getUserBooksModel ({id}) {
+    async getUserBooksModel ({ userId }) {
         const query = `
             SELECT books.*, book_user.user_id 
             FROM books
@@ -10,35 +10,35 @@ class UserBooksModels {
             WHERE book_user.user_id = $1
         `
         
-        const values = [id]
+        const values = [userId]
 
         const queryResponse = await pool.query(query, values)
 
-        return queryResponse.rows[0]
+        return queryResponse.rows
     }
 
-    async addUserBookModel({ id, bookId }) {
+    async addUserBookModel({ userId, bookId }) {
         const query = `
             INSERT INTO book_user (user_id, book_id)
             VALUES ($1, $2)
             RETURNING *
         `
 
-        const values = [id, bookId]
+        const values = [userId, bookId]
 
         const queryResponse = await pool.query(query, values)
 
         return queryResponse.rows[0]
     }
 
-    async removeUserBookModel({ id, bookId }){
+    async removeUserBookModel({ userId, bookId }){
         const query = `
             DELETE FROM book_user
             WHERE user_id = $1 AND book_id = $2
             RETURNING *
         `
 
-        const values = [id, bookId]
+        const values = [userId, bookId]
         
         const queryResponse = await pool.query(query, values)
 

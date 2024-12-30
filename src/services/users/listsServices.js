@@ -2,13 +2,13 @@ import { ulid } from 'ulid'
 import dayjs from "dayjs"
 
 class ListsServices {
-    async getListsService ({ id, listId }, listsModels) {
+    async getListsService ({ userId, listId }, listsModels) {
         let getListsModel = null
         
         if (listId) {
-            getListsModel = await listsModels.getListModel({ id, listId })
+            getListsModel = await listsModels.getListModel({ userId, listId })
         } else {
-            getListsModel = await listsModels.getListsModel({ id })
+            getListsModel = await listsModels.getListsModel({ userId })
         }
 
         const queryCount = {
@@ -21,8 +21,8 @@ class ListsServices {
         }
     }
 
-    async createListService({ id: userId, items }, listsModels) {
-        items.id = ulid()
+    async createListService({ userId, items }, listsModels) {
+        items.listId = ulid()
         items.privacy || (items.privacy = false)
         items.updatedAt = dayjs().format("YYYY-MM-DD[T]HH:mm:ss")
         
@@ -67,13 +67,13 @@ class ListsServices {
         }
     }
 
-    async getLikedListsService ({ id, listId }, listsModels) {
+    async getLikedListsService ({ userId, listId }, listsModels) {
         let getLikedListsModel = null
 
         if (listId) {
-            getLikedListsModel = await listsModels.getLikedListModel({ id, listId })
+            getLikedListsModel = await listsModels.getLikedListModel({ userId, listId })
         } else {
-            getLikedListsModel = await listsModels.getLikedListsModel({ id })
+            getLikedListsModel = await listsModels.getLikedListsModel({ userId })
         }
 
         const queryCount = {
@@ -86,7 +86,7 @@ class ListsServices {
         }
     }
 
-    async likeListService({ id: userId, listId }, listsModels) {
+    async likeListService({ userId, listId }, listsModels) {
         const likeListModel = await listsModels.likeListModel({ userId, listId })
 
         return {
@@ -94,7 +94,7 @@ class ListsServices {
         }
     }
 
-    async unlikeListService({ id: userId, listId }, listsModels) {
+    async unlikeListService({ userId, listId }, listsModels) {
         const unlikeListModel = await listsModels.unlikeListModel({ userId, listId })
 
         return {
@@ -102,13 +102,13 @@ class ListsServices {
         }
     }
 
-    async getFollowedListsService ({ id, listId }, listsModels) {
+    async getFollowedListsService ({ userId, listId }, listsModels) {
         let getFollowedListsModel = null
 
         if (listId) {
-            getFollowedListsModel = await listsModels.getFollowedListModel({ id, listId })
+            getFollowedListsModel = await listsModels.getFollowedListModel({ userId, listId })
         } else {
-            getFollowedListsModel = await listsModels.getFollowedListsModel({ id })
+            getFollowedListsModel = await listsModels.getFollowedListsModel({ userId })
         }
 
         const queryCount = {
@@ -121,7 +121,7 @@ class ListsServices {
         }
     }
 
-    async followListService({ id: userId, listId }, listsModels) {
+    async followListService({ userId, listId }, listsModels) {
         const followListModel = await listsModels.followListModel({ userId, listId })
 
         return {
@@ -129,7 +129,7 @@ class ListsServices {
         }
     }
 
-    async unfollowListService({ id: userId, listId }, listsModels) {
+    async unfollowListService({ userId, listId }, listsModels) {
         const unfollowListModel = await listsModels.unfollowListModel({ userId, listId })
 
         return {

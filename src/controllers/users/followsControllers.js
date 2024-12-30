@@ -8,9 +8,9 @@ class FollowsControllers {
     }
 
     getFollowsController = async (req, res) => {
-        const { id } = req.params
+        const { userId } = req.params
 
-        const result = await this.followsServices.getFollowsService({ id }, this.followsModels)
+        const result = await this.followsServices.getFollowsService({ userId }, this.followsModels)
 
         res.status(200).json({
             "status": "success",
@@ -20,9 +20,9 @@ class FollowsControllers {
     }
 
     createFollowController = async (req, res) => {
-        const { id, userId } = req.params
+        const { userId, follow } = req.params
 
-        const result = await this.followsServices.createFollowService({ id, userId }, this.followsModels)
+        const result = await this.followsServices.createFollowService({ userId, follow }, this.followsModels)
 
         res.status(200).json({
             "status": "success",
@@ -31,9 +31,9 @@ class FollowsControllers {
     }
 
     deleteFollowController = async (req, res) => {
-        const { id, userId } = req.params
+        const { userId, follow } = req.params
 
-        const result = await this.followsServices.deleteFollowService({ id, userId }, this.followsModels)
+        const result = await this.followsServices.deleteFollowService({ userId, follow }, this.followsModels)
 
         res.status(200).json({
             "status": "success",

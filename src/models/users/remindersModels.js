@@ -1,7 +1,7 @@
 import { pool } from "../../db/index.js"
 
 class RemindersModels {
-    async getRemindersModel({id}) {
+    async getRemindersModel({ userId }) {
         const query = `
             SELECT 
                 reminders.*,
@@ -12,7 +12,7 @@ class RemindersModels {
             WHERE user_reminder.user_id = $1
         `
 
-        const values = [id]
+        const values = [userId]
 
         const queryResponse = await pool.query(query, values)
 
@@ -22,7 +22,7 @@ class RemindersModels {
     async createReminderModel({
         userId, 
         items: {
-            id,
+            reminderId,
             name,
             description,
             reminderDate,
@@ -52,7 +52,7 @@ class RemindersModels {
                 RETURNING id
             `
 
-            const userReminderValues = [userId, id]
+            const userReminderValues = [userId, reminderId]
 
             await client.query(userReminderQuery, userReminderValues)
 

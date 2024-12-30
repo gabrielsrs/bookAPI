@@ -1,6 +1,6 @@
 class UserBooksServices {
-    async getUserBooksService({ id }, userBooksModels) {
-        const getUserBooksModel = await userBooksModels.getUserBooksModel({ id })
+    async getUserBooksService({ userId }, userBooksModels) {
+        const getUserBooksModel = await userBooksModels.getUserBooksModel({ userId })
         const queryCount = {
             count: getUserBooksModel.length
         }
@@ -11,16 +11,16 @@ class UserBooksServices {
         }
     }
 
-    async addUserBookService({ id, bookId }, userBooksModels) {
-        const addUserBookModel = await userBooksModels.addUserBookModel({ id, bookId })
+    async addUserBookService({ userId, bookId }, userBooksModels) {
+        const addUserBookModel = await userBooksModels.addUserBookModel({ userId, bookId })
 
         return {
             ...addUserBookModel
         }
     }
 
-    async removeUserBookService({ id, bookId }, userBooksModels) {
-        const removeUserBookModel = await userBooksModels.removeUserBookModel({ id, bookId })
+    async removeUserBookService({ userId, bookId }, userBooksModels) {
+        const removeUserBookModel = await userBooksModels.removeUserBookModel({ userId, bookId })
 
         return {
             ...removeUserBookModel

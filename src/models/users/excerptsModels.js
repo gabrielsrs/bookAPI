@@ -1,7 +1,7 @@
 import { pool } from "../../db/index.js"
 
 class ExcerptsModels {
-    async getBookExcerptsModel({id, bookId}) {
+    async getBookExcerptsModel({userId, bookId}) {
         const query = `
             SELECT * 
             FROM excerpts
@@ -10,15 +10,15 @@ class ExcerptsModels {
             WHERE book_excerpt.user_id = $1 AND book_excerpt.book_id = $2
         `
 
-        const values = [id, bookId]
+        const values = [userId, bookId]
 
         const queryResponse = await pool.query(query, values)
 
-        return queryResponse.rows[0]
+        return queryResponse.rows
         
     }
 
-    async getBooksExcerptsModel({id}) {
+    async getBooksExcerptsModel({userId}) {
         const query = `
             SELECT * 
             FROM excerpts
@@ -27,20 +27,20 @@ class ExcerptsModels {
             WHERE book_excerpt.user_id = $1
         `
 
-        const values = [id]
+        const values = [userId]
 
         const queryResponse = await pool.query(query, values)
 
-        return queryResponse.rows[0]
+        return queryResponse.rows
         
     }
 
-    async createExcerptModel({ id, bookId, items: {
-        id: excerptId,
+    async createExcerptModel({ userId, bookId, items: {
+        excerptId,
         content,
         privacy,
     }, bookLocale: {
-        id: bookLocaleId,
+        bookLocaleId,
         page,
         paragraph_number,
         chapter_number,
@@ -78,7 +78,7 @@ class ExcerptsModels {
                 RETURNING excerpt_id
             `
 
-            const bookExcerptValues = [excerptId, bookId, id, bookLocaleId]
+            const bookExcerptValues = [excerptId, bookId, userId, bookLocaleId]
 
             const bookExcerptResponse = await client.query(bookExcerptQuery, bookExcerptValues)
 

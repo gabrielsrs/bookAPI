@@ -1,7 +1,7 @@
 import { pool } from "../../db/index.js"
 
 class BookmarksModels {
-    async getBookBookmarksModel({id, bookId}) {
+    async getBookBookmarksModel({ userId, bookId }) {
         const query = `
             SELECT bookmark.id, lower(book_locale.page) as page, bookmark.book_id, bookmark.user_id, bookmark.privacy
             FROM bookmark
@@ -10,7 +10,7 @@ class BookmarksModels {
             WHERE user_id = $1 AND book_id = $2
         `
 
-        const values = [id, bookId]
+        const values = [userId, bookId]
 
         const queryResponse = await pool.query(query, values)
 
@@ -18,7 +18,7 @@ class BookmarksModels {
         
     }
 
-    async getBooksBookmarksModel({id}) {
+    async getBooksBookmarksModel({ userId }) {
         const query = `
             SELECT bookmark.id, lower(book_locale.page) as page, bookmark.book_id, bookmark.user_id, bookmark.privacy
             FROM bookmark
@@ -27,21 +27,21 @@ class BookmarksModels {
             WHERE user_id = $1
         `
 
-        const values = [id]
+        const values = [userId]
 
         const queryResponse = await pool.query(query, values)
 
-        return queryResponse.rows[0]
+        return queryResponse.rows
         
     }
 
     async createBookmarkModel({ items: {
-        id: bookmarkId,
+        bookmarkId,
         userId,
         bookId,
         privacy
     }, bookLocale: {
-        id: bookLocaleId,
+        bookLocaleId,
         page,
         paragraph_number,
         chapter_number,

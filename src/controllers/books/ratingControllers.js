@@ -8,9 +8,9 @@ class RatingControllers {
     }
 
     getRatingsController = async (req, res) => {
-        const { id } = req.params
+        const { bookId } = req.params
 
-        const result = await this.ratingServices.getRatingsService({ id }, this.ratingModels)
+        const result = await this.ratingServices.getRatingsService({ bookId }, this.ratingModels)
 
         res.status(200).json({
             "status": "success",
@@ -20,11 +20,11 @@ class RatingControllers {
     }
 
     createRatingsController = async (req, res) => {
-        const { id, userId } = req.params
+        const { bookId, userId } = req.params
         const { rating, privacy } = req.body
 
         const result = await this.ratingServices.createRatingsService({
-            id,
+            bookId,
             userId,
             rating,
             privacy

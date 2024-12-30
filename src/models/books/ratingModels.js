@@ -1,7 +1,7 @@
 import { pool } from "../../db/index.js"
 
 class RatingModels {
-    async getRatingsModel ({id}) {
+    async getRatingsModel ({ bookId }) {
         const query = `
             SELECT ratings.*, book_rate.book_id 
             FROM ratings
@@ -9,7 +9,7 @@ class RatingModels {
                 ON ratings.id = book_rate.rate_id
             WHERE book_rate.book_id = $1
         `
-        const values = [id]
+        const values = [bookId]
 
         const queryResponse = await pool.query(query, values)
 
@@ -17,8 +17,8 @@ class RatingModels {
     }
 
     async createRatingsModel({
-        rate_id,
-        id,
+        rateId,
+        bookId,
         userId,
         rating,
         privacy
@@ -32,7 +32,7 @@ class RatingModels {
                 VALUES ($1, $2, $3)
                 RETURNING *
             `
-            const rateValues = [rate_id, rating, privacy]
+            const rateValues = [rateId, rating, privacy]
 
             const rateQueryResponse = await client.query(rateQuery, rateValues)
 
@@ -42,7 +42,7 @@ class RatingModels {
                 RETURNING *
             `
 
-            const bookRateValues = [rate_id, id, userId]
+            const bookRateValues = [rateId, bookId, userId]
 
             const bookRateQueryResponse = await client.query(bookRateQuery, bookRateValues)
 

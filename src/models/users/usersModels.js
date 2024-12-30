@@ -1,7 +1,7 @@
 import { pool } from "../../db/index.js"
 
 class UsersModels {
-    async getUserModel ({id}) {
+    async getUserModel ({ userId }) {
         const query =`
             WITH following AS (
             SELECT COUNT(*) AS following_count
@@ -20,7 +20,7 @@ class UsersModels {
             WHERE users.id = $1
         `
 
-        const values = [id]
+        const values = [userId]
 
         const queryResponse = await pool.query(query, values)
 
@@ -35,11 +35,11 @@ class UsersModels {
 
         const queryResponse = await pool.query(query)
 
-        return queryResponse.rows[0]
+        return queryResponse.rows
     }
 
     async createUserModel ({
-        id, 
+        userId, 
         nickname,
         description,
         coverImage,
@@ -52,7 +52,7 @@ class UsersModels {
         `
 
         const values = [
-            id, 
+            userId, 
             nickname,
             description,
             coverImage,
@@ -64,7 +64,7 @@ class UsersModels {
         return userQueryResponse.rows[0]
     }
 
-    async updateUserModel ({id, items}) {
+    async updateUserModel ({ userId, items }) {
         const query = `
             UPDATE users
             SET ${Object.entries(items).map(item => `${item[0]} = ${item[1]}`)}
@@ -72,21 +72,21 @@ class UsersModels {
             RETURNING *
         `
 
-        const values = [id]
+        const values = [userId]
 
         const userQueryResponse = await pool.query(query, values) 
 
         return userQueryResponse.rows[0]
     }
 
-    async deleteUserModel({id}) {
+    async deleteUserModel({ userId }) {
         const query = `
             DELETE FROM users
             WHERE id = $1
             RETURNING id
         `
 
-        const values = [id]
+        const values = [userId]
 
         const userQueryResponse = await pool.query(query, values)
 

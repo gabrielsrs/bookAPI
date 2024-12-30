@@ -1,7 +1,7 @@
 import { pool } from "../../db/index.js";
 
 class BookDetailsModels {
-    async getBookNotesModel ({ id }) {
+    async getBookNotesModel ({ bookId }) {
         const query = `
             SELECT id, content, privacy, updated_at, book_id, book_locale_id 
             FROM notes
@@ -9,14 +9,14 @@ class BookDetailsModels {
                 ON notes.id = book_note.note_id
             WHERE book_note.book_id = $1
         `
-        const values = [id]
+        const values = [bookId]
         
         const queryResponse = await pool.query(query, values)
 
-        return queryResponse.rows[0]
+        return queryResponse.rows
     }
 
-    async getBookQuotesModel ({ id }) {
+    async getBookQuotesModel ({ bookId }) {
         const query = `
             SELECT quotes.*, book_quote.book_id, book_quote.book_locale_id
             FROM quotes
@@ -24,14 +24,14 @@ class BookDetailsModels {
                 ON quotes.id = book_quote.quote_id
             WHERE book_quote.book_id = $1
         `
-        const values = [id]
+        const values = [bookId]
         
         const queryResponse = await pool.query(query, values)
 
-        return queryResponse.rows[0]
+        return queryResponse.rows
     }
 
-    async getBookExcerptsModel ({ id }) {
+    async getBookExcerptsModel ({ bookId }) {
         const query = `
                 SELECT excerpts.*, book_excerpt.book_id,  book_excerpt.book_locale_id 
                 FROM excerpts
@@ -39,14 +39,14 @@ class BookDetailsModels {
                     ON excerpts.id = book_excerpt.excerpt_id
                 WHERE book_excerpt.book_id = $1
             `
-            const values = [id]
+            const values = [bookId]
         
         const queryResponse = await pool.query(query, values)
 
-        return queryResponse.rows[0]
+        return queryResponse.rows
     }
 
-    async getBookBookmarksModel ({ id }) {
+    async getBookBookmarksModel ({ bookId }) {
         const query = `
             SELECT bookmark.id, lower(book_locale.page) as page, bookmark.book_id, bookmark.privacy 
             FROM bookmark
@@ -54,14 +54,14 @@ class BookDetailsModels {
                 ON bookmark.book_locale_id = book_locale.id
             WHERE bookmark.book_id = $1
         `
-        const values = [id]
+        const values = [bookId]
         
         const queryResponse = await pool.query(query, values)
 
-        return queryResponse.rows[0]
+        return queryResponse.rows
     }
 
-    async getBookMetadataModel ({ id }) {
+    async getBookMetadataModel ({ bookId }) {
         const client = await pool.connect()
 
         try {
@@ -72,7 +72,7 @@ class BookDetailsModels {
                 FROM books
                 WHERE books.id = $1
             `
-            const bookInfoValues = [id]
+            const bookInfoValues = [bookId]
             
             const bookInfoQueryResponse = await client.query(bookInfo, bookInfoValues)
 
@@ -83,7 +83,7 @@ class BookDetailsModels {
                     ON authors.id = book_author.author_id
                 WHERE book_author.book_id = $1
             `
-            const bookAuthorValues = [id]
+            const bookAuthorValues = [bookId]
             
             const bookAuthorQueryResponse = await client.query(bookAuthor, bookAuthorValues)
 
@@ -94,7 +94,7 @@ class BookDetailsModels {
                     ON publishers.id = book_publisher.publisher_id
                 WHERE book_publisher.book_id = $1
             `
-            const bookPublisherValues = [id]
+            const bookPublisherValues = [bookId]
             
             const bookPublisherQueryResponse = await client.query(bookPublisher, bookPublisherValues)
 
@@ -105,7 +105,7 @@ class BookDetailsModels {
                     ON tags.id = book_tag.tag_id
                 WHERE book_tag.book_id = $1
             `
-            const bookTagValues = [id]
+            const bookTagValues = [bookId]
             
             const bookTagQueryResponse = await client.query(bookTag, bookTagValues)
 
@@ -116,7 +116,7 @@ class BookDetailsModels {
                     ON categories.id = book_category.category_id
                 WHERE book_category.book_id = $1
             `
-            const bookCategoryValues = [id]
+            const bookCategoryValues = [bookId]
             
             const bookCategoryQueryResponse = await client.query(bookCategory, bookCategoryValues)
 
@@ -127,7 +127,7 @@ class BookDetailsModels {
                     ON ratings.id = book_rate.rate_id
                 WHERE book_rate.book_id = $1
             `
-            const ratingsValues = [id]
+            const ratingsValues = [bookId]
             
             const ratingsQueryResponse = await client.query(ratingsQuery, ratingsValues)
 
@@ -138,7 +138,7 @@ class BookDetailsModels {
                     ON notes.id = book_note.note_id
                 WHERE book_note.book_id = $1
             `
-            const notesValues = [id]
+            const notesValues = [bookId]
             
             const notesQueryResponse = await client.query(notesQuery, notesValues)
 
@@ -149,7 +149,7 @@ class BookDetailsModels {
                     ON quotes.id = book_quote.quote_id
                 WHERE book_quote.book_id = $1
             `
-            const quoteValues = [id]
+            const quoteValues = [bookId]
             
             const quoteQueryResponse = await client.query(quoteQuery, quoteValues)
 
@@ -160,7 +160,7 @@ class BookDetailsModels {
                     ON excerpts.id = book_excerpt.excerpt_id
                 WHERE book_excerpt.book_id = $1
             `
-            const excerptValues = [id]
+            const excerptValues = [bookId]
             
             const excerptQueryResponse = await client.query(excerptQuery, excerptValues)
 
@@ -169,7 +169,7 @@ class BookDetailsModels {
                 FROM bookmark
                 WHERE book_id = $1
             `
-            const bookmarkValues = [id]
+            const bookmarkValues = [bookId]
             
             const bookmarkQueryResponse = await client.query(bookmarkQuery, bookmarkValues)
 
@@ -180,7 +180,7 @@ class BookDetailsModels {
                     ON users.id = book_user.user_id
                 WHERE book_user.book_id = $1
             `
-            const userWithBookValues = [id]
+            const userWithBookValues = [bookId]
             
             const userWithBookQueryResponse = await client.query(userWithBookQuery, userWithBookValues)
 
@@ -191,7 +191,7 @@ class BookDetailsModels {
                     ON lists.id = list_books.list_id
                 WHERE list_books.book_id = $1
             `
-            const listWithBookValues = [id]
+            const listWithBookValues = [bookId]
             
             const listWithBookQueryResponse = await client.query(listWithBookQuery, listWithBookValues)
 
@@ -200,7 +200,7 @@ class BookDetailsModels {
                 FROM read_later
                 WHERE book_id = $1
             `
-            const readLaterValues = [id]
+            const readLaterValues = [bookId]
             
             const readLaterQueryResponse = await client.query(readLaterQuery, readLaterValues)
 
@@ -209,7 +209,7 @@ class BookDetailsModels {
                 FROM reading_progress
                 WHERE book_id = $1 AND finished = true
             `
-            const usersFinishedBookValues = [id]
+            const usersFinishedBookValues = [bookId]
             
             const usersFinishedBookQueryResponse = await client.query(usersFinishedBookQuery, usersFinishedBookValues)
 
@@ -218,7 +218,7 @@ class BookDetailsModels {
                 FROM reading_progress
                 WHERE book_id = $1 AND finished = false AND started = true
             `
-            const usersReadingBookValues = [id]
+            const usersReadingBookValues = [bookId]
             
             const usersReadingBookQueryResponse = await client.query(usersReadingBookQuery, usersReadingBookValues)
 

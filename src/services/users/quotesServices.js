@@ -1,13 +1,13 @@
 import { ulid } from 'ulid'
 
 class QuotesServices {
-  async getQuotesService({id, bookId}, quotesModels) {
+  async getQuotesService({userId, bookId}, quotesModels) {
     let getQuotesModel = null
 
     if (bookId) {
-      getQuotesModel = await quotesModels.getBookQuotesModel({id, bookId})
+      getQuotesModel = await quotesModels.getBookQuotesModel({userId, bookId})
     } else {
-      getQuotesModel = await quotesModels.getBooksQuotesModel({id})
+      getQuotesModel = await quotesModels.getBooksQuotesModel({userId})
     }
 
     const queryCount = {
@@ -20,16 +20,16 @@ class QuotesServices {
     }
   }
 
-  async createQuoteService({ id, bookId, items }, quotesModels) {
-    items.id = ulid()
+  async createQuoteService({ userId, bookId, items }, quotesModels) {
+    items.quotId = ulid()
 
     items.privacy || (items.privacy = true)
 
     const { book_locale: bookLocale } = items
 
-    bookLocale.id = ulid()
+    bookLocale.bookLocaleId = ulid()
     
-    const createQuoteModel = await quotesModels.createQuoteModel({ id, bookId, items, bookLocale })
+    const createQuoteModel = await quotesModels.createQuoteModel({ userId, bookId, items, bookLocale })
 
     return {
       ...createQuoteModel

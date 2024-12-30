@@ -1,7 +1,7 @@
 import { pool } from "../../db/index.js"
 
 class ListsModels {
-    async getListModel({id, listId}) {
+    async getListModel({ userId, listId }) {
         const query = `
             WITH likes AS (
                 SELECT COUNT(*) AS likes_count
@@ -41,14 +41,14 @@ class ListsModels {
             HAVING user_lists.user_id = $1 AND lists.id = $2
         `
         
-        const values = [id, listId]
+        const values = [userId, listId]
 
         const queryResponse = await pool.query(query, values)
 
         return queryResponse.rows[0]
     }    
     
-    async getListsModel({id}) {
+    async getListsModel({ userId }) {
         const query = `
             SELECT 
                 lists.id, 
@@ -78,15 +78,15 @@ class ListsModels {
             HAVING user_lists.user_id = $1
         `
 
-        const values = [id]
+        const values = [userId]
 
         const queryResponse = await pool.query(query, values)
 
-        return queryResponse.rows[0]
+        return queryResponse.rows
     }
 
     async createListModel({ userId, items: {
-        id: listId,
+        listId,
         name,
         description,
         privacy,
@@ -238,7 +238,7 @@ class ListsModels {
         return queryResponse.rows[0]
     }
 
-    async getLikedListModel({id, listId}) {
+    async getLikedListModel({ userId, listId }) {
         const query = `
             SELECT 
                 lists.id, 
@@ -265,14 +265,14 @@ class ListsModels {
             HAVING user_lists.user_id = $1 AND user_lists.list_id = $2
         `
         
-        const values = [id, listId]
+        const values = [userId, listId]
 
         const queryResponse = await pool.query(query, values)
 
         return queryResponse.rows[0]
     }
 
-    async getLikedListsModel({id}) {
+    async getLikedListsModel({ userId }) {
         const query = `
             SELECT 
                 lists.id, 
@@ -299,7 +299,7 @@ class ListsModels {
             HAVING user_lists.user_id = $1
         `
 
-        const values = [id]
+        const values = [userId]
 
         const queryResponse = await pool.query(query, values)
 
@@ -334,7 +334,7 @@ class ListsModels {
         return queryResponse.rows[0]
     }
 
-    async getFollowedListModel({id, listId}) {
+    async getFollowedListModel({ userId, listId }) {
         const query = `
             SELECT 
                 lists.id, 
@@ -361,14 +361,14 @@ class ListsModels {
             HAVING user_lists.user_id = $1 AND user_lists.list_id = $2
         `
 
-        const values = [id, listId]
+        const values = [userId, listId]
 
         const queryResponse = await pool.query(query, values)
 
         return queryResponse.rows[0]
     }   
 
-    async getFollowedListsModel({id}) {
+    async getFollowedListsModel({ userId }) {
         const query = `
             SELECT 
                 lists.id, 
@@ -395,7 +395,7 @@ class ListsModels {
             HAVING user_lists.user_id = $1
         `
 
-        const values = [id]
+        const values = [userId]
 
         const queryResponse = await pool.query(query, values)
 

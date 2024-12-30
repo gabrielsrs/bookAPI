@@ -8,9 +8,9 @@ class ExcerptsControllers {
     }
 
     getExcerptsController = async (req, res) => {
-        const { id, bookId } = req.params
+        const { userId, bookId } = req.params
 
-        const result = await this.excerptsServices.getExcerptsService({ id, bookId }, this.excerptsModels)
+        const result = await this.excerptsServices.getExcerptsService({ userId, bookId }, this.excerptsModels)
 
         res.status(200).json({
             "status": "success",
@@ -20,10 +20,10 @@ class ExcerptsControllers {
     }
 
     createExcerptsController = async (req, res) => {
-        const { id, bookId } = req.params
+        const { userId, bookId } = req.params
         const items = req.body
 
-        const result = await this.excerptsServices.createExcerptService({ id, bookId, items }, this.excerptsModels)
+        const result = await this.excerptsServices.createExcerptService({ userId, bookId, items }, this.excerptsModels)
 
         res.status(200).json({
             "status": "success",

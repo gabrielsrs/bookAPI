@@ -1,26 +1,24 @@
-import { ReadingModels } from "../../models/users/readingModels.js"
-
 import { ulid } from 'ulid'
 import dayjs from "dayjs"
 
 class ReadingServices {
-    async getReadingProgressService({ id, bookId }, readingModels) {
-        const getReadingProgressModel = await readingModels.getReadingProgressModel({ id, bookId })
+    async getReadingProgressService({ userId, bookId }, readingModels) {
+        const getReadingProgressModel = await readingModels.getReadingProgressModel({ userId, bookId })
 
         return {
             getReadingProgressService: getReadingProgressModel
         }
     }
 
-    async createReadingProgressService({ id: userId, bookId, items }, readingModels) {
-        items.id = ulid()
+    async createReadingProgressService({ userId, bookId, items }, readingModels) {
+        items.readingProgressId = ulid()
         items.privacy || (items.privacy = false)
         items.started || (items.started = false)
         items.finished || (items.finished = false)
         items.lastReading = dayjs().format("YYYY-MM-DD[T]HH:mm:ss")
 
         const { book_locale: bookLocale } = items
-        bookLocale.id = ulid()
+        bookLocale.bookLocaleId = ulid()
 
         const createReadingProgressModel = await readingModels.createReadingProgressModel({ userId, bookId, items, bookLocale })
 
@@ -42,8 +40,8 @@ class ReadingServices {
         }
     }
 
-    async getReadingGoalsService({ id, bookId }, readingModels) {
-        const getReadingGoalsModel = await readingModels.getReadingGoalsModel({ id, bookId })
+    async getReadingGoalsService({ userId, bookId }, readingModels) {
+        const getReadingGoalsModel = await readingModels.getReadingGoalsModel({ userId, bookId })
         const queryCount = {
             count: getReadingGoalsModel.length
         }
@@ -54,7 +52,7 @@ class ReadingServices {
         }
     }
 
-    async createReadingGoalService({ id: userId, bookId, items }, readingModels) {
+    async createReadingGoalService({ userId, bookId, items }, readingModels) {
         const { start_time: startTime, end_date: endDate, frequency } = items
 
         items.goalId = ulid()

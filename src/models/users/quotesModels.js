@@ -1,7 +1,7 @@
 import { pool } from "../../db/index.js"
 
 class QuotesModels {
-    async getBookQuotesModel({id, bookId}) {
+    async getBookQuotesModel({ userId, bookId }) {
         const query = `
             SELECT * 
             FROM quotes
@@ -10,15 +10,15 @@ class QuotesModels {
             WHERE book_quote.user_id = $1 AND book_quote.book_id = $2
         `
 
-        const values = [id, bookId]
+        const values = [userId, bookId]
 
         const queryResponse = await pool.query(query, values)
 
-        return queryResponse.rows[0]
+        return queryResponse.rows
         
     }
 
-    async getBooksQuotesModel({id}) {
+    async getBooksQuotesModel({ userId }) {
         const query = `
             SELECT * 
             FROM quotes
@@ -27,20 +27,20 @@ class QuotesModels {
             WHERE book_quote.user_id = $1
         `
 
-        const values = [id]
+        const values = [userId]
 
         const queryResponse = await pool.query(query, values)
 
-        return queryResponse.rows[0]
+        return queryResponse.rows
         
     }
 
-  async createQuoteModel({ id, bookId, items: {
-        id: quoteId,
+  async createQuoteModel({ userId, bookId, items: {
+        quoteId,
         content,
         privacy,
     }, bookLocale: {
-        id: bookLocaleId,
+        bookLocaleId,
         page,
         paragraph_number,
         chapter_number,
@@ -78,7 +78,7 @@ class QuotesModels {
             RETURNING quote_id
         `
 
-        const bookQuoteValues = [quoteId, bookId, id, bookLocaleId]
+        const bookQuoteValues = [quoteId, bookId, userId, bookLocaleId]
 
         const bookQuoteResponse = await client.query(bookQuoteQuery, bookQuoteValues)
 

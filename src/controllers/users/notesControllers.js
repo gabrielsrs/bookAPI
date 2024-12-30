@@ -8,9 +8,9 @@ class NotesControllers {
     }
 
     getNotesController = async (req, res) => {
-        const { id, bookId } = req.params
+        const { userId, bookId } = req.params
 
-        const result = await this.notesServices.getNotesService({ id, bookId }, this.notesModels)
+        const result = await this.notesServices.getNotesService({ userId, bookId }, this.notesModels)
 
         res.status(200).json({
             "status": "success",
@@ -20,10 +20,10 @@ class NotesControllers {
     }
 
     createNoteController = async (req, res) => {
-        const { id, bookId } = req.params
+        const { userId, bookId } = req.params
         const items = req.body
 
-        const result = await this.notesServices.createNoteService({ id, bookId, items }, this.notesModels)
+        const result = await this.notesServices.createNoteService({ userId, bookId, items }, this.notesModels)
 
         res.status(200).json({
             "status": "success",

@@ -1,7 +1,7 @@
 import { pool } from "../../db/index.js"
 
 class NotesModels {
-    async getBookNotesModel({id, bookId}) {
+    async getBookNotesModel({ userId, bookId }) {
         const query = `
             SELECT * 
             FROM notes
@@ -10,15 +10,15 @@ class NotesModels {
             WHERE book_note.user_id = $1 AND book_note.book_id = $2
         `
 
-        const values = [id, bookId]
+        const values = [userId, bookId]
 
         const queryResponse = await pool.query(query, values)
 
-        return queryResponse.rows[0]
+        return queryResponse.rows
         
     }
 
-    async getBooksNotesModel({id}) {
+    async getBooksNotesModel({ userId }) {
         const query = `
             SELECT * 
             FROM notes
@@ -27,21 +27,21 @@ class NotesModels {
             WHERE book_note.user_id = $1
         `
 
-        const values = [id]
+        const values = [userId]
 
         const queryResponse = await pool.query(query, values)
 
-        return queryResponse.rows[0]
+        return queryResponse.rows
         
     }
 
-    async createNoteModel ({ id, bookId, items: {
-        id: noteId,
+    async createNoteModel ({ userId, bookId, items: {
+        noteId,
         content,
         privacy,
         updatedAt
     }, bookLocale: {
-        id: bookLocaleId,
+        bookLocaleId,
         page,
         paragraph_number,
         chapter_number,
@@ -81,7 +81,7 @@ class NotesModels {
                 RETURNING note_id
             `
 
-            const bookNoteValues = [noteId, bookId, id, bookLocaleId]
+            const bookNoteValues = [noteId, bookId, userId, bookLocaleId]
 
             const bookNoteResponse = await client.query(bookNoteQuery, bookNoteValues)
 

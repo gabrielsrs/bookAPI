@@ -8,9 +8,9 @@ class QuotesControllers {
     }
 
     getQuotesController = async (req, res) => {
-        const { id, bookId } = req.params
+        const { userId, bookId } = req.params
 
-        const result = await this.quotesServices.getQuotesService({ id, bookId }, this.quotesModels)
+        const result = await this.quotesServices.getQuotesService({ userId, bookId }, this.quotesModels)
 
         res.status(200).json({
             "status": "success",
@@ -20,10 +20,10 @@ class QuotesControllers {
     }
 
     createQuoteController = async (req, res) => {
-        const { id, bookId } = req.params
+        const { userId, bookId } = req.params
         const items = req.body
 
-        const result = await this.quotesServices.createQuoteService({ id, bookId, items }, this.quotesModels)
+        const result = await this.quotesServices.createQuoteService({ userId, bookId, items }, this.quotesModels)
 
         res.status(200).json({
             "status": "success",

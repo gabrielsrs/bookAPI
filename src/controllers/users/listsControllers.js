@@ -8,9 +8,9 @@ class ListsControllers {
     }
 
     getListsController = async (req, res) => {
-        const { id, listId } = req.params
+        const { userId, listId } = req.params
 
-        const result = await this.listsServices.getListsService({ id, listId }, this.listsModels)
+        const result = await this.listsServices.getListsService({ userId, listId }, this.listsModels)
 
         res.status(200).json({
             "status": "success",
@@ -20,10 +20,10 @@ class ListsControllers {
     }
 
     createListController = async (req, res) => {
-        const { id } = req.params
+        const { userId } = req.params
         const items = req.body
 
-        const result = await this.listsServices.createListService({ id, items }, this.listsModels)
+        const result = await this.listsServices.createListService({ userId, items }, this.listsModels)
 
         res.status(200).json({
             "status": "success",
@@ -77,9 +77,9 @@ class ListsControllers {
     }
 
     getLikedListsController = async (req, res) => {
-        const { id, listId } = req.params
+        const { userId, listId } = req.params
 
-        const result = await this.listsServices.getLikedListsService({ id, listId }, this.listsModels)
+        const result = await this.listsServices.getLikedListsService({ userId, listId }, this.listsModels)
 
         res.status(200).json({
             "status": "success",
@@ -89,9 +89,9 @@ class ListsControllers {
     }
 
     likeListController = async (req, res) => {
-        const { id, listId } = req.params
+        const { userId, listId } = req.params
 
-        const result = await this.listsServices.likeListService({ id, listId }, this.listsModels)
+        const result = await this.listsServices.likeListService({ userId, listId }, this.listsModels)
 
         res.status(200).json({
             "status": "success",
@@ -100,9 +100,9 @@ class ListsControllers {
     }
 
     unlikeListController = async (req, res) => {
-        const { id, listId } = req.params
+        const { userId, listId } = req.params
 
-        const result = await this.listsServices.unlikeListService({ id, listId }, this.listsModels)
+        const result = await this.listsServices.unlikeListService({ userId, listId }, this.listsModels)
 
         res.status(200).json({
             "status": "success",
@@ -111,9 +111,9 @@ class ListsControllers {
     }
 
     getFollowedListsController = async (req, res) => {
-        const { id, listId } = req.params
+        const { userId, listId } = req.params
 
-        const result = await this.listsServices.getFollowedListsService({ id, listId }, this.listsModels)
+        const result = await this.listsServices.getFollowedListsService({ userId, listId }, this.listsModels)
 
         res.status(200).json({
             "status": "success",
@@ -123,9 +123,9 @@ class ListsControllers {
     }
 
     followListController = async (req, res) => {
-        const { id, listId } = req.params
+        const { userId, listId } = req.params
 
-        const result = await this.listsServices.followListService({ id, listId }, this.listsModels)
+        const result = await this.listsServices.followListService({ userId, listId }, this.listsModels)
 
         res.status(200).json({
             "status": "success",
@@ -134,9 +134,9 @@ class ListsControllers {
     }
 
     unfollowListController = async (req, res) => {
-        const { id, listId } = req.params
+        const { userId, listId } = req.params
 
-        const result = await this.listsServices.unfollowListService({ id, listId }, this.listsModels)
+        const result = await this.listsServices.unfollowListService({ userId, listId }, this.listsModels)
 
         res.status(200).json({
             "status": "success",

@@ -8,9 +8,9 @@ class ReadingControllers {
     }
 
     getReadingProgressController = async (req, res) => {
-        const { id, bookId } = req.params
+        const { userId, bookId } = req.params
 
-        const result = await this.readingServices.getReadingProgressService({ id, bookId }, this.readingModels)
+        const result = await this.readingServices.getReadingProgressService({ userId, bookId }, this.readingModels)
 
         res.status(200).json({
             "status": "success",
@@ -19,10 +19,10 @@ class ReadingControllers {
     }
 
     createReadingProgressController = async (req, res) => {
-        const { id, bookId } = req.params
+        const { userId, bookId } = req.params
         const items = req.body
 
-        const result = await this.readingServices.createReadingProgressService({ id, bookId, items }, this.readingModels)
+        const result = await this.readingServices.createReadingProgressService({ userId, bookId, items }, this.readingModels)
 
         res.status(200).json({
             "status": "success",
@@ -43,9 +43,9 @@ class ReadingControllers {
     }
 
     getReadingGoalsController = async (req, res) => {
-        const { id, bookId } = req.params
+        const { userId, bookId } = req.params
 
-        const result = await this.readingServices.getReadingGoalsService({ id, bookId }, this.readingModels)
+        const result = await this.readingServices.getReadingGoalsService({ userId, bookId }, this.readingModels)
 
         res.status(200).json({
             "status": "success",
@@ -55,10 +55,10 @@ class ReadingControllers {
     }
 
     createReadingGoalController = async (req, res) => {
-        const { id, bookId } = req.params
+        const { userId, bookId } = req.params
         const items = req.body
 
-        const result = await this.readingServices.createReadingGoalService({ id, bookId, items }, this.readingModels)
+        const result = await this.readingServices.createReadingGoalService({ userId, bookId, items }, this.readingModels)
 
         res.status(200).json({
             "status": "success",

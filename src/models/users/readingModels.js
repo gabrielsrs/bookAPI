@@ -1,7 +1,7 @@
 import { pool } from "../../db/index.js"
 
 class ReadingModels {
-    async getReadingProgressModel({id, bookId}) {
+    async getReadingProgressModel({userId, bookId}) {
         const query = `
             SELECT  
                 reading_progress.id,
@@ -31,7 +31,7 @@ class ReadingModels {
             WHERE reading_progress.user_id = $1 AND reading_progress.book_id = $2
         `
 
-        const values = [id, bookId]
+        const values = [userId, bookId]
 
         const queryResponse = await pool.query(query, values)
 
@@ -42,14 +42,14 @@ class ReadingModels {
         userId, 
         bookId, 
         items: {
-            id,
+            readingProgressId,
             privacy,
             lastReading,
             started,
             finished            
         }, 
         bookLocale: {
-            id: bookLocaleId,
+            bookLocaleId,
             page,
             paragraph_number,
             chapter_number,
@@ -68,7 +68,7 @@ class ReadingModels {
                 RETURNING id
             `
 
-            const readingProgressValues = [id, bookId, userId, bookLocaleId, privacy, lastReading, started, finished]
+            const readingProgressValues = [readingProgressId, bookId, userId, bookLocaleId, privacy, lastReading, started, finished]
 
             const readingProgressQueryResponse = await client.query(readingProgressQuery, readingProgressValues)
 
@@ -139,7 +139,7 @@ class ReadingModels {
         }
     }
     
-    async getReadingGoalsModel({id, bookId}) {
+    async getReadingGoalsModel({ userId, bookId }) {
         const query = `
             SELECT 
                 goals.*, 
@@ -156,7 +156,7 @@ class ReadingModels {
             WHERE user_goal.user_id = $1 AND goal_book.book_id = $2
         `
 
-        const values = [id, bookId]
+        const values = [userId, bookId]
 
         const queryResponse = await pool.query(query, values)
 

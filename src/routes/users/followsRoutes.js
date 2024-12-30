@@ -9,7 +9,7 @@ const route = Router()
 const followsControllers = new FollowsControllers()
 
 route.get("/:userId/follows", validateId, validationResult, followsControllers.getFollowsController)
-route.post("/:userId/follows/:userId", validateId, validationResult, followsControllers.createFollowController)  
-route.delete("/:userId/follows/:userId", validateId, validationResult, followsControllers.deleteFollowController)  
+route.post("/:userId/follows/:follow", validateId, validationResult, followsControllers.createFollowController)  
+route.delete("/:userId/follows/:follow", validateId, validationResult, followsControllers.deleteFollowController)  
 
 export default route

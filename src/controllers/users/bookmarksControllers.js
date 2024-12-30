@@ -8,9 +8,9 @@ class BookmarksControllers {
   }
 
   getBookmarksController = async (req, res) => {
-    const { id, bookId } = req.params
+    const { userId, bookId } = req.params
 
-    const result = await this.bookmarksServices.getBookmarksService({ id, bookId }, this.bookmarksModels)
+    const result = await this.bookmarksServices.getBookmarksService({ userId, bookId }, this.bookmarksModels)
 
     res.status(200).json({
         "status": "success",
@@ -20,10 +20,10 @@ class BookmarksControllers {
   }
 
   createBookmarksController = async (req, res) => {
-    const { id, bookId } = req.params
+    const { userId, bookId } = req.params
     const items = req.body
 
-    const result = await this.bookmarksServices.createBookmarkService({ id, bookId, items }, this.bookmarksModels)
+    const result = await this.bookmarksServices.createBookmarkService({ userId, bookId, items }, this.bookmarksModels)
 
     res.status(200).json({
         "status": "success",
