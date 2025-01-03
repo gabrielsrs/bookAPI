@@ -5,7 +5,7 @@ class BookServices {
     async getBookService ({ bookId }, bookModels) {
         let queryResponse = null
 
-        if (id) {
+        if (bookId) {
             queryResponse = await bookModels.getBookModel({ bookId })
         } else {
             queryResponse = await bookModels.getBooksModel()
