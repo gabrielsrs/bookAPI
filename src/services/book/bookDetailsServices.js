@@ -1,58 +1,44 @@
 class BookDetailsServices {
     async getBookNotesService ({ bookId }, bookDetailsModels) {
         const getBookNotesModel = await bookDetailsModels.getBookNotesModel({ bookId })
-        const notesCount = {
-            count: getBookNotesModel.length
-        }
 
         return {
-            getBookNotesModel,
-            notesCount
+            count: getBookNotesModel.notes.length,
+            ...getBookNotesModel
         }
     }
 
     async getBookQuotesService  ({ bookId }, bookDetailsModels) {
         const getBookQuotesModel = await bookDetailsModels.getBookQuotesModel({ bookId })
-        const quotesCount = {
-            count: getBookQuotesModel.length
-        }
 
         return {
-            getBookQuotesModel,
-            quotesCount
+            count: getBookQuotesModel.quotes.length,
+            ...getBookQuotesModel
         }
     }
 
     async getBookExcerptsService ({ bookId }, bookDetailsModels) {
         const getBookExcerptsModel = await bookDetailsModels.getBookExcerptsModel({ bookId })
-        const excerptsCount = {
-            count: getBookExcerptsModel.length
-        }
         
         return {
-            getBookExcerptsModel,
-            excerptsCount
+            count: getBookExcerptsModel.excerpts.length,
+            ...getBookExcerptsModel
         }
     }
 
     async getBookBookmarksService ({ bookId }, bookDetailsModels) {
         const getBookBookmarksModel = await bookDetailsModels.getBookBookmarksModel({ bookId })
-        const bookmarksCount = {
-            count: getBookBookmarksModel.length
-        }
         
         return {
-            getBookBookmarksModel,
-            bookmarksCount
+            count: getBookBookmarksModel.bookmarks.length,
+            ...getBookBookmarksModel
         }
     }
 
     async getBookMetadataService ({ bookId }, bookDetailsModels) {
         const getBookMetadataModel = await bookDetailsModels.getBookMetadataModel({ bookId })
         
-        return {
-            getBookMetadataModel
-        }
+        return getBookMetadataModel
     }
 }
 

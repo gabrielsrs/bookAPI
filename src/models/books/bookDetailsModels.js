@@ -13,7 +13,9 @@ class BookDetailsModels {
         
         const queryResponse = await pool.query(query, values)
 
-        return queryResponse.rows
+        return {
+            notes: queryResponse.rows
+        }
     }
 
     async getBookQuotesModel ({ bookId }) {
@@ -28,7 +30,9 @@ class BookDetailsModels {
         
         const queryResponse = await pool.query(query, values)
 
-        return queryResponse.rows
+        return {
+            quotes: queryResponse.rows
+        }
     }
 
     async getBookExcerptsModel ({ bookId }) {
@@ -43,7 +47,9 @@ class BookDetailsModels {
         
         const queryResponse = await pool.query(query, values)
 
-        return queryResponse.rows
+        return {
+            excerpts: queryResponse.rows
+        }
     }
 
     async getBookBookmarksModel ({ bookId }) {
@@ -58,7 +64,9 @@ class BookDetailsModels {
         
         const queryResponse = await pool.query(query, values)
 
-        return queryResponse.rows
+        return {
+            bookmarks: queryResponse.rows
+        }
     }
 
     async getBookMetadataModel ({ bookId }) {
