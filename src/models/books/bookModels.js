@@ -19,7 +19,6 @@ class BookModels {
             }
         }
         
-
         return filtered
     }
 
@@ -73,7 +72,9 @@ class BookModels {
         
         const queryResponse = await pool.query(query, values)
 
-        return queryResponse.rows[0]
+        return {
+            book: queryResponse.rows[0]
+        }
     }
 
     async getBooksModel () {
@@ -120,7 +121,9 @@ class BookModels {
         
         const queryResponse = await pool.query(query)
 
-        return queryResponse.rows
+        return {
+            books: queryResponse.rows
+        }
     }
 
     async createBookModel ({
@@ -142,6 +145,11 @@ class BookModels {
     }) {
         const client = await pool.connect()
         try {
+            let authorsQueryResponse;
+            let publishersQueryResponse;
+            let tagsQueryResponse;
+            let categoriesQueryResponse;
+
             await client.query('BEGIN')
                 const bookQuery = `
                     INSERT INTO books
@@ -175,7 +183,7 @@ class BookModels {
                         RETURNING *
                     `
 
-                    await client.query(authorQuery)
+                    authorsQueryResponse = await client.query(authorQuery)
                     
                     const bookAuthorQuery = `
                         INSERT INTO book_author
@@ -201,7 +209,7 @@ class BookModels {
                         RETURNING *
                     `
 
-                    await client.query(publisherQuery)
+                    publishersQueryResponse = await client.query(publisherQuery)
 
                     const bookPublisherQuery = `
                         INSERT INTO book_publisher
@@ -231,7 +239,7 @@ class BookModels {
                         RETURNING *
                     `
 
-                    await client.query(tagQuery)
+                    tagsQueryResponse = await client.query(tagQuery)
                     
 
                     const bookTagQuery = `
@@ -262,7 +270,7 @@ class BookModels {
                         RETURNING *
                     `
 
-                    await client.query(categoryQuery)
+                    categoriesQueryResponse = await client.query(categoryQuery)
 
                     const bookCategoryQuery = `
                         INSERT INTO book_category
@@ -280,7 +288,11 @@ class BookModels {
             await client.query('COMMIT')
 
             return {
-                createdBook: booksQueryResponse.rows[0].id
+                book: booksQueryResponse.rows[0],
+                authors: authorsQueryResponse.rows || [],
+                publishers: publishersQueryResponse.rows || [],
+                tags: tagsQueryResponse.rows || [],
+                categories: categoriesQueryResponse.rows || []
             }
         }
         catch(err) {
@@ -292,7 +304,8 @@ class BookModels {
         }
     }
     
-    async updateBookModel (book, {
+    async updateBookModel ({
+        book,
         authors = [],
         publishers = [],
         tags = [],
@@ -300,6 +313,12 @@ class BookModels {
     }) {
         const client = await pool.connect()
         try {
+            let booksQueryResponse;
+            let authorsResponse;
+            let publishersResponse;
+            let tagsResponse;
+            let categoriesResponse;
+
             client.query('BEGIN')
             
             if(Object.keys(book).length) {
@@ -307,11 +326,12 @@ class BookModels {
                     UPDATE books
                         SET ${Object.entries(book).map(item => `${item[0]} = ${item[1]}`)}
                     WHERE id = $1
+                    RETURNING *
                 `
 
                 const bookValues = [book.bookId]
 
-                const booksQueryResponse = await client.query(bookQuery, bookValues)
+                booksQueryResponse = await client.query(bookQuery, bookValues)
             }
 
             if(authors.length) {
@@ -323,6 +343,7 @@ class BookModels {
                                 .map(item => `${item[0]} = ${item[1]}`)
                             }
                         WHERE id = $1
+                        RETURNING *
                     `
 
                     const authorValues = [
@@ -330,6 +351,7 @@ class BookModels {
                     ]
 
                     const authorQueryResponse = await client.query(authorQuery, authorValues)
+                    authorsResponse.push(authorQueryResponse.rows[0])
                 }
             }
 
@@ -342,6 +364,7 @@ class BookModels {
                                 .map(item => `${item[0]} = ${item[1]}`)
                             }
                         WHERE id = $1
+                        RETURNING *
                     `
 
                     const publisherValues = [
@@ -349,6 +372,7 @@ class BookModels {
                     ]
 
                     const publisherQueryResponse = await client.query(publisherQuery, publisherValues)
+                    publishersResponse.push(publisherQueryResponse.rows[0])
                 }
             }
 
@@ -361,6 +385,7 @@ class BookModels {
                                 .map(item => `${item[0]} = ${item[1]}`)
                             }
                         WHERE id = $1
+                        RETURNING *
                     `
 
                     const tagValues = [
@@ -368,6 +393,7 @@ class BookModels {
                     ]
 
                     const tagQueryResponse = await client.query(tagQuery, tagValues)
+                    tagsResponse.push(tagQueryResponse.rows[0])
                 }
             }
 
@@ -380,6 +406,7 @@ class BookModels {
                                 .map(item => `${item[0]} = ${item[1]}`)
                             }
                         WHERE id = $1
+                        RETURNING *
                     `
 
                     const categoryValues = [
@@ -387,13 +414,20 @@ class BookModels {
                     ]
 
                     const categoryQueryResponse = await client.query(categoryQuery, categoryValues)
+                    categoriesResponse.push(categoryQueryResponse.rows[0])                    
                 }
             }
 
             await client.query('COMMIT')
 
+            const a = 1
+
             return {
-                bookId: book.bookId
+                book: booksQueryResponse || "",
+                authors: authorsResponse || [],
+                publishers: publishersResponse || [],
+                tags: tagsResponse || [],
+                categories: categoriesResponse || [],
             }
         }
         catch(err) {
@@ -454,7 +488,13 @@ class BookModels {
 
             await client.query('COMMIT')
 
-            return booksQueryResponse.rows[0]
+            return {
+                book: booksQueryResponse,
+                authors: authorQueryResponse,
+                bookAuthor: bookAuthorQueryResponse,
+                publishers: publisherQueryResponse,
+                bookPublisher: bookPublisherResponse,
+            }
         }
         catch(err) {
             client.query('ROLLBACK')

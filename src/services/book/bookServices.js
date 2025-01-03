@@ -3,21 +3,17 @@ import dayjs from "dayjs"
 
 class BookServices {
     async getBookService ({ bookId }, bookModels) {
-        let queryResponse = null
-
         if (bookId) {
-            queryResponse = await bookModels.getBookModel({ bookId })
+            const queryResponse = await bookModels.getBookModel({ bookId })
+
+            return queryResponse
         } else {
-            queryResponse = await bookModels.getBooksModel()
-        }
-
-        const queryCount = {
-            count: queryResponse.length
-        }
-
-        return {
-            queryResponse, 
-            queryCount
+            const queryResponse = await bookModels.getBooksModel()
+    
+            return { 
+                count: queryResponse.books.length,
+                ...queryResponse
+            }
         }
     }
 
@@ -55,11 +51,9 @@ class BookServices {
         items.bookId = ulid()
         items.bookUpdatedAt = dayjs().format("YYYY-MM-DD[T]HH:mm:ss")
 
-        const createBookModel = await bookModels.createBookModel(items)
+        const createBookModel = await bookModels.createBookModel({ items })
 
-        return {
-            ...createBookModel
-        }
+        return createBookModel
     }
 
     async updateBookService({ bookId, items }, bookModels) {
@@ -67,45 +61,41 @@ class BookServices {
         book.bookId = bookId
 
         for(const item in items) {
-            if(item != "authors" ||
-                item != "publishers" ||
-                item != "tags" ||
+            if(item != "authors" &&
+                item != "publishers" &&
+                item != "tags" &&
                 item != "categories"
             ) {
-                book.item = items[item]
+                book[item] = items[item]
                 if(!("updatedAt" in book)) {
                     book.updated_at = dayjs().format("YYYY-MM-DD[T]HH:mm:ss")
                 }
+            } else if(item == "authors") {
+                items.authors.forEach((author, index) => {
+                    items.authors[index] = {
+                        updated_at: dayjs().format("YYYY-MM-DD[T]HH:mm:ss"),
+                        ...author
+                    } 
+                })
+            } else if (item == "publishers") {
+                items.publishers.forEach((publisher, index) => {
+                    items.publishers[index] = {
+                        updated_at: dayjs().format("YYYY-MM-DD[T]HH:mm:ss"),
+                        ...publisher
+                    } 
+                })
             }
         }
 
-        items.authors.length && items.authors.forEach((author, index) => {
-            items.authors[index] = {
-                updated_at: dayjs().format("YYYY-MM-DD[T]HH:mm:ss"),
-                ...author
-            } 
-        })
-
-        items.publishers.length && items.publishers.forEach((publisher, index) => {
-            items.publishers[index] = {
-                updated_at: dayjs().format("YYYY-MM-DD[T]HH:mm:ss"),
-                ...publisher
-            } 
-        })
-
         const updateBookModel = await bookModels.updateBookModel(book, items)
 
-        return {
-            ...updateBookModel
-        }
+        return updateBookModel
     }
 
     async deleteBookService ({ bookId }, bookModels) {
         const deleteBookModel = await bookModels.deleteBookModel({ bookId })
 
-        return {
-            ...deleteBookModel
-        }
+        return deleteBookModel
     }
 }
 
