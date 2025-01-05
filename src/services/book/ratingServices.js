@@ -3,63 +3,33 @@ import { ulid } from "ulid"
 class RatingServices {
     async getRatingsService ({ bookId }, ratingModels) {
         const getRatingsModel = await ratingModels.getRatingsModel({ bookId })
-        const queryCount = {
-            count: getRatingsModel.length
-        }
 
         return {
-            getRatingsModel,
-            queryCount
+            count: getRatingsModel.ratings.length,
+            ...getRatingsModel,
         }
     }
 
-    async createRatingsService ({
-        bookId,
-        userId,
-        rating,
-        privacy = false
-    }, ratingModels) {
-        const rateId = ulid()
+    async createRatingsService ({ bookId, userId, items }, ratingModels) {
+        items.rateId = ulid()
 
-        const createRatingsModel = await ratingModels.createRatingsModel({
-            rateId,
-            bookId,
-            userId,
-            rating,
-            privacy
-        })
+        items.privacy || (items.privacy = false)
 
-        return {
-            ...createRatingsModel
-        }
+        const createRatingsModel = await ratingModels.createRatingsModel({ bookId, userId, items })
+
+        return createRatingsModel
     }
 
-    async updateRatingsService ({
-        ratingId,
-        rating,
-        privacy
-    }, ratingModels) {
-        const rateData = {}
+    async updateRatingsService ({ rateId, items }, ratingModels) {
+        const updateRatingsModel = await ratingModels.updateRatingsModel({ rateId, items })
 
-        rating && (rateData.rating = rating)
-        privacy && (rateData.privacy = privacy)
-
-        const updateRatingsModel = await ratingModels.updateRatingsModel({
-            ratingId,
-            rateData
-        })
-
-        return {
-            ...updateRatingsModel
-        }
+        return updateRatingsModel
     }
 
-    async deleteRatingsService ({ ratingId }, ratingModels) {
-        const deleteRatingsModel = await ratingModels.deleteRatingsModel({ ratingId })
+    async deleteRatingsService ({ rateId }, ratingModels) {
+        const deleteRatingsModel = await ratingModels.deleteRatingsModel({ rateId })
 
-        return {
-            ...deleteRatingsModel
-        }
+        return deleteRatingsModel
     }
 }
 

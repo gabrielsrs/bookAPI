@@ -10,7 +10,7 @@ const ratingControllers = new RatingControllers()
 
 route.get("/:bookId/ratings", validateId, validationResult, ratingControllers.getRatingsController) 
 route.post("/:bookId/ratings/:userId", validateId, ratingCreateValidator, validationResult, ratingControllers.createRatingsController) 
-route.patch("/:bookId/ratings/:userId/:ratingId", validateId, ratingUpdateValidator, validationResult, ratingControllers.updateRatingsController) 
-route.delete("/:bookId/ratings/:userId/:ratingId", validateId, validationResult, ratingControllers.deleteRatingsController) 
+route.patch("/:bookId/ratings/:userId/:rateId", validateId, ratingUpdateValidator, validationResult, ratingControllers.updateRatingsController) 
+route.delete("/:bookId/ratings/:userId/:rateId", validateId, validationResult, ratingControllers.deleteRatingsController) 
 
 export default route

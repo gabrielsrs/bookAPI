@@ -423,11 +423,11 @@ class BookModels {
             const a = 1
 
             return {
-                book: booksQueryResponse || "",
-                authors: authorsResponse || [],
-                publishers: publishersResponse || [],
-                tags: tagsResponse || [],
-                categories: categoriesResponse || [],
+                book: booksQueryResponse.rows[0] || "",
+                authors: authorsResponse.rows || [],
+                publishers: publishersResponse.rows || [],
+                tags: tagsResponse.rows || [],
+                categories: categoriesResponse.rows || [],
             }
         }
         catch(err) {
@@ -489,11 +489,11 @@ class BookModels {
             await client.query('COMMIT')
 
             return {
-                book: booksQueryResponse,
-                authors: authorQueryResponse,
-                bookAuthor: bookAuthorQueryResponse,
-                publishers: publisherQueryResponse,
-                bookPublisher: bookPublisherResponse,
+                book: booksQueryResponse.rows[0],
+                authors: authorQueryResponse.rows,
+                bookAuthor: bookAuthorQueryResponse.rows,
+                publishers: publisherQueryResponse.rows,
+                bookPublisher: bookPublisherResponse.rows,
             }
         }
         catch(err) {

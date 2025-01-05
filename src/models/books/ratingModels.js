@@ -13,16 +13,16 @@ class RatingModels {
 
         const queryResponse = await pool.query(query, values)
 
-        return queryResponse.rows
+        return {
+            ratings: queryResponse.rows
+        }
     }
 
-    async createRatingsModel({
+    async createRatingsModel({ bookId, userId, items: {
         rateId,
-        bookId,
-        userId,
         rating,
         privacy
-    }) {
+    } }) {
         const client = await pool.connect()
         try {
             client.query("BEGIN")
@@ -48,7 +48,9 @@ class RatingModels {
 
             await client.query("COMMIT")
 
-            return rateQueryResponse.rows[0]
+            return {
+                rate: rateQueryResponse.rows[0]
+            }
         }
         catch (err) {
             client.query("ROLLBACK")
@@ -58,13 +60,10 @@ class RatingModels {
         }
     }
 
-    async updateRatingsModel({
-        ratingId,
-        rateData
-    }) {
+    async updateRatingsModel({ ratingId, items }) {
         const query = `
             UPDATE ratings
-                SET ${Object.keys(rateData).map(item => `${item} = ${rateData[item]}`)}
+                SET ${Object.keys(items).map(item => `${item} = ${items[item]}`)}
             WHERE id = $1
             RETURNING *
         `
@@ -74,7 +73,7 @@ class RatingModels {
         const queryResponse = await pool.query(query, values)
 
         return {
-            updatedRate: queryResponse
+            rate: queryResponse
         }
     }
 
@@ -107,7 +106,7 @@ class RatingModels {
             await client.query('COMMIT')
 
             return {
-                deletedRate: rateQueryResponse.rows[0]
+                rate: rateQueryResponse.rows[0]
             }
         }
         catch(err) {
