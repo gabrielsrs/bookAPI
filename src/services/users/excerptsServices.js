@@ -2,7 +2,7 @@ import { ulid } from "ulid"
 
 class ExcerptsServices {
     async getExcerptsService({ userId, bookId }, excerptsModels) {
-        let getExcerptsModel = null
+        let getExcerptsModel
 
         if (bookId) {
             getExcerptsModel = await excerptsModels.getBookExcerptsModel({ userId, bookId })
@@ -10,20 +10,16 @@ class ExcerptsServices {
             getExcerptsModel = await excerptsModels.getBooksExcerptsModel({ userId })
         }
 
-        const queryCount = {
-            count: getExcerptsModel.length
-        }
-
         return {
-            getExcerptsModel,
-            queryCount
+            count: getExcerptsModel.excerpts.length,
+            ...getExcerptsModel
         }
     }
 
     async createExcerptService({ userId, bookId, items }, excerptsModels) {
         items.excerptId = ulid()
 
-        items.privacy || (items.privacy = true)
+        "privacy" in items || (items.privacy = true)
 
         const { book_locale: bookLocale } = items
 
@@ -31,9 +27,7 @@ class ExcerptsServices {
         
         const createExcerptModel = await excerptsModels.createExcerptModel({ userId, bookId, items, bookLocale })
 
-        return {
-            ...createExcerptModel
-        }
+        return createExcerptModel
     }
 
     async updateExcerptService({ excerptId, items }, excerptsModels) {
@@ -42,17 +36,13 @@ class ExcerptsServices {
 
         const updateExcerptModel = await excerptsModels.updateExcerptModel({ excerptId, items, bookLocale })
 
-        return {
-            ...updateExcerptModel
-        }
+        return updateExcerptModel
     }
 
     async deleteExcerptService({ excerptId }, excerptsModels) {
         const deleteExcerptModel = await excerptsModels.deleteExcerptModel({ excerptId })
 
-        return {
-            ...deleteExcerptModel
-        }
+        return deleteExcerptModel
     }
 }
 

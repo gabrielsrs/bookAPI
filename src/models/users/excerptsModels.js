@@ -14,7 +14,9 @@ class ExcerptsModels {
 
         const queryResponse = await pool.query(query, values)
 
-        return queryResponse.rows
+        return {
+            excerpts: queryResponse.rows
+        }
         
     }
 
@@ -31,7 +33,9 @@ class ExcerptsModels {
 
         const queryResponse = await pool.query(query, values)
 
-        return queryResponse.rows
+        return {
+            excerpts: queryResponse.rows
+        }
         
     }
 
@@ -84,7 +88,10 @@ class ExcerptsModels {
 
             await client.query('COMMIT')
 
-            return excerptQueryResponse.rows[0]
+            return {
+                excerpt: excerptQueryResponse.rows[0],
+                bookLocale: bookLocaleResponse.rows[0]
+            }
 
         } catch (err) {
             client.query('ROLLBACK')
@@ -98,6 +105,8 @@ class ExcerptsModels {
         const client = await pool.connect()
 
         try {
+            let bookLocaleResponse
+
             client.query('BEGIN')
 
             const excerptQuery = `
@@ -124,12 +133,15 @@ class ExcerptsModels {
 
                 const bookLocaleValues = [excerptId]
 
-                const bookLocaleResponse = await client.query(bookLocaleQuery, bookLocaleValues)
+                bookLocaleResponse = await client.query(bookLocaleQuery, bookLocaleValues)
             }
 
             await client.query('COMMIT')
 
-            return excerptQueryResponse.rows[0]
+            return {
+                excerpt: excerptQueryResponse.rows[0],
+                bookLocale: bookLocaleResponse.rows[0] || {}
+            }
 
         } catch (err) {
             client.query('ROLLBACK')
@@ -180,7 +192,10 @@ class ExcerptsModels {
 
             await client.query('COMMIT')
 
-            return excerptQueryResponse.rows[0]
+            return {
+                excerpt: excerptQueryResponse.rows[0],
+                bookLocale: bookLocaleResponse.rows[0]
+            }
 
         } catch (err) {
             client.query('ROLLBACK')
