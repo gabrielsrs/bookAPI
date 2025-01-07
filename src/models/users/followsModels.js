@@ -57,7 +57,9 @@ class FollowsModels {
 
         const queryResponse = await pool.query(query, values)
 
-        return queryResponse.rows[0]
+        return {
+            follow: queryResponse.rows[0]
+        }
     }
 
     async deleteFollowModel({ unfollow, unfollowed }) {
@@ -71,7 +73,9 @@ class FollowsModels {
 
         const queryResponse = await pool.query(query, values)
 
-        return queryResponse.rows[0]
+        return {
+            unfollow: queryResponse.rows[0]
+        }
     }
 }
 
