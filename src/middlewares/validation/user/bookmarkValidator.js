@@ -13,7 +13,7 @@ const validateCreationBookmark = [
         .isObject()
             .withMessage("Invalid BOOK LOCALE format. Book locale should be a JSON"),
 
-    body(["book_locale.page", "book_locale.paragraph_number", "book_locale.chapter_number", "book_locale.word_offset"])
+    body(["book_locale.page"])
         .optional()
         .trim()
         .notEmpty()
@@ -37,11 +37,7 @@ const validateCreationBookmark = [
     body('book_locale').custom(value => {
             if (!value) return true
             
-            const hasLocationFields =
-                'page' in value &&
-                'paragraph_number' in value &&
-                'chapter_number' in value &&
-                'word_offset' in value
+            const hasLocationFields = 'page' in value;
             const hasLocationIdentifier = 'location_identifier' in value;
 
             if (!hasLocationFields && !hasLocationIdentifier) {

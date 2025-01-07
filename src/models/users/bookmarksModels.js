@@ -14,7 +14,9 @@ class BookmarksModels {
 
         const queryResponse = await pool.query(query, values)
 
-        return queryResponse.rows[0]
+        return {
+            bookmarks: queryResponse.rows
+        }
         
     }
 
@@ -31,7 +33,9 @@ class BookmarksModels {
 
         const queryResponse = await pool.query(query, values)
 
-        return queryResponse.rows
+        return {
+            bookmarks: queryResponse.rows
+        }
         
     }
 
@@ -56,7 +60,7 @@ class BookmarksModels {
             const bookmarkQuery = `
                 INSERT INTO bookmark (id, book_id, user_id, book_locale_id, privacy)
                 VALUES ($1, $2, $3, $4, $5)
-                RETURNING id
+                RETURNING *
             `
     
             const bookmarkValues = [bookmarkId, bookId, userId, bookLocaleId, privacy]
@@ -66,7 +70,7 @@ class BookmarksModels {
             const bookLocaleQuery = `
                 INSERT INTO book_locale (id, page, paragraph_number, chapter_number, word_offset, location_identifier)
                 VALUES ($1, $2, $3, $4, $5, $6, $7)
-                RETURNING id
+                RETURNING *
             `
     
             const bookLocaleValues = [bookLocaleId, page, paragraph_number, chapter_number, word_offset, location_identifier]
@@ -75,7 +79,10 @@ class BookmarksModels {
     
             await client.query('COMMIT')
     
-            return bookmarkQueryResponse.rows[0]
+            return {
+                bookmark: bookmarkQueryResponse.rows[0],
+                bookLocale: bookLocaleResponse.rows[0]
+            }
     
         } catch (err) {
             client.query('ROLLBACK')
@@ -116,7 +123,10 @@ class BookmarksModels {
 
         await client.query('COMMIT')
 
-        return bookmarkQueryResponse.rows[0]
+        return {
+            bookmark: bookmarkQueryResponse.rows[0],
+            bookLocale: bookLocaleResponse.rows[0]
+        }
 
     } catch (err) {
         client.query('ROLLBACK')

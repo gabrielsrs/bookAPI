@@ -1,4 +1,4 @@
-import { ulid } from 'ulid'
+import { ulid } from "ulid"
 
 class BookmarksServices {
   async getBookmarksService({ userId, bookId }, bookmarksModels) {
@@ -6,17 +6,14 @@ class BookmarksServices {
 
     if (bookId) {
       getBookmarksModel = await bookmarksModels.getBookBookmarksModel({ userId, bookId })
+      
     } else {
       getBookmarksModel = await bookmarksModels.getBooksBookmarksModel({ userId })
     }
 
-    const queryCount = {
-      count: getBookmarksModel.length
-    }
-
     return {
-      getBookmarksModel,
-      queryCount
+      count: getBookmarksModel.bookmarks.length,
+      ...getBookmarksModel,
     }
   }
 
@@ -33,17 +30,13 @@ class BookmarksServices {
 
     const createBookmarkModel = await bookmarksModels.createBookmarkModel({ items, bookLocale })
 
-    return {
-      ...createBookmarkModel
-    }
+    return createBookmarkModel
   }
 
   async deleteBookmarkService ({ bookmarkId }, bookmarksModels) {
     const deleteBookmarkModel = await bookmarksModels.deleteBookmarkModel({ bookmarkId })
 
-    return {
-      ...deleteBookmarkModel
-    }
+    return deleteBookmarkModel
   }
 }
 
