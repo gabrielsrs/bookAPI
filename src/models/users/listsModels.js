@@ -45,7 +45,9 @@ class ListsModels {
 
         const queryResponse = await pool.query(query, values)
 
-        return queryResponse.rows[0]
+        return {
+            list: queryResponse.rows[0]
+        }
     }    
     
     async getListsModel({ userId }) {
@@ -82,7 +84,9 @@ class ListsModels {
 
         const queryResponse = await pool.query(query, values)
 
-        return queryResponse.rows
+        return {
+            lists: queryResponse.rows
+        }
     }
 
     async createListModel({ userId, items: {
@@ -119,7 +123,9 @@ class ListsModels {
             
             await client.query('COMMIT')
 
-            return listQueryResponse.rows[0]
+            return {
+                list: listQueryResponse.rows[0]
+            }
 
         } catch (err) {
             client.query('ROLLBACK')
@@ -140,7 +146,9 @@ class ListsModels {
 
         const queryResponse = await pool.query(query, values)
 
-        return queryResponse.rows[0]
+        return {
+            list: queryResponse.rows[0]
+        }
     }
 
     async deleteListModel({ listId }) {
@@ -152,7 +160,7 @@ class ListsModels {
             const bookListQuery = `
                 DELETE FROM list_books
                 WHERE list_id = $1
-                RETURNING id
+                RETURNING book_id
             `
             
             const bookListValues = [listId]
@@ -162,7 +170,7 @@ class ListsModels {
             const likeListQuery = `
                 DELETE FROM likes_list
                 WHERE AND list_id = $1
-                RETURNING id
+                RETURNING user_id
             `
             
             const likeListValues = [listId]
@@ -172,7 +180,7 @@ class ListsModels {
             const followsListQuery = `
                 DELETE FROM list_followed
                 WHERE list_id = $1
-                RETURNING id
+                RETURNING user_id
             `
             
             const followsListValues = [listId]
@@ -201,7 +209,12 @@ class ListsModels {
             
             await client.query('COMMIT')
 
-            return listQueryResponse.rows[0]
+            return {
+                list: listQueryResponse.rows[0],
+                books: bookListQueryResponse.rows,
+                usersLike: likeListQueryResponse.rows,
+                userFollower: followsListQueryResponse.rows
+            }
 
         } catch (err) {
             client.query('ROLLBACK')
@@ -221,21 +234,25 @@ class ListsModels {
 
         const queryResponse = await pool.query(query, values)
 
-        return queryResponse.rows[0]
+        return {
+            book: queryResponse.rows[0]
+        }
     }
     
     async removeBookFromListModel({ listId, bookId }) {
         const query = `
             DELETE FROM list_books
             WHERE list_id = $1 AND book_id = $2
-            RETURNING *
+            RETURNING book_id
         `
         
         const values = [listId, bookId]
 
         const queryResponse = await pool.query(query, values)
 
-        return queryResponse.rows[0]
+        return {
+            book: queryResponse.rows[0]
+        }
     }
 
     async getLikedListModel({ userId, listId }) {
@@ -269,7 +286,9 @@ class ListsModels {
 
         const queryResponse = await pool.query(query, values)
 
-        return queryResponse.rows[0]
+        return {
+            likes: queryResponse.rows[0]
+        }
     }
 
     async getLikedListsModel({ userId }) {
@@ -303,7 +322,9 @@ class ListsModels {
 
         const queryResponse = await pool.query(query, values)
 
-        return queryResponse.rows[0]
+        return {
+            likes: queryResponse.rows
+        }
     }
 
     async likeListModel({ userId, listId }) {
@@ -317,21 +338,25 @@ class ListsModels {
 
         const queryResponse = await pool.query(query, values)
 
-        return queryResponse.rows[0]
+        return {
+            like: queryResponse.rows[0]
+        }
     }
 
     async unlikeListModel({ userId, listId }){
         const query = `
             DELETE FROM likes_list
             WHERE user_id = $1 AND list_id = $2
-            RETURNING *
+            RETURNING list_id
         `
         
         const values = [userId, listId]
 
         const queryResponse = await pool.query(query, values)
 
-        return queryResponse.rows[0]
+        return {
+            unlike: queryResponse.rows[0]
+        }
     }
 
     async getFollowedListModel({ userId, listId }) {
@@ -365,7 +390,9 @@ class ListsModels {
 
         const queryResponse = await pool.query(query, values)
 
-        return queryResponse.rows[0]
+        return {
+            follows: queryResponse.rows[0]
+        }
     }   
 
     async getFollowedListsModel({ userId }) {
@@ -399,7 +426,9 @@ class ListsModels {
 
         const queryResponse = await pool.query(query, values)
 
-        return queryResponse.rows[0]
+        return {
+            follows: queryResponse.rows[0]
+        }
     }
 
     async followListModel({ userId, listId }) {
@@ -413,7 +442,9 @@ class ListsModels {
 
         const queryResponse = await pool.query(query, values)
 
-        return queryResponse.rows[0]
+        return {
+            follow: queryResponse.rows[0]
+        }
     }
 
     async unfollowListModel({ userId, listId }) {
@@ -427,7 +458,9 @@ class ListsModels {
 
         const queryResponse = await pool.query(query, values)
 
-        return queryResponse.rows[0]        
+        return {
+            unfollow: queryResponse.rows[0] 
+        }       
     }
 }
 

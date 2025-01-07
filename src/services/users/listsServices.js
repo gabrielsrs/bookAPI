@@ -2,22 +2,18 @@ import { ulid } from 'ulid'
 import dayjs from "dayjs"
 
 class ListsServices {
-    async getListsService ({ userId, listId }, listsModels) {
-        let getListsModel = null
-        
+    async getListsService ({ userId, listId }, listsModels) {        
         if (listId) {
-            getListsModel = await listsModels.getListModel({ userId, listId })
+            const getListsModel = await listsModels.getListModel({ userId, listId })
+            
+            return getListsModel
         } else {
-            getListsModel = await listsModels.getListsModel({ userId })
-        }
+            const getListsModel = await listsModels.getListsModel({ userId })
 
-        const queryCount = {
-            count: getListsModel.length
-        }
-
-        return {
-            getListsService: getListsModel,
-            queryCount
+            return {
+                count: getListsModel.lists.length,
+                ...getListsModel,
+            }
         }
     }
 
@@ -28,9 +24,7 @@ class ListsServices {
         
         const createListModel = await listsModels.createListModel({ userId, items })
 
-        return {
-            ...createListModel
-        }
+        return createListModel
     }
 
     async updateListService({ listId, items }, listsModels) {
@@ -38,103 +32,93 @@ class ListsServices {
 
         const updateListModel = await listsModels.updateListModel({ listId, items })
 
-        return {
-            ...updateListModel
-        }
+        return updateListModel
     }
 
     async deleteListService({ listId }, listsModels) {
         const deleteListModel = await listsModels.deleteListModel({ listId })
 
-        return {
-            ...deleteListModel
-        }
+        return deleteListModel
     }
 
     async addBookToListService({ listId, bookId }, listsModels) {
         const addBookToListModel = await listsModels.addBookToListModel({ listId, bookId })
 
-        return {
-            ...addBookToListModel
-        }
+        return addBookToListModel
     }
 
     async removeBookFromListService({ listId, bookId }, listsModels) {
         const removeBookFromListModel = await listsModels.removeBookFromListModel({ listId, bookId })
 
-        return {
-            ...removeBookFromListModel
-        }
+        return removeBookFromListModel
     }
 
     async getLikedListsService ({ userId, listId }, listsModels) {
-        let getLikedListsModel = null
-
         if (listId) {
-            getLikedListsModel = await listsModels.getLikedListModel({ userId, listId })
+            const getLikedListsModel = await listsModels.getLikedListModel({ userId, listId })
+
+            return {
+                count: getLikedListsModel.likes["users_likes"].length,
+                ...getLikedListsModel
+            }
         } else {
-            getLikedListsModel = await listsModels.getLikedListsModel({ userId })
-        }
+            const getLikedListsModel = await listsModels.getLikedListsModel({ userId })
 
-        const queryCount = {
-            count: getLikedListsModel.length
-        }
+            getLikedListsModel.likes.forEach((item, index) => {
+                getLikedListsModel.likes[index].likesCount = item["users_likes"].length
+            })
 
-        return {
-            getLikedListsService: getLikedListsModel,
-            queryCount
+            return {
+                count: getLikedListsModel.likes.length,
+                ...getLikedListsModel
+            }
         }
     }
 
     async likeListService({ userId, listId }, listsModels) {
         const likeListModel = await listsModels.likeListModel({ userId, listId })
 
-        return {
-            ...likeListModel
-        }
+        return likeListModel
     }
 
     async unlikeListService({ userId, listId }, listsModels) {
         const unlikeListModel = await listsModels.unlikeListModel({ userId, listId })
 
-        return {
-            ...unlikeListModel
-        }
+        return unlikeListModel
     }
 
     async getFollowedListsService ({ userId, listId }, listsModels) {
-        let getFollowedListsModel = null
-
         if (listId) {
-            getFollowedListsModel = await listsModels.getFollowedListModel({ userId, listId })
+            const getFollowedListsModel = await listsModels.getFollowedListModel({ userId, listId })
+
+            return {
+                count: getFollowedListsModel.follows["users_followers"].length,
+                ...getFollowedListsModel
+            }
         } else {
-            getFollowedListsModel = await listsModels.getFollowedListsModel({ userId })
-        }
+            const getFollowedListsModel = await listsModels.getFollowedListsModel({ userId })
 
-        const queryCount = {
-            count: getFollowedListsModel.length
-        }
-
-        return {
-            getFollowedListsService: getFollowedListsModel,
-            queryCount
+            getFollowedListsModel.follows.map((item, index) => {
+                getFollowedListsModel.follows[index].followsCount = item["users_followers"].length
+            })
+            
+            return {
+                count: getFollowedListsModel.follows.length,
+                ...getFollowedListsModel
+            }
         }
     }
 
     async followListService({ userId, listId }, listsModels) {
         const followListModel = await listsModels.followListModel({ userId, listId })
 
-        return {
-            ...followListModel
-        }
+        return followListModel
     }
 
     async unfollowListService({ userId, listId }, listsModels) {
         const unfollowListModel = await listsModels.unfollowListModel({ userId, listId })
 
-        return {
-            ...unfollowListModel
-        }
+        return unfollowListModel
     }
 }
 
