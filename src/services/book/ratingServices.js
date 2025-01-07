@@ -13,7 +13,7 @@ class RatingServices {
     async createRatingsService ({ bookId, userId, items }, ratingModels) {
         items.rateId = ulid()
 
-        items.privacy || (items.privacy = false)
+        "privacy" in items || (items.privacy = false)
 
         const createRatingsModel = await ratingModels.createRatingsModel({ bookId, userId, items })
 

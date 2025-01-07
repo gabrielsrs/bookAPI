@@ -18,8 +18,8 @@ class RemindersServices {
     items.reminderId = ulid()
     items.reminderDate = dayjs(items.reminder_datetime).format("YYYY-MM-DD")
     items.reminderTime = dayjs(items.reminder_datetime).format("HH:mm:ss")
-    items.is_active || (items.is_active = true)
-    items.is_sent || (items.is_sent = false)
+    "is_active" in items || (items.is_active = true)
+    "is_sent" in items || (items.is_sent = false)
     items.updatedAt = dayjs().format("YYYY-MM-DD[T]HH:mm:ss")
 
     const createReminderModel = await remindersModels.createReminderModel({ userId, items })

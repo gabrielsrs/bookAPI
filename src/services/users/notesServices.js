@@ -24,7 +24,7 @@ class NotesServices {
   async createNoteService ({ userId, bookId, items }, notesModels) {
     items.noteId = ulid()
 
-    items.privacy || (items.privacy = true)
+    "privacy" in items || (items.privacy = true)
 
     items.updatedAt = dayjs().format("YYYY-MM-DD[T]HH:mm:ss")
 

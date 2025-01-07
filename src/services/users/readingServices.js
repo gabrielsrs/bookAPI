@@ -12,9 +12,9 @@ class ReadingServices {
 
     async createReadingProgressService({ userId, bookId, items }, readingModels) {
         items.readingProgressId = ulid()
-        items.privacy || (items.privacy = false)
-        items.started || (items.started = false)
-        items.finished || (items.finished = false)
+        "privacy" in items || (items.privacy = false)
+        "started" in items || (items.started = false)
+        "finished" in items || (items.finished = false)
         items.lastReading = dayjs().format("YYYY-MM-DD[T]HH:mm:ss")
 
         const { book_locale: bookLocale } = items

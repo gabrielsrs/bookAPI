@@ -20,7 +20,7 @@ class ReadLaterServices {
         items.bookId = bookId
         items.updated_at = dayjs().format("YYYY-MM-DD[T]HH:mm:ss")
 
-        items.privacy || (items.privacy = false)
+        "privacy" in items || (items.privacy = false)
 
         const createReadLaterModel = await readLaterModels.createReadLaterModel({ items })
         

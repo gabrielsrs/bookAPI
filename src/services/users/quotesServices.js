@@ -23,7 +23,7 @@ class QuotesServices {
   async createQuoteService({ userId, bookId, items }, quotesModels) {
     items.quotId = ulid()
 
-    items.privacy || (items.privacy = true)
+    "privacy" in items || (items.privacy = true)
 
     const { book_locale: bookLocale } = items
 

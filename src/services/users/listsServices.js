@@ -23,7 +23,7 @@ class ListsServices {
 
     async createListService({ userId, items }, listsModels) {
         items.listId = ulid()
-        items.privacy || (items.privacy = false)
+        "privacy" in items || (items.privacy = false)
         items.updatedAt = dayjs().format("YYYY-MM-DD[T]HH:mm:ss")
         
         const createListModel = await listsModels.createListModel({ userId, items })

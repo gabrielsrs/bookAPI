@@ -22,7 +22,7 @@ class BookmarksServices {
     items.userId = userId
     items.bookId = bookId
 
-    items.privacy || (items.privacy = true)
+    "privacy" in items || (items.privacy = true)
     
     const { book_locale: bookLocale } = items
 
