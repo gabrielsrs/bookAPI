@@ -5,8 +5,8 @@ import { BookmarkServiceObject } from "../serviceObjects/users/bookmarkServiceOb
 import { ulid } from "ulid"
 
 describe("bookmarkService", () => {
-    let bookmarksServices = new BookmarksServices()
-    let bookmarkServiceObject = new BookmarkServiceObject()
+    let bookmarksServices
+    let bookmarkServiceObject
     let userId, bookId, bookmarkId
     const checkId = /^[0-7][0-9A-HJKMNP-TV-Z]{25}$/
 
