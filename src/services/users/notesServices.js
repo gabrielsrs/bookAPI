@@ -11,13 +11,9 @@ class NotesServices {
       getNotesModel = await notesModels.getBooksNotesModel({userId})
     }
 
-    const queryCount = {
-      count: getNotesModel.length
-    }
-
     return {
-      getNotesModel,
-      queryCount
+      count: getNotesModel.notes.length,
+      ...getNotesModel
     }
   }
 
@@ -34,9 +30,7 @@ class NotesServices {
     
     const createNoteModel = await notesModels.createNoteModel({ userId, bookId, items, bookLocale })
 
-    return {
-      ...createNoteModel
-    }
+    return createNoteModel
   }
 
   async updateNoteService({ noteId, items }, notesModels) {
@@ -47,17 +41,13 @@ class NotesServices {
 
     const updateNoteModel = await notesModels.updateNoteModel({ noteId, items, bookLocale })
 
-    return {
-      ...updateNoteModel
-    }
+    return updateNoteModel
   }
 
   async deleteNoteService({ noteId }, notesModels) {
     const deleteNoteModel = await notesModels.deleteNoteModel({ noteId })
 
-    return {
-      ...deleteNoteModel
-    }
+    return deleteNoteModel
   }
 }
 

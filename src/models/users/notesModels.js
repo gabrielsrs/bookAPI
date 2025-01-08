@@ -14,7 +14,9 @@ class NotesModels {
 
         const queryResponse = await pool.query(query, values)
 
-        return queryResponse.rows
+        return {
+            notes: queryResponse.rows
+        }
         
     }
 
@@ -31,7 +33,9 @@ class NotesModels {
 
         const queryResponse = await pool.query(query, values)
 
-        return queryResponse.rows
+        return {
+            notes: queryResponse.rows
+        }
         
     }
 
@@ -51,6 +55,7 @@ class NotesModels {
         const client = await pool.connect()
 
         try {
+            let bookLocaleResponse
             client.query('BEGIN')
 
             const noteQuery = `
@@ -72,7 +77,7 @@ class NotesModels {
 
                 const bookLocaleValues = [bookLocaleId, page, paragraph_number, chapter_number, word_offset, location_identifier]
 
-                const bookLocaleResponse = await client.query(bookLocaleQuery, bookLocaleValues)
+                bookLocaleResponse = await client.query(bookLocaleQuery, bookLocaleValues)
             }
 
             const bookNoteQuery = `
@@ -87,7 +92,10 @@ class NotesModels {
 
             await client.query('COMMIT')
 
-            return noteQueryResponse.rows[0]
+            return {
+                note: noteQueryResponse.rows[0],
+                bookLocale: bookLocaleResponse.rows[0] || []
+            }
 
         } catch (err) {
             client.query('ROLLBACK')
@@ -101,6 +109,7 @@ class NotesModels {
         const client = await pool.connect()
 
         try {
+            let bookLocaleResponse
             client.query('BEGIN')
 
             if (items) {
@@ -129,12 +138,15 @@ class NotesModels {
 
                 const bookLocaleValues = [noteId]
 
-                const bookLocaleResponse = await client.query(bookLocaleQuery, bookLocaleValues)
+                bookLocaleResponse = await client.query(bookLocaleQuery, bookLocaleValues)
             }
 
             await client.query('COMMIT')
 
-            return noteQueryResponse.rows[0]
+            return {
+                note: noteQueryResponse.rows[0],
+                bookLocale: bookLocaleResponse.rows[0] || []
+            }
 
         } catch (err) {
             client.query('ROLLBACK')
@@ -185,7 +197,10 @@ class NotesModels {
 
             await client.query('COMMIT')
 
-            return noteQueryResponse.rows[0]
+            return {
+                note: noteQueryResponse.rows[0],
+                bookLocale: bookLocaleResponse.rows[0]
+            }
 
         } catch (err) {
             client.query('ROLLBACK')
