@@ -4,13 +4,10 @@ import dayjs from "dayjs"
 class RemindersServices {
   async getRemindersService({ userId }, remindersModels) {
     const getRemindersModel = await remindersModels.getRemindersModel({ userId })
-    const queryCount = {
-      count: getRemindersModel.length
-    }
 
     return {
-      getRemindersService: getRemindersModel,
-      queryCount
+      count: getRemindersModel.reminders.length,
+      ...getRemindersModel
     }
   }
 
@@ -24,9 +21,7 @@ class RemindersServices {
 
     const createReminderModel = await remindersModels.createReminderModel({ userId, items })
 
-    return {
-      ...createReminderModel
-    }
+    return createReminderModel
   }
 
   async updateReminderService({ reminderId, items }, remindersModels) {
@@ -38,17 +33,13 @@ class RemindersServices {
 
     const updateReminderModel = await remindersModels.updateReminderModel({ reminderId, items })
 
-    return {
-      ...updateReminderModel
-    }
+    return updateReminderModel
   }
 
   async deleteReminderService({ reminderId }, remindersModels) {
     const deleteReminderModel = await remindersModels.deleteReminderModel({ reminderId })
 
-    return {
-      ...deleteReminderModel
-    }
+    return deleteReminderModel
   }
 }
 

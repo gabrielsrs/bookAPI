@@ -16,7 +16,9 @@ class RemindersModels {
 
         const queryResponse = await pool.query(query, values)
 
-        return queryResponse.rows[0]
+        return {
+            reminder: queryResponse.rows
+        }
     }
     
     async createReminderModel({
@@ -58,7 +60,9 @@ class RemindersModels {
 
             await client.query('COMMIT')
 
-            return reminderResponse.rows[0]
+            return {
+                reminder: reminderResponse.rows[0]
+            }
 
         } catch (e) {
             await client.query('ROLLBACK')
@@ -78,7 +82,9 @@ class RemindersModels {
 
         const queryResponse = await client.query(query, values)
 
-        return queryResponse.rows[0]
+        return {
+            reminder: queryResponse.rows[0]
+        }
 
     }
     async deleteReminderModel({ reminderId }) {
@@ -92,7 +98,9 @@ class RemindersModels {
 
         const queryResponse = await pool.query(query, values)
         
-        return queryResponse.rows[0]
+        return {
+            reminder: queryResponse.rows[0]
+        }
     }
 
 }
