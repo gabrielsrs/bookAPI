@@ -3,54 +3,41 @@ import dayjs from "dayjs"
 
 class UsersServices {
   async getUsersService({ userId }, usersModels) {
-    let getUsersModel = null
-
     if (userId) {
-      getUsersModel = await usersModels.getUserModel({ userId })
+      const getUsersModel = await usersModels.getUserModel({ userId })
+
+      return getUsersModel
+
     } else {
-      getUsersModel = await usersModels.getUsersModel()
-    }
+      const getUsersModel = await usersModels.getUsersModel()
 
-    const queryCount = {
-      count: getUsersModel.length
-    }
-
-    return {
-      getUsersModel,
-      queryCount
+      return {
+        count: getUsersModel.users.length,
+        ...getUsersModel
+      }
     }
   }
 
-  async createUserService({ nickname, description, cover_image }, usersModels) {
-    const user = {
-      userId: ulid(),
-      nickname,
-      description,
-      coverImage: cover_image,
-      updatedAt: dayjs().format("YYYY-MM-DD[T]HH:mm:ss")
-    }
+  async createUserService({ items }, usersModels) {
+    items.userId = ulid()
+    items.updatedAt = dayjs().format("YYYY-MM-DD[T]HH:mm:ss")
 
-    const createUserModel = await usersModels.createUserModel({ user })
+    const createUserModel = await usersModels.createUserModel({ items })
 
-    return {
-      ...createUserModel
-    }
+    return createUserModel
   }
 
   async updateUserService({ userId, items }, usersModels) {
+    items.update_at = dayjs().format("YYYY-MM-DD[T]HH:mm:ss")
     const updateUserModel = await usersModels.updateUserModel({ userId, items })
 
-    return {
-      ...updateUserModel
-    }
+    return updateUserModel
   }
 
   async deleteUserService({ userId }, usersModels) {
     const deleteUserModel = await usersModels.deleteUserModel({ userId })
 
-    return {
-      ...deleteUserModel
-    }
+    return deleteUserModel
   }
 }
 

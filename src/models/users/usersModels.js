@@ -24,7 +24,9 @@ class UsersModels {
 
         const queryResponse = await pool.query(query, values)
 
-        return queryResponse.rows[0]
+        return {
+            user: queryResponse.rows[0]
+        }
     }
 
     async getUsersModel () {
@@ -35,14 +37,16 @@ class UsersModels {
 
         const queryResponse = await pool.query(query)
 
-        return queryResponse.rows
+        return {
+            users: queryResponse.rows
+        }
     }
 
     async createUserModel ({
         userId, 
         nickname,
         description,
-        coverImage,
+        cover_image: coverImage,
         updatedAt
     }) {
         const query = `
@@ -61,7 +65,9 @@ class UsersModels {
 
         const userQueryResponse = await pool.query(query, values)
 
-        return userQueryResponse.rows[0]
+        return {
+            user: userQueryResponse.rows[0]
+        }
     }
 
     async updateUserModel ({ userId, items }) {
@@ -76,7 +82,9 @@ class UsersModels {
 
         const userQueryResponse = await pool.query(query, values) 
 
-        return userQueryResponse.rows[0]
+        return {
+            user: userQueryResponse.rows[0]
+        }
     }
 
     async deleteUserModel({ userId }) {
@@ -90,7 +98,9 @@ class UsersModels {
 
         const userQueryResponse = await pool.query(query, values)
 
-        return userQueryResponse.rows[0]
+        return {
+            user: userQueryResponse.rows[0]
+        }
     }
 }
 

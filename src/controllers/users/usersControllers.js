@@ -20,9 +20,9 @@ class UsersControllers {
     }
 
     createUserController = async (req, res) => {
-        const { nickname, description, cover_image } = req.body
+        const items = req.body
 
-        const result = await this.usersServices.createUserService({ nickname, description, cover_image }, this.usersModels)
+        const result = await this.usersServices.createUserService({ items }, this.usersModels)
 
         res.status(200).json({
             "status": "success",
