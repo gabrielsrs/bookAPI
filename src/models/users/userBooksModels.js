@@ -14,7 +14,9 @@ class UserBooksModels {
 
         const queryResponse = await pool.query(query, values)
 
-        return queryResponse.rows
+        return {
+            userBooks: queryResponse.rows
+        }
     }
 
     async addUserBookModel({ userId, bookId }) {
@@ -28,7 +30,9 @@ class UserBooksModels {
 
         const queryResponse = await pool.query(query, values)
 
-        return queryResponse.rows[0]
+        return {
+            userBook: queryResponse.rows[0]
+        }
     }
 
     async removeUserBookModel({ userId, bookId }){
@@ -42,7 +46,9 @@ class UserBooksModels {
         
         const queryResponse = await pool.query(query, values)
 
-        return queryResponse.rows[0]
+        return {
+            userBook: queryResponse.rows[0]
+        }
     }
 }
 
