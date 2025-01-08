@@ -14,13 +14,13 @@ class ReadLaterModels {
 
         const queryResponse = await pool.query(query, values)
 
-        return queryResponse.rows
+        return {
+            readLater: queryResponse.rows
+        }
     }
 
-    async createReadLaterModel({ items: {
+    async createReadLaterModel({ userId, bookId, items: {
         readLaterId,
-        userId,
-        bookId,
         privacy,
         updatedAt
     } }) {
@@ -34,7 +34,9 @@ class ReadLaterModels {
 
         const queryResponse = await pool.query(query, values)
 
-        return queryResponse.rows[0]
+        return {
+            readLater: queryResponse.rows[0]
+        }
     }
 
     async deleteReadLaterModel({ userId, bookId }) {
@@ -48,7 +50,9 @@ class ReadLaterModels {
 
         const queryResponse = await pool.query(query, values)
 
-        return queryResponse.rows[0]
+        return {
+            readLater: queryResponse.rows[0]
+        }
     }
 }
 

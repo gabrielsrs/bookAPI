@@ -4,37 +4,28 @@ import dayjs from "dayjs"
 class ReadLaterServices {
     async getReadLaterService({ userId }, readLaterModels) {
         const getReadLetterModel = await readLaterModels.getReadLaterModel({ userId })
-        const queryCount = {
-            count: getReadLetterModel.length
-        }
 
         return {
-            getReadLetterModel,
-            queryCount
+            count: getReadLetterModel.readLater.length,
+            ...getReadLetterModel
         }
     }
 
     async createReadLaterService({ userId, bookId, items }, readLaterModels) {
         items.readLaterId = ulid()
-        items.userId = userId
-        items.bookId = bookId
-        items.updated_at = dayjs().format("YYYY-MM-DD[T]HH:mm:ss")
+        items.updatedAt = dayjs().format("YYYY-MM-DD[T]HH:mm:ss")
 
         "privacy" in items || (items.privacy = false)
 
-        const createReadLaterModel = await readLaterModels.createReadLaterModel({ items })
+        const createReadLaterModel = await readLaterModels.createReadLaterModel({ userId, bookId, items })
         
-        return {
-            ...createReadLaterModel
-        }
+        return createReadLaterModel
     }
 
     async deleteReadLaterService({ userId, bookId }, readLaterModels) {
         const deleteReadLaterModel = await readLaterModels.deleteReadLaterModel({ userId, bookId })
 
-        return { 
-            ...deleteReadLaterModel
-        }
+        return deleteReadLaterModel
     }
 }
 
