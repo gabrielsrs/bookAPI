@@ -14,7 +14,9 @@ class QuotesModels {
 
         const queryResponse = await pool.query(query, values)
 
-        return queryResponse.rows
+        return {
+            quotes: queryResponse.rows
+        }
         
     }
 
@@ -31,7 +33,9 @@ class QuotesModels {
 
         const queryResponse = await pool.query(query, values)
 
-        return queryResponse.rows
+        return {
+            quotes: queryResponse.rows
+        }
         
     }
 
@@ -84,7 +88,10 @@ class QuotesModels {
 
         await client.query('COMMIT')
 
-        return quoteQueryResponse.rows[0]
+        return {
+            quote: quoteQueryResponse.rows[0],
+            bookLocale: bookQuoteResponse.rows[0]
+        }
 
     } catch (err) {
         client.query('ROLLBACK')
@@ -98,6 +105,7 @@ class QuotesModels {
     const client = await pool.connect()
 
     try {
+        let bookLocaleResponse
         client.query('BEGIN')
 
         const quoteQuery = `
@@ -124,12 +132,15 @@ class QuotesModels {
 
             const bookLocaleValues = [quoteId]
 
-            const bookLocaleResponse = await client.query(bookLocaleQuery, bookLocaleValues)
+            bookLocaleResponse = await client.query(bookLocaleQuery, bookLocaleValues)
         }
 
         await client.query('COMMIT')
 
-        return quoteQueryResponse.rows[0]
+        return {
+            quote: quoteQueryResponse.rows[0],
+            bookLocale: bookLocaleResponse.rows[0] || {}
+        }
 
     } catch (err) {
         client.query('ROLLBACK')
@@ -180,7 +191,10 @@ class QuotesModels {
 
         await client.query('COMMIT')
 
-        return quoteQueryResponse.rows[0]
+        return {
+            quote: quoteQueryResponse.rows[0],
+            bookLocale: bookLocaleResponse.rows[0]
+        }
 
     } catch (err) {
         client.query('ROLLBACK')

@@ -10,18 +10,14 @@ class QuotesServices {
       getQuotesModel = await quotesModels.getBooksQuotesModel({userId})
     }
 
-    const queryCount = {
-      count: getQuotesModel.length
-    }
-
     return {
-      getQuotesModel,
-      queryCount
+      count: getQuotesModel.quotes.length,
+      ...getQuotesModel
     }
   }
 
   async createQuoteService({ userId, bookId, items }, quotesModels) {
-    items.quotId = ulid()
+    items.quoteId = ulid()
 
     "privacy" in items || (items.privacy = true)
 
@@ -31,9 +27,7 @@ class QuotesServices {
     
     const createQuoteModel = await quotesModels.createQuoteModel({ userId, bookId, items, bookLocale })
 
-    return {
-      ...createQuoteModel
-    }
+    return createQuoteModel
   }
 
   async updateQuoteService({ quoteId, items }, quotesModels) {
@@ -42,17 +36,13 @@ class QuotesServices {
 
     const updateQuoteModel = await quotesModels.updateQuoteModel({ quoteId, items, bookLocale })
 
-    return {
-      ...updateQuoteModel
-    }
+    return updateQuoteModel
   }
 
   async deleteQuoteService({ quoteId }, quotesModels) {
     const deleteQuoteModel = await quotesModels.deleteQuoteModel({ quoteId })
 
-    return {
-      ...deleteQuoteModel
-    }
+    return deleteQuoteModel
   }
 }
   
