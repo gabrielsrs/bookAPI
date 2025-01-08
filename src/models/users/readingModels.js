@@ -35,7 +35,9 @@ class ReadingModels {
 
         const queryResponse = await pool.query(query, values)
 
-        return queryResponse.rows[0]
+        return {
+            reading: queryResponse.rows[0]
+        }
     }
 
     async createReadingProgressModel({
@@ -84,7 +86,10 @@ class ReadingModels {
 
             await client.query('COMMIT')
 
-            return readingProgressQueryResponse.rows[0]
+            return {
+                reading: readingProgressQueryResponse.rows[0],
+                bookLocale: bookLocaleResponse.rows[0]
+            }
 
         } catch (err) {
             client.query('ROLLBACK')
@@ -98,6 +103,7 @@ class ReadingModels {
         const client = await pool.connect()
 
         try {
+            let bookLocaleResponse
             client.query('BEGIN')
 
             const readingProgressQuery = `
@@ -124,12 +130,15 @@ class ReadingModels {
 
                 const bookLocaleValues = [progressId]
 
-                const bookLocaleResponse = await client.query(bookLocaleQuery, bookLocaleValues)
+                bookLocaleResponse = await client.query(bookLocaleQuery, bookLocaleValues)
             }
 
             await client.query('COMMIT')
 
-            return readingProgressQueryResponse.rows[0]
+            return {
+                reading: readingProgressQueryResponse.rows[0],
+                bookLocale: bookLocaleResponse.rows[0] || {}
+            }
 
         } catch (err) {
             client.query('ROLLBACK')
@@ -160,7 +169,9 @@ class ReadingModels {
 
         const queryResponse = await pool.query(query, values)
 
-        return queryResponse.rows
+        return {
+            goals: queryResponse.rows
+        }
     }
 
     async createReadingGoalModel({
@@ -196,7 +207,7 @@ class ReadingModels {
                 const goalQuery = `
                     INSERT INTO goals (id, name, description, duration, start_time, end_date, updated_at)
                     VALUES ($1, $2, $3, INTERVAL $4, $5, $6, $7)
-                    RETURNING id
+                    RETURNING *
                 `
 
                 const goalValues = [goalId, name, description, duration, startTime, endDate, goalUpdatedAt]
@@ -206,7 +217,7 @@ class ReadingModels {
                 const frequencyQuery = `
                     INSERT INTO frequencies (id, option, marker)
                     VALUES ($1, $2, $3)
-                    RETURNING id
+                    RETURNING *
                 `
 
                 const frequencyValues = [frequencyId, option, marker]
@@ -216,7 +227,7 @@ class ReadingModels {
                 const frequencyGoalQuery = `
                     INSERT INTO frequency_goal (frequency_id, goal_id)
                     VALUES ($1, $2)
-                    RETURNING goal_id
+                    RETURNING *
                 `
 
                 const frequencyGoalValues = [frequencyId, goalId]
@@ -226,7 +237,7 @@ class ReadingModels {
                 const userGoalQuery = `
                     INSERT INTO user_goal (user_id, goal_id)
                     VALUES ($1, $2)
-                    RETURNING user_id
+                    RETURNING *
                 `
 
                 const userGoalValues = [userId, goalId]
@@ -236,7 +247,7 @@ class ReadingModels {
                 const goalBookQuery = `
                     INSERT INTO goal_book (book_id, goal_id)
                     VALUES ($1, $2)
-                    RETURNING goal_id
+                    RETURNING *
                 `
 
                 const goalBookValues = [bookId, goalId]
@@ -246,7 +257,7 @@ class ReadingModels {
                 const reminderQuery = `
                     INSERT INTO reminders (id, name, description, reminder_date, reminder_time, is_active, is_sent, updated_at)
                     VALUES ($1, $2, $3, $4, $5, $6 ,$7, $8)
-                    RETURNING id
+                    RETURNING *
                 `
 
                 const reminderValues = [reminderId, name, description, reminderDate, reminderTime, isActive, isSent, reminderUpdatedAt]
@@ -265,7 +276,11 @@ class ReadingModels {
                 
                 await client.query('COMMIT')
 
-                return goalQueryResponse.rows[0]
+                return {
+                    goals: goalQueryResponse.rows[0],
+                    frequency: frequencyQueryResponse.rows[0],
+                    reminder: reminderQueryResponse.rows[0]
+                }
 
             } catch (err) {
                 client.query('ROLLBACK')
@@ -279,6 +294,10 @@ class ReadingModels {
         const client = await pool.connect()
 
         try {
+            let goalQueryResponse
+            let frequencyQueryResponse
+            let reminderQueryResponse
+
             client.query('BEGIN')
 
             if (Object.key(items).length) {
@@ -291,7 +310,7 @@ class ReadingModels {
 
                 const goalValues = [goalId]
 
-                const goalQueryResponse = await client.query(goalQuery, goalValues)
+                goalQueryResponse = await client.query(goalQuery, goalValues)
 
             }
 
@@ -306,7 +325,7 @@ class ReadingModels {
 
                 const frequencyValues = [goalId]
 
-                const frequencyQueryResponse = await client.query(frequencyQuery, frequencyValues)
+                frequencyQueryResponse = await client.query(frequencyQuery, frequencyValues)
             }
 
             if (Object.key(reminder).length) {
@@ -320,12 +339,16 @@ class ReadingModels {
 
                 const reminderValues = [goalId]
 
-                const reminderQueryResponse = await client.query(reminderQuery, reminderValues)
+                reminderQueryResponse = await client.query(reminderQuery, reminderValues)
             }
             
             await client.query('COMMIT')
 
-            return goalQueryResponse.rows[0]
+            return {
+                goal: goalQueryResponse.rows[0],
+                frequency: frequencyQueryResponse.rows[0],
+                reminder: reminderQueryResponse.rows[0]
+            }
 
         } catch (err) {
             client.query('ROLLBACK')
@@ -339,6 +362,10 @@ class ReadingModels {
         const client = await pool.connect()
 
         try {
+            let goalQueryResponse
+            let frequencyQueryResponse
+            let reminderQueryResponse
+
             client.query('BEGIN')
 
             const goalQuery = `
@@ -349,7 +376,7 @@ class ReadingModels {
 
             const goalValues = [goalId]
 
-            const goalQueryResponse = await client.query(goalQuery, goalValues)
+            goalQueryResponse = await client.query(goalQuery, goalValues)
 
             const frequencyGoalQuery = `
                 DELETE FROM frequency_goal
@@ -371,7 +398,7 @@ class ReadingModels {
 
             const frequencyValues = [goalId]
 
-            const frequencyQueryResponse = await client.query(frequencyQuery, frequencyValues)
+            frequencyQueryResponse = await client.query(frequencyQuery, frequencyValues)
 
             const userGoalQuery = `
                 DELETE FROM user_goal
@@ -411,11 +438,15 @@ class ReadingModels {
 
             const reminderValues = [goalReminderQueryResponse.rows[0].reminder_id]
 
-            const reminderQueryResponse = await client.query(reminderQuery, reminderValues)
+            reminderQueryResponse = await client.query(reminderQuery, reminderValues)
 
             await client.query('COMMIT')
 
-            return goalQueryResponse.rows[0]
+            return {
+                goal: goalQueryResponse.rows[0],
+                frequency: frequencyQueryResponse.rows[0],
+                reminder: reminderQueryResponse.rows[0]
+            }
 
         } catch (err) {
             client.query('ROLLBACK')
@@ -424,7 +455,6 @@ class ReadingModels {
             client.release()
         }
     }
-    
 }
 
 export { ReadingModels }
