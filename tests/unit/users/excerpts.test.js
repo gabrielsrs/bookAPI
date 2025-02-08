@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest"
-import { ExcerptsServices } from "../../src/services/users/excerptsServices.js"
+import { ExcerptsServices } from "../../../src/services/users/excerptsServices.js"
 import { ExcerptServiceObject } from "../serviceObjects/users/excerptServiceObject.js"
 
 import { ulid } from "ulid"
