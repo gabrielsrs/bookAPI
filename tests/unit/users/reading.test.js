@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest"
-import { ReadingServices } from "../../src/services/users/readingServices.js"
+import { ReadingServices } from "../../../src/services/users/readingServices.js"
 import { ReadingServiceObject } from "../serviceObjects/users/readingServiceObject.js"
 
 import dayjs from "dayjs"

@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest"
-import { QuotesServices } from "../../src/services/users/quotesServices.js"
+import { QuotesServices } from "../../../src/services/users/quotesServices.js"
 import { QuoteServiceObject } from "../serviceObjects/users/quoteServiceObject.js"
 
 import { ulid } from "ulid"

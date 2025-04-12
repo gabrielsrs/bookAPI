@@ -1,6 +1,6 @@
 import { it, beforeEach, describe, expect } from "vitest"
 import { BookServiceObject } from "../serviceObjects/book/bookServiceObject.js"
-import { BookServices } from "../../src/services/book/bookServices.js"
+import { BookServices } from "../../../src/services/book/bookServices.js"
 
 import { ulid } from 'ulid'
 

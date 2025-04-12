@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest"
-import { RemindersServices } from "../../src/services/users/remindersServices.js"
+import { RemindersServices } from "../../../src/services/users/remindersServices.js"
 import { ReminderServiceObject } from "../serviceObjects/users/reminderServiceObject"
 
 import dayjs from "dayjs"

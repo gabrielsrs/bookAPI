@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest"
-import { FollowsServices } from "../../src/services/users/followsServices.js"
+import { FollowsServices } from "../../../src/services/users/followsServices.js"
 import { FollowServiceObject } from "../serviceObjects/users/followServiceObject.js"
 
 import { ulid } from "ulid"
